@@ -699,84 +699,103 @@
   <div class="ds-section" id="agents">
     <div class="ds-section-heading">
       <h2>05</h2>
-      <span>Agent Marker States</span>
+      <span>Character & Agent Marker Showcase</span>
     </div>
 
-    <div class="demo-box" style="background:rgba(17,22,43,0.8); border:1px solid var(--c-border); padding:var(--s-8);">
+    <!-- 5 Character Full Showcase Cards -->
+    <div class="ds-label" style="margin-bottom:var(--s-2);">Core 5 Characters (High-Res Portraits)</div>
+    <div class="demo-box" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:var(--s-4); background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
+      
+      <!-- Adel -->
+      <div class="persona-card" data-char="adel">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Adel</div>
+        <div class="persona-card__mbti">ISTJ · 방어마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">원칙주의</span>
+          <span class="trait-tag">결계 방어</span>
+        </div>
+      </div>
+
+      <!-- Leo -->
+      <div class="persona-card selected" data-char="leo">
+        <div class="persona-card__badge">PERSONA</div>
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Leo_ESTP.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Leo</div>
+        <div class="persona-card__mbti">ESTP · 마법공학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">모험심</span>
+          <span class="trait-tag">마법 생물</span>
+        </div>
+      </div>
+
+      <!-- Ria -->
+      <div class="persona-card" data-char="ria">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Ria</div>
+        <div class="persona-card__mbti">INFP · 고대룬학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">감성적</span>
+          <span class="trait-tag">고대 룬</span>
+        </div>
+      </div>
+
+      <!-- Kai -->
+      <div class="persona-card" data-char="kai">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Kai</div>
+        <div class="persona-card__mbti">ENTJ · 변성마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">전략적</span>
+          <span class="trait-tag">아티팩트</span>
+        </div>
+      </div>
+
+      <!-- Sera -->
+      <div class="persona-card" data-char="sera">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Sera</div>
+        <div class="persona-card__mbti">ESFJ · 치유마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">이타적</span>
+          <span class="trait-tag">약초 치유</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Agent Markers State Preview -->
+    <div class="ds-label" style="margin-top:var(--s-6); margin-bottom:var(--s-2);">Agent Marker State Tokens</div>
+    <div class="demo-box" style="background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
       <div class="marker-grid">
         <!-- Default -->
         <div class="marker-cell">
-          <div class="agent-marker char-leo" style="background-image:url('../assets/character.png');"></div>
+          <div class="agent-marker" style="background-image:url('../assets/character/Leo_ESTP.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
           <div class="marker-cell__label">Default<br><span style="color:var(--c-text-3);">Leo</span></div>
-        </div>
-
-        <!-- Hover -->
-        <div class="marker-cell">
-          <div class="agent-marker char-leo" style="background-image:url('../assets/character.png'); transform:scale(1.08); box-shadow:0 0 0 3px rgba(109,90,230,0.4), var(--sh-md);"></div>
-          <div class="marker-cell__label">Hover<br><span style="color:var(--c-text-3);">scale 1.08</span></div>
         </div>
 
         <!-- Selected -->
         <div class="marker-cell">
-          <div class="agent-marker char-ria selected" style="background-image:url('../assets/character.png');"></div>
+          <div class="agent-marker selected" style="background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-primary); box-shadow:0 0 12px var(--c-primary);"></div>
           <div class="marker-cell__label">Selected<br><span style="color:var(--c-primary);">ring-pulse</span></div>
         </div>
 
-        <!-- Critical -->
+        <!-- Critical / Missing -->
         <div class="marker-cell">
-          <div class="agent-marker char-leo state-critical" style="background-image:url('../assets/character.png');"></div>
-          <div class="marker-cell__label">Critical<br><span style="color:var(--c-critical);">ring-pulse-critical</span></div>
+          <div class="agent-marker state-missing" style="background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-critical); box-shadow:0 0 12px var(--c-critical);"></div>
+          <div class="marker-cell__label">Missing<br><span style="color:var(--c-critical);">flicker</span></div>
         </div>
 
-        <!-- Missing -->
+        <!-- Kai Active -->
         <div class="marker-cell">
-          <div class="agent-marker char-adel state-missing" style="background-image:url('../assets/character.png');"></div>
-          <div class="marker-cell__label">Missing<br><span style="color:var(--c-critical);">opacity·flicker</span></div>
+          <div class="agent-marker" style="background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
+          <div class="marker-cell__label">Active<br><span style="color:var(--c-text-3);">Kai</span></div>
         </div>
 
-        <!-- Cursed -->
+        <!-- Sera Active -->
         <div class="marker-cell">
-          <div class="agent-marker char-kai state-cursed" style="background-image:url('../assets/character.png');"></div>
-          <div class="marker-cell__label">Cursed<br><span style="color:#B845D6;">hue-rotate</span></div>
-        </div>
-
-        <!-- Sera -->
-        <div class="marker-cell">
-          <div class="agent-marker char-sera" style="background-image:url('../assets/character.png');"></div>
-          <div class="marker-cell__label">Default<br><span style="color:var(--c-text-3);">Sera</span></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Persona Cards -->
-    <div class="ds-label" style="margin-top:var(--s-4);">Persona Select Cards</div>
-    <div class="demo-box" style="display:flex; gap:var(--s-4); overflow-x:auto;">
-      <div class="persona-card" data-char="adel">
-        <div class="persona-card__portrait char-adel" style="background-image:url('../assets/character.png');"></div>
-        <div class="persona-card__name" style="font-family:var(--f-serif-en);">Adel</div>
-        <div class="persona-card__mbti">ISTJ</div>
-        <div class="persona-card__tags">
-          <span class="trait-tag">책임감</span>
-          <span class="trait-tag">방어 마법</span>
-        </div>
-      </div>
-      <div class="persona-card selected" data-char="leo">
-        <div class="persona-card__badge">선택됨</div>
-        <div class="persona-card__portrait char-leo" style="background-image:url('../assets/character.png');"></div>
-        <div class="persona-card__name" style="font-family:var(--f-serif-en);">Leo</div>
-        <div class="persona-card__mbti">ESTP</div>
-        <div class="persona-card__tags">
-          <span class="trait-tag">충동적</span>
-          <span class="trait-tag">마법 생물</span>
-        </div>
-      </div>
-      <div class="persona-card" data-char="ria">
-        <div class="persona-card__portrait char-ria" style="background-image:url('../assets/character.png');"></div>
-        <div class="persona-card__name" style="font-family:var(--f-serif-en);">Ria</div>
-        <div class="persona-card__mbti">ENFP</div>
-        <div class="persona-card__tags">
-          <span class="trait-tag">공감</span>
-          <span class="trait-tag">치유 마법</span>
+          <div class="agent-marker" style="background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
+          <div class="marker-cell__label">Active<br><span style="color:var(--c-text-3);">Sera</span></div>
         </div>
       </div>
     </div>

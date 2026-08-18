@@ -2,122 +2,136 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Causal System Trace Inspector — Magic Academy</title>
+  <title>Causal Inspector — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Noto+Serif+KR:wght@400;600&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
   <style>
     * { box-sizing: border-box; }
-    body { margin: 0; overflow: hidden; background: #040814; font-family: var(--f-sans); color: #e2e8f4; }
+    body { margin: 0; overflow: hidden; background: var(--c-bg); font-family: var(--f-sans); }
     .screen { width: 1440px; height: 900px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
 
-    /* Subtle background grid pattern representing AI backend architecture */
-    .bg-cyber {
+    /* Background map with deep dark blur */
+    .bg-map {
       position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 10%, rgba(14, 28, 68, 0.7) 0%, rgba(4, 8, 20, 0.98) 80%);
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.18) saturate(0.5) blur(8px);
+      transform: scale(1.04);
       pointer-events: none;
     }
-    .grid-lines {
+    .bg-overlay {
       position: absolute; inset: 0;
-      background-size: 32px 32px;
-      background-image: 
-        linear-gradient(to right, rgba(70, 100, 180, 0.05) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(70, 100, 180, 0.05) 1px, transparent 1px);
+      background: radial-gradient(circle at 40% 20%, rgba(11, 24, 56, 0.8) 0%, rgba(6, 13, 32, 0.98) 85%);
       pointer-events: none;
     }
 
-    /* ── Topbar (Engineering HUD Header) ── */
-    .tech-topbar {
-      height: 48px;
-      padding: 0 var(--s-5);
+    /* ── Topbar ── */
+    .topbar {
+      height: 52px;
+      padding: 0 var(--s-6);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      border-bottom: 1px solid rgba(70, 100, 180, 0.3);
-      background: rgba(6, 12, 28, 0.96);
+      border-bottom: 1px solid var(--c-border);
+      background: rgba(6, 13, 32, 0.94);
       backdrop-filter: blur(16px);
       z-index: 30;
       flex-shrink: 0;
     }
-    .tech-topbar__left { display: flex; align-items: center; gap: var(--s-3); }
-    .telemetry-tag {
+    .topbar__left { display: flex; align-items: center; gap: var(--s-4); }
+    .topbar__brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-md);
+      font-weight: 600;
+      color: var(--c-text);
+      letter-spacing: 0.04em;
+    }
+
+    /* Tab navigation */
+    .inspector-tab-nav {
+      display: flex;
+      gap: var(--s-2);
+      background: rgba(6, 13, 32, 0.8);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: 3px;
+    }
+    .tab-btn {
+      padding: 5px 14px;
+      border-radius: var(--r-sm);
       font-family: var(--f-mono);
       font-size: 11px;
-      padding: 2px 8px;
-      border-radius: var(--r-sm);
-      background: rgba(52, 179, 199, 0.12);
-      border: 1px solid rgba(52, 179, 199, 0.35);
-      color: var(--c-inspector);
+      font-weight: 600;
+      color: var(--c-text-2);
+      background: transparent;
+      border: 1px solid transparent;
+      cursor: pointer;
       display: flex;
       align-items: center;
       gap: 6px;
-      font-weight: 600;
+      transition: all var(--tr-fast);
     }
-    .telemetry-pulse {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--c-inspector);
-      box-shadow: 0 0 8px var(--c-inspector);
-      animation: ring-pulse 1.8s infinite;
+    .tab-btn:hover { color: var(--c-text); background: rgba(70, 100, 180, 0.15); }
+    .tab-btn.active {
+      color: #ffffff;
+      background: rgba(94, 96, 232, 0.25);
+      border-color: var(--c-primary);
+      box-shadow: 0 0 12px rgba(94, 96, 232, 0.3);
     }
-    .tech-metrics {
-      display: flex; align-items: center; gap: var(--s-4);
-      font-family: var(--f-mono); font-size: 11px; color: var(--c-text-2);
-    }
-    .tech-metric-val { color: var(--c-cream); font-weight: 600; }
 
-    /* ── Main 3-Column Engineering Deep Trace Layout ── */
-    .trace-layout {
+    /* ── Main Container ── */
+    .inspector-content {
       flex: 1;
-      display: grid;
-      grid-template-columns: 310px 1fr 1fr;
-      gap: var(--s-3);
-      padding: var(--s-3) var(--s-5);
+      padding: var(--s-4) var(--s-6);
       z-index: 10;
-      height: calc(900px - 48px);
+      height: calc(900px - 52px);
       box-sizing: border-box;
       overflow: hidden;
     }
 
-    /* Column Container */
-    .trace-col {
-      background: rgba(8, 16, 38, 0.85);
-      backdrop-filter: blur(20px);
-      border: 1px solid rgba(70, 100, 180, 0.28);
+    .tab-pane {
+      display: none;
+      height: 100%;
+      box-sizing: border-box;
+    }
+    .tab-pane.active {
+      display: grid;
+    }
+
+    /* ── TAB 1: User-Friendly View (3.1~3.6) ── */
+    .user-view-grid {
+      grid-template-columns: 360px 1fr 1fr;
+      gap: var(--s-3);
+      height: 100%;
+    }
+
+    .info-card {
+      background: rgba(11, 24, 56, 0.85);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
       border-radius: var(--r-md);
       display: flex;
       flex-direction: column;
       overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.35);
     }
-    .trace-col__header {
-      padding: 8px var(--s-3);
-      border-bottom: 1px solid rgba(70, 100, 180, 0.25);
-      background: rgba(6, 11, 26, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-shrink: 0;
-    }
-    .trace-col__title {
+    .info-card__header {
+      padding: var(--s-2) var(--s-3);
+      background: rgba(6, 13, 32, 0.7);
+      border-bottom: 1px solid rgba(70, 100, 180, 0.2);
       font-family: var(--f-mono);
       font-size: 11px;
-      font-weight: 700;
+      font-weight: 600;
       color: var(--c-cream);
       letter-spacing: 0.08em;
       text-transform: uppercase;
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      gap: 6px;
     }
-    .trace-col__badge {
-      font-family: var(--f-mono);
-      font-size: 9px;
-      padding: 1px 6px;
-      border-radius: 3px;
-      font-weight: 600;
-    }
-    .trace-col__body {
+    .info-card__body {
       flex: 1;
       padding: var(--s-3);
       display: flex;
@@ -126,9 +140,14 @@
       overflow-y: auto;
     }
 
-    /* ── Tech Code Blocks & Data Cards ── */
+    /* ── TAB 2: Developer Metric View (3.7) ── */
+    .dev-view-grid {
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: var(--s-3);
+      height: 100%;
+    }
     .code-block {
-      background: #02050f;
+      background: #030612;
       border: 1px solid rgba(70, 100, 180, 0.25);
       border-radius: var(--r-sm);
       padding: var(--s-2) var(--s-3);
@@ -142,254 +161,326 @@
       color: var(--c-inspector);
       font-weight: 600;
       margin-bottom: 4px;
-      display: flex;
-      justify-content: space-between;
       border-bottom: 1px dashed rgba(70, 100, 180, 0.2);
       padding-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
     }
     .code-kw { color: #5e60e8; font-weight: 600; }
     .code-str { color: #d4b26f; }
     .code-num { color: #38b277; }
     .code-crit { color: #db4c4c; font-weight: 700; }
     .code-dim { color: #526388; }
-
-    /* Vector Snippet Box */
-    .vector-box {
-      background: rgba(6, 14, 32, 0.7);
-      border: 1px solid rgba(52, 179, 199, 0.25);
-      border-radius: var(--r-sm);
-      padding: var(--s-2);
-      font-family: var(--f-mono);
-      font-size: 10px;
-    }
-    .sim-bar {
-      height: 4px; border-radius: 2px;
-      background: linear-gradient(90deg, #5e60e8, var(--c-inspector));
-      margin-top: 3px;
-    }
-
-    /* AST Evaluator Visualizer */
-    .ast-tree {
-      font-family: var(--f-mono);
-      font-size: 10.5px;
-      color: #9ab0d6;
-      line-height: 1.6;
-    }
-    .ast-node { display: flex; align-items: center; gap: 4px; }
-    .ast-pass { color: var(--c-success); font-weight: 700; }
-    .ast-fail { color: var(--c-critical); font-weight: 700; }
-
-    /* Agent mini badge */
-    .agent-id-card {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-      padding: var(--s-2) var(--s-3);
-      background: rgba(6, 12, 28, 0.8);
-      border: 1px solid rgba(70, 100, 180, 0.25);
-      border-radius: var(--r-sm);
-    }
-    .agent-id-portrait {
-      width: 44px; height: 56px;
-      border-radius: 3px;
-      background-image: url('../assets/character/Adel_ISTJ.png');
-      background-size: cover;
-      background-position: center top;
-      border: 1px solid var(--c-border-hi);
-      flex-shrink: 0;
-    }
   </style>
 </head>
 <body>
 
 <div class="screen">
-  <div class="bg-cyber"></div>
-  <div class="grid-lines"></div>
+  <div class="bg-map"></div>
+  <div class="bg-overlay"></div>
 
-  <!-- ── Topbar (Engineering Telemetry Bar) ── -->
-  <div class="tech-topbar">
-    <div class="tech-topbar__left">
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar__left">
       <a href="03-simulation.html" class="btn btn-ghost btn-sm" style="padding: 4px 10px; gap:4px; font-size:11px;">
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        시뮬레이션 복귀
+        시뮬레이션으로 복귀
       </a>
-      <div style="width:1px; height:16px; background:rgba(70, 100, 180, 0.3);"></div>
-      <div class="telemetry-tag">
-        <div class="telemetry-pulse"></div>
-        SYSTEM TRACE: trc_01j5a87b
+      <div style="width:1px; height:16px; background:var(--c-border);"></div>
+      <div class="topbar__brand">Magic Academy</div>
+
+      <!-- Tab Switcher (§3.1~3.6 사용자 뷰 vs §3.7 개발자 확장 탭) -->
+      <div class="inspector-tab-nav">
+        <button class="tab-btn active" id="btn-tab-user" onclick="switchInspectorTab('user')">
+          <span>§3.1~3.6 사건 인과 분석</span>
+        </button>
+        <button class="tab-btn" id="btn-tab-dev" onclick="switchInspectorTab('dev')">
+          <span style="color:var(--c-inspector);">§3.7 개발자 기술 메트릭</span>
+        </button>
       </div>
-      <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">MAGIC EVENT #04 &middot; STUDENT_MISSING</span>
     </div>
 
-    <div class="tech-metrics">
-      <span>TICK: <strong class="tech-metric-val">10</strong></span>
-      <span>Latency: <strong class="tech-metric-val" style="color:var(--c-success);">42ms</strong></span>
-      <span>Policy: <strong class="tech-metric-val">v0.1-mvp</strong></span>
-      <span>Embedding: <strong class="tech-metric-val">text-embedding-3-small (1536d)</strong></span>
-      <div style="width:1px; height:16px; background:rgba(70, 100, 180, 0.3);"></div>
-      <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding: 3px 12px; font-size:11px;">
+    <div style="display:flex; align-items:center; gap:var(--s-3);">
+      <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2);">Tick 10 &middot; 14:02:15</span>
+      <div style="width:1px; height:16px; background:var(--c-border);"></div>
+      <a href="05-relationship.html" class="btn btn-outline btn-sm" style="padding: 4px 10px; font-size:11px;">
+        관계망 그래프
+      </a>
+      <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding: 4px 12px; font-size:11px;">
         시뮬레이션 뷰 &rarr;
       </a>
     </div>
   </div>
 
-  <!-- ── Main 3-Column Engineering Trace ── -->
-  <div class="trace-layout">
+  <!-- Main Content -->
+  <div class="inspector-content">
 
-    <!-- ── COLUMN 1: Agent State & Policy AST Rule Engine ── -->
-    <div class="trace-col">
-      <div class="trace-col__header">
-        <span class="trace-col__title">
-          <span>01. Policy Rule AST & State</span>
-        </span>
-        <span class="trace-col__badge" style="background:rgba(219,76,76,0.15); color:var(--c-critical); border:1px solid var(--c-critical-ring);">TRIGGERED</span>
+    <!-- ── TAB 1: User-Friendly View (§3.1 ~ §3.6) ── -->
+    <div class="tab-pane active user-view-grid" id="pane-user">
+
+      <!-- Column 1: §3.1 프로필 & §3.2 내부 상태 게이지 -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>§3.1 프로필 & §3.2 상태</span>
+          <span style="color:var(--c-critical);">CRITICAL</span>
+        </div>
+        <div class="info-card__body">
+          <!-- Profile Card -->
+          <div style="display:flex; gap:var(--s-3); padding:var(--s-2) var(--s-3); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
+            <div style="width:52px; height:66px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1px solid var(--c-border-hi);"></div>
+            <div style="flex:1;">
+              <div style="font-family:var(--f-serif-ko); font-size:16px; font-weight:700; color:#fff;">Adel</div>
+              <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">ISTJ &middot; 2학년</div>
+              <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">방어마법학과</div>
+            </div>
+          </div>
+
+          <!-- Internal State Gauges (§3.2) -->
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3); display:flex; flex-direction:column; gap:var(--s-2);">
+            <div>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:11px; margin-bottom:3px;">
+                <span style="color:var(--c-text-2);">스트레스</span>
+                <span style="color:var(--c-critical); font-weight:700;">92 / 90 (한계 초과)</span>
+              </div>
+              <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:3px;">
+                <div style="height:100%; width:92%; background:var(--c-critical); border-radius:3px;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:11px; margin-bottom:3px;">
+                <span style="color:var(--c-text-2);">피로도</span>
+                <span style="color:var(--c-cream); font-weight:700;">84 / 80 (누적 위험)</span>
+              </div>
+              <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:3px;">
+                <div style="height:100%; width:84%; background:var(--c-cream); border-radius:3px;"></div>
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:11px; margin-bottom:3px;">
+                <span style="color:var(--c-text-2);">기분 만족도</span>
+                <span style="color:var(--c-text-3);">22 / 100 (침체)</span>
+              </div>
+              <div style="height:6px; background:rgba(255,255,255,0.1); border-radius:3px;">
+                <div style="height:100%; width:22%; background:#5e60e8; border-radius:3px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Runtime Return Forecast -->
+          <div style="margin-top:auto; background:rgba(94,96,232,0.12); border:1px solid var(--c-primary-ring); border-radius:var(--r-sm); padding:var(--s-3);">
+            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-primary); font-weight:700;">RUNTIME FORECAST</div>
+            <div style="font-size:11px; color:#fff; margin-top:2px;">상태: <strong>MISSING</strong> (시뮬레이션 큐 일시 제외)</div>
+            <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">예상 복귀: <strong>TICK 14</strong> (스트레스 회복 시)</div>
+          </div>
+        </div>
       </div>
-      <div class="trace-col__body">
-        
-        <!-- Agent Identity & Internal Metrics -->
-        <div class="agent-id-card">
-          <div class="agent-id-portrait"></div>
-          <div style="flex:1; min-width:0; font-family:var(--f-mono); font-size:11px;">
-            <div style="color:#ffffff; font-weight:700;">Adel (s-1)</div>
-            <div style="color:var(--c-cream); font-size:10px;">ISTJ &middot; 방어마법학과 2학년</div>
-            <div style="color:var(--c-critical); font-size:10px; margin-top:2px;">Status: <strong>MISSING (T10)</strong></div>
+
+      <!-- Column 2: §3.3 Decision Explanation & §3.4 행동 로그 -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>§3.3 결정 서사 & §3.4 행동 로그</span>
+          <span style="color:var(--c-cream);">NARRATIVE</span>
+        </div>
+        <div class="info-card__body">
+          <!-- §3.3 Decision Explanation (1문장 서사) -->
+          <div style="background:rgba(6,13,32,0.6); border:1px solid rgba(70,100,180,0.25); border-left:3px solid var(--c-cream); border-radius:var(--r-sm); padding:var(--s-3);">
+            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600; margin-bottom:4px;">[ 사건 원인 요약 ]</div>
+            <div style="font-family:var(--f-serif-ko); font-size:12.5px; color:#fff; line-height:1.6;">
+              &ldquo;Adel의 스트레스가 10틱 연속 한계치(90)를 초과하고 누적 피로가 극에 달해 도서관 3층 결계 구역에서 자리를 피했습니다.&rdquo;
+            </div>
+            <div style="margin-top:6px; font-size:11px; color:var(--c-text-2); font-family:var(--f-serif-ko);">
+              &ldquo;규율을 지키지 못했다는 자책감에 누구의 시선도 마주치고 싶지 않아 잠시 결계 뒤편으로 숨기로 결정했습니다.&rdquo;
+            </div>
+          </div>
+
+          <!-- §3.4 최근 행동 로그 타임라인 -->
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3); flex:1;">
+            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:8px;">[ 최근 행동 타임라인 ]</div>
+            <div style="display:flex; flex-direction:column; gap:6px; font-size:11px;">
+              <div style="display:flex; gap:8px;">
+                <span style="font-family:var(--f-mono); color:var(--c-critical); font-weight:700;">T10</span>
+                <span style="color:#fff;">도서관 3층 결계 구역에서 이탈 (실종 상태 전환)</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <span style="font-family:var(--f-mono); color:var(--c-cream);">T09</span>
+                <span style="color:var(--c-text-2);">복도에서 Leo와 규칙 준수 문제로 심한 말다툼</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <span style="font-family:var(--f-mono); color:var(--c-primary);">T08</span>
+                <span style="color:var(--c-text-2);">도서관 3층 금서 구역 결계 균열 순찰 및 점검</span>
+              </div>
+              <div style="display:flex; gap:8px;">
+                <span style="font-family:var(--f-mono); color:var(--c-text-3);">T07</span>
+                <span style="color:var(--c-text-2);">강의동 A 방어마법 특강 출석</span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- AST Condition Evaluation Code Block -->
-        <div class="code-block">
-          <div class="code-title">
-            <span>RULE: RULE_STUDENT_MISSING</span>
-            <span style="color:var(--c-success);">AST PASS</span>
+      <!-- Column 3: §3.5 Memory (기억) & §3.6 관계망 -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>§3.5 Memory & §3.6 관계망</span>
+          <span style="color:var(--c-inspector);">RETRIEVED</span>
+        </div>
+        <div class="info-card__body">
+          <!-- §3.5 사용된 기억들 (Memory) -->
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
+            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600; margin-bottom:6px;">[ 사건에 영향을 준 기억 ]</div>
+            
+            <div style="border-bottom:1px solid rgba(70,100,180,0.15); padding-bottom:6px; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">
+                <span>기억 1 (관찰 · T08)</span>
+                <span>중요도 85</span>
+              </div>
+              <div style="font-size:11px; color:#fff; margin-top:2px;">
+                "도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."
+              </div>
+            </div>
+
+            <div>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">
+                <span>기억 2 (대화 · T09)</span>
+                <span>중요도 90</span>
+              </div>
+              <div style="font-size:11px; color:#fff; margin-top:2px;">
+                "Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."
+              </div>
+            </div>
           </div>
-          <div class="ast-tree">
-            <div><span class="code-kw">IF</span> <span class="code-dim">(Priority: P1, Mode: Deterministic)</span></div>
-            <div class="ast-node">├── stress (<span class="code-crit">92</span>) &gt;= <span class="code-num">90</span> <span class="ast-pass">✓ TRUE</span></div>
-            <div class="ast-node">├── fatigue (<span class="code-crit">84</span>) &gt;= <span class="code-num">80</span> <span class="ast-pass">✓ TRUE</span></div>
-            <div class="ast-node">├── loc == <span class="code-str">"LIBRARY_3F"</span> <span class="ast-pass">✓ MATCH</span></div>
-            <div class="ast-node">└── contention_count == <span class="code-num">0</span> <span class="ast-pass">✓ NO CONFLICT</span></div>
-            <div style="margin-top:4px;"><span class="code-kw">THEN EVALUATE</span> ➔ <span style="color:var(--c-critical); font-weight:700;">COMMIT_ACTION(MISSING)</span></div>
+
+          <!-- §3.6 관계 변화 (Relationships) -->
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3); margin-top:auto;">
+            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px;">[ 대인 관계 상태 ]</div>
+            <div style="display:flex; flex-direction:column; gap:6px; font-size:11px;">
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--c-text-2);">Leo (ESTP)</span>
+                <span style="color:var(--c-critical); font-weight:600;">신뢰도 25 (갈등 심화 ↓)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--c-text-2);">Sera (ESFJ)</span>
+                <span style="color:var(--c-success); font-weight:600;">신뢰도 70 (염려 중)</span>
+              </div>
+              <div style="display:flex; justify-content:space-between;">
+                <span style="color:var(--c-text-2);">Kai (ENTJ)</span>
+                <span style="color:var(--c-text-3);">신뢰도 50 (중립)</span>
+              </div>
+            </div>
           </div>
         </div>
+      </div>
 
-        <!-- State Snapshot Diffs -->
-        <div class="code-block" style="margin-top:auto;">
-          <div class="code-title">
-            <span>STATE SNAPSHOT DELTA (s-1)</span>
-            <span class="code-dim">JSONB</span>
+    </div>
+
+    <!-- ── TAB 2: Developer Technical Metrics (§3.7) ── -->
+    <div class="tab-pane dev-view-grid" id="pane-dev">
+
+      <!-- Dev Col 1: Policy Engine AST & Evaluator -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>01. Policy Engine AST Evaluator</span>
+          <span style="color:var(--c-success);">DETERMINISTIC</span>
+        </div>
+        <div class="info-card__body">
+          <div class="code-block">
+            <div class="code-title">
+              <span>RULE: RULE_STUDENT_MISSING</span>
+              <span style="color:var(--c-success);">AST PASS</span>
+            </div>
+            <div><span class="code-kw">IF</span> <span class="code-dim">(policy-mvp-0.1, Priority: P1)</span></div>
+            <div>├── stress (<span class="code-crit">92</span>) &gt;= <span class="code-num">90</span> <span style="color:var(--c-success);">✓ TRUE</span></div>
+            <div>├── fatigue (<span class="code-crit">84</span>) &gt;= <span class="code-num">80</span> <span style="color:var(--c-success);">✓ TRUE</span></div>
+            <div>├── loc == <span class="code-str">"LIBRARY_3F"</span> <span style="color:var(--c-success);">✓ MATCH</span></div>
+            <div>└── contention_count == <span class="code-num">0</span> <span style="color:var(--c-success);">✓ NO CONFLICT</span></div>
+            <div style="margin-top:4px;"><span class="code-kw">THEN EVALUATE</span> ➔ <span style="color:var(--c-critical); font-weight:700;">COMMIT(MISSING)</span></div>
           </div>
-          <pre style="margin:0; font-size:10px; color:#a4b5d6;">{
+
+          <div class="code-block" style="margin-top:auto;">
+            <div class="code-title">
+              <span>STATE SNAPSHOT DELTA</span>
+              <span class="code-dim">JSONB</span>
+            </div>
+            <pre style="margin:0; font-size:10px; color:#a4b5d6;">{
   <span class="code-kw">"agent_id"</span>: <span class="code-str">"s-1"</span>,
   <span class="code-kw">"prev_status"</span>: <span class="code-str">"ACTIVE"</span>,
   <span class="code-kw">"curr_status"</span>: <span class="code-crit">"MISSING"</span>,
-  <span class="code-kw">"stress_val"</span>: <span class="code-crit">92</span>,
-  <span class="code-kw">"fatigue_val"</span>: <span class="code-crit">84</span>,
-  <span class="code-kw">"duration"</span>: <span class="code-num">4</span> <span class="code-dim">/* Ticks (T10-T14) */</span>
+  <span class="code-kw">"duration"</span>: <span class="code-num">4</span> <span class="code-dim">/* Ticks */</span>
 }</pre>
+          </div>
         </div>
-
       </div>
-    </div>
 
-    <!-- ── COLUMN 2: pgvector Cosine Retrieval & Vector Space ── -->
-    <div class="trace-col">
-      <div class="trace-col__header">
-        <span class="trace-col__title">
-          <span>02. pgvector Memory Retrieval</span>
-        </span>
-        <span class="trace-col__badge" style="background:rgba(52,179,199,0.15); color:var(--c-inspector); border:1px solid rgba(52,179,199,0.3);">TOP-2 INJECTED</span>
+      <!-- Dev Col 2: pgvector 1536-dim Embedding Space -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>02. pgvector Cosine Retrieval</span>
+          <span style="color:var(--c-inspector);">1536 DIM</span>
+        </div>
+        <div class="info-card__body">
+          <div class="code-block">
+            <div class="code-title">
+              <span>TOP-1: mem_01j5a87b</span>
+              <span style="color:var(--c-cream);">Score: 0.892</span>
+            </div>
+            <div style="font-size:10px; color:#fff;">"도서관 금서 구역 결계 균열 목격"</div>
+            <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">
+              Embedding[1536]: [0.0241, -0.0512, 0.1184, -0.0094, 0.0732, ...]
+            </div>
+          </div>
+
+          <div class="code-block">
+            <div class="code-title">
+              <span>TOP-2: mem_01j5a99c</span>
+              <span style="color:var(--c-cream);">Score: 0.841</span>
+            </div>
+            <div style="font-size:10px; color:#fff;">"Leo가 마법 생물 유인해 말다툼"</div>
+            <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">
+              Embedding[1536]: [-0.0128, 0.0891, -0.0342, 0.0611, -0.0189, ...]
+            </div>
+          </div>
+
+          <div class="code-block" style="margin-top:auto;">
+            <div class="code-title">
+              <span>Model & HNSW Index</span>
+              <span style="color:var(--c-inspector);">text-embedding-3-small</span>
+            </div>
+            <div style="font-size:10px;">
+              Index: <code>idx_agent_memories_embedding</code><br>
+              Cosine Metric: <code>vector_cosine_ops</code>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="trace-col__body">
-        
-        <!-- Query Vector Context -->
-        <div class="code-block">
-          <div class="code-title">
-            <span>RETRIEVAL QUERY & HNSW SEARCH</span>
-            <span style="color:var(--c-inspector);">Cosine Distance</span>
-          </div>
-          <div style="font-size:10px; color:#cad6ef; margin-bottom:4px;">
-            <span class="code-kw">Query:</span> "도서관 3층 결계 마력 불안정 및 스트레스 누적"
-          </div>
-          <div class="code-dim" style="font-size:9.5px;">
-            HNSW Index: idx_agent_memories_embedding (m=16, ef=64)
-          </div>
+
+      <!-- Dev Col 3: LLM Telemetry & DB SQL Commit -->
+      <div class="info-card">
+        <div class="info-card__header">
+          <span>03. LLM Telemetry & SQL Commit</span>
+          <span style="color:var(--c-success);">42ms LATENCY</span>
         </div>
+        <div class="info-card__body">
+          <div class="code-block">
+            <div class="code-title">
+              <span>LLM EXECUTION TELEMETRY</span>
+              <span style="color:var(--c-success);">OK</span>
+            </div>
+            <div style="font-size:10px; line-height:1.6;">
+              • Latency: <strong style="color:var(--c-success);">42ms</strong><br>
+              • Prompt Tokens: <strong>412</strong><br>
+              • Completion Tokens: <strong>58</strong><br>
+              • Temperature: <strong>0.7</strong> &middot; Model: GPT-4o-mini
+            </div>
+          </div>
 
-        <!-- Retrieved Memory 1 (Top-1) -->
-        <div class="vector-box" style="border-color:rgba(52,179,199,0.4);">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:var(--c-inspector); font-weight:700;">[Top 1] mem_01j5a87b &middot; TICK 08</span>
-            <span style="color:var(--c-cream); font-weight:700;">Score: 0.892</span>
-          </div>
-          <div style="color:#ffffff; font-size:11px; margin:4px 0; font-family:var(--f-sans);">
-            "도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다. 방어 마법진 순환 이상."
-          </div>
-          <div class="sim-bar" style="width: 89.2%;"></div>
-          <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">
-            Vector[1536]: [0.0241, -0.0512, 0.1184, -0.0094, 0.0732, -0.0415, ...]
-          </div>
-        </div>
-
-        <!-- Retrieved Memory 2 (Top-2) -->
-        <div class="vector-box">
-          <div style="display:flex; justify-content:space-between; align-items:center;">
-            <span style="color:var(--c-cream); font-weight:700;">[Top 2] mem_01j5a99c &middot; TICK 09</span>
-            <span style="color:var(--c-cream); font-weight:700;">Score: 0.841</span>
-          </div>
-          <div style="color:#ffffff; font-size:11px; margin:4px 0; font-family:var(--f-sans);">
-            "Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."
-          </div>
-          <div class="sim-bar" style="width: 84.1%;"></div>
-          <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">
-            Vector[1536]: [-0.0128, 0.0891, -0.0342, 0.0611, -0.0189, 0.0924, ...]
-          </div>
-        </div>
-
-        <!-- Pipeline Pass-Through Confirmation -->
-        <div class="code-block" style="margin-top:auto;">
-          <div class="code-title">
-            <span>TickResult.retrieval_traces</span>
-            <span style="color:var(--c-success);">BOUND</span>
-          </div>
-          <div style="font-size:10px;">
-            <code>retrieval_traces["s-1"] = ["mem_01j5a87b", "mem_01j5a99c"]</code>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- ── COLUMN 3: LLM Reasoning (CoT) & Deterministic Commit ── -->
-    <div class="trace-col">
-      <div class="trace-col__header">
-        <span class="trace-col__title">
-          <span>03. LLM Inference & DB Commit</span>
-        </span>
-        <span class="trace-col__badge" style="background:rgba(56,178,119,0.15); color:var(--c-success); border:1px solid rgba(56,178,119,0.3);">TRANSACTION OK</span>
-      </div>
-      <div class="trace-col__body">
-        
-        <!-- LLM Chain-of-Thought & Prompt Context -->
-        <div class="code-block" style="border-color:rgba(212,178,111,0.3);">
-          <div class="code-title" style="color:var(--c-cream);">
-            <span>LLM CHAIN-OF-THOUGHT (CoT TRACE)</span>
-            <span>Non-Deterministic Narration</span>
-          </div>
-          <div style="font-size:10.5px; color:#d6e2f7; font-family:var(--f-serif-ko); line-height:1.5;">
-            &ldquo;규율을 지키지 못했다는 자책감과 극도의 마력 피로가 한계에 달했다. 결계 파편을 수습하기 전까지는 누구의 시선도 마주치고 싶지 않다. 잠시 결계 뒤편으로 몸을 숨긴다.&rdquo;
-          </div>
-          <div class="code-dim" style="margin-top:6px; font-size:9.5px;">
-            Prompt Tokens: 412 &middot; Completion Tokens: 58 &middot; Temperature: 0.7
-          </div>
-        </div>
-
-        <!-- Deterministic DB Write Transaction -->
-        <div class="code-block">
-          <div class="code-title">
-            <span>DB TRANSACTION (SQL Execution)</span>
-            <span style="color:var(--c-success);">COMMITTED</span>
-          </div>
-          <pre style="margin:0; font-size:10px; color:#7dd3fc;">
+          <div class="code-block" style="margin-top:auto;">
+            <div class="code-title">
+              <span>DB TRANSACTION (SQL Execution)</span>
+              <span style="color:var(--c-success);">COMMITTED</span>
+            </div>
+            <pre style="margin:0; font-size:10px; color:#7dd3fc;">
 <span class="code-kw">BEGIN</span>;
 <span class="code-kw">UPDATE</span> agents
 <span class="code-kw">SET</span> status = <span class="code-crit">'MISSING'</span>, is_active = <span class="code-crit">FALSE</span>
@@ -398,27 +489,29 @@
 <span class="code-kw">INSERT INTO</span> event_participants (event_id, agent_id, result)
 <span class="code-kw">VALUES</span> (<span class="code-str">'evt-04'</span>, <span class="code-str">'s-1'</span>, <span class="code-str">'{"action":"MISSING","retrieved_ids":["mem_01j5a87b","mem_01j5a99c"]}'</span>);
 <span class="code-kw">COMMIT</span>;</pre>
-        </div>
-
-        <!-- Runtime Recovery Sequence Guard -->
-        <div class="code-block" style="margin-top:auto; border-color:rgba(56,178,119,0.35); background:rgba(56,178,119,0.06);">
-          <div class="code-title" style="color:var(--c-success);">
-            <span>RUNTIME RECOVERY SEQUENCE</span>
-            <span>TICK 14</span>
-          </div>
-          <div style="font-size:10px; color:#bbf7d0; line-height:1.5;">
-            • Excluded from active queue: <strong>T10 ~ T13 (4 Ticks)</strong><br>
-            • Recovery condition: <code>stress &lt; 60</code> (Decay: -10/tick)<br>
-            • Trigger: <code>STATUS_ENDED</code> ➔ Re-activate at <strong>TICK 14</strong>
           </div>
         </div>
-
       </div>
+
     </div>
 
   </div>
 </div>
 
 <script src="../js/magic-academy.js"></script>
+<script>
+  function switchInspectorTab(tabKey) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-pane').forEach(pane => pane.classList.remove('active'));
+
+    if (tabKey === 'user') {
+      document.getElementById('btn-tab-user').classList.add('active');
+      document.getElementById('pane-user').classList.add('active');
+    } else {
+      document.getElementById('btn-tab-dev').classList.add('active');
+      document.getElementById('pane-dev').classList.add('active');
+    }
+  }
+</script>
 </body>
 </html>
