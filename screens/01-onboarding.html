@@ -325,7 +325,7 @@
 
     <!-- Slide 3 -->
     <div class="ob-slide" id="slide-3">
-      <div style="margin-top: auto; padding-bottom: var(--s-4);">
+      <div style="margin-top: auto; padding-bottom: var(--s-3);">
         <div class="ob-badge" style="background: var(--c-inspector-muted); border-color: var(--c-inspector-ring);">
           <div class="ob-badge-dot" style="background: var(--c-inspector); box-shadow:0 0 6px var(--c-inspector);"></div>
           <span class="ob-badge-text" style="color: var(--c-inspector);">Causal Observatory</span>
@@ -333,33 +333,39 @@
 
         <h1 class="onboarding__title">원인은<br>명확하게.</h1>
 
-        <div class="gold-divider" style="margin: var(--s-6) 0;">
+        <div class="gold-divider" style="margin: var(--s-4) 0;">
           <div class="gold-divider__dot"></div>
         </div>
 
-        <p class="onboarding__desc">
+        <p class="onboarding__desc" style="font-size:13px; margin-bottom:var(--s-3);">
           Magic Event가 발생하면,<br>
-          Inspector가 정확한 인과관계를 역추적한다.
+          Inspector가 1문장 서사와 정밀 인과를 보여줍니다.
         </p>
 
-        <div style="margin-top: var(--s-5); background:rgba(11,24,56,0.85); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-3) var(--s-4); font-family:var(--f-mono); font-size:11px; display:flex; flex-direction:column; gap:6px;">
-          <div style="display:flex; justify-content:space-between;">
-            <span style="color:var(--c-text-3);">Condition</span>
-            <span style="color:var(--c-critical);">stress &gt; 90 (92 Met)</span>
+        <!-- 2-Layer Scenario Example Card -->
+        <div style="background:rgba(11,24,56,0.9); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-3); display:flex; flex-direction:column; gap:6px;">
+          <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600; display:flex; justify-content:space-between;">
+            <span>시나리오 예시</span>
+            <span style="color:var(--c-critical);">TICK 10 · 실종 사건</span>
           </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="color:var(--c-text-3);">Rule Engine</span>
-            <span style="color:var(--c-inspector);">RULE_STUDENT_MISSING</span>
+
+          <!-- Layer 1 Summary -->
+          <div style="font-size:11px; color:var(--c-text); background:rgba(6,13,32,0.6); padding:6px 8px; border-radius:4px; border-left:2px solid var(--c-cream); line-height:1.4;">
+            &ldquo;Adel의 스트레스가 한계치(90)를 초과해 자리를 피했습니다.&rdquo;
           </div>
-          <div style="display:flex; justify-content:space-between;">
-            <span style="color:var(--c-text-3);">Commit State</span>
-            <span style="color:var(--c-cream);">MISSING &middot; 4 TICKS</span>
+
+          <!-- Layer 2 Technical Trace Preview -->
+          <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-2); background:rgba(6,13,32,0.4); padding:6px 8px; border-radius:4px; border:1px solid rgba(70,100,180,0.2); line-height:1.6;">
+            <div>1. Condition: <strong style="color:var(--c-critical);">stress 92 &gt; 90</strong></div>
+            <div>2. Memory: <strong style="color:var(--c-inspector);">결계 균열 목격 (유사도 0.892)</strong></div>
+            <div>3. State Commit: <strong style="color:var(--c-cream);">MISSING · 4 TICKS</strong></div>
           </div>
         </div>
       </div>
 
       <button class="onboarding__cta"
-        onclick="window.location.href='02-persona-select.html'">
+        onclick="window.location.href='02-persona-select.html'"
+        style="margin-top:var(--s-3);">
         Persona 선택하고 시작하기 &rarr;
       </button>
     </div>
