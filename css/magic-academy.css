@@ -8,54 +8,62 @@
 
 /* ── 1. Design Tokens ─────────────────────────────────────── */
 :root {
-  /* Color — Background  (color-palette.md § surface) */
-  --c-bg:               #021029;   /* Deep Navy — surface-base */
-  --c-surface:          #3a3939;   /* Muted Slate — panels, cards, sidebars */
-  --c-surface-hi:       #2a2929;   /* Overlay — hover, selected */
-  --c-surface-glass:    rgba(2, 16, 41, 0.88);  /* Navy glass for map overlays */
+  /* Color — Background & Surfaces (Mystic Midnight Navy) */
+  --c-bg:               #070d1e;   /* Deepest midnight navy */
+  --c-surface:          #0e1730;   /* Rich navy surface for cards & panels */
+  --c-surface-hi:       #162347;   /* Elevated navy surface for hover/active */
+  --c-surface-card:     rgba(16, 26, 56, 0.78);  /* Translucent card surface */
+  --c-surface-glass:    rgba(10, 17, 38, 0.82);  /* Frosted midnight glass */
+  --c-surface-drawer:   rgba(9, 15, 34, 0.94);   /* Deep drawer surface */
 
-  /* Color — Interactive (CTA buttons, links, focus ring) */
-  --c-primary:          #00b4d8;   /* Glowing Cyan — interactive */
-  --c-primary-hover:    #00c8ee;
-  --c-primary-muted:    rgba(0, 180, 216, 0.12);
-  --c-primary-ring:     rgba(0, 180, 216, 0.35);
+  /* Color — Primary / Agent (Mystic Violet) */
+  --c-primary:          #6D5AE6;   /* Arcane Violet — Agent actions & selection */
+  --c-primary-hover:    #7e6bf5;
+  --c-primary-muted:    rgba(109, 90, 230, 0.16);
+  --c-primary-ring:     rgba(109, 90, 230, 0.38);
 
-  /* Color — Brand / Decorative (titles, dividers, accents) */
-  --c-cream:            #d7c6a7;   /* Cream Ivory — brand primary */
-  --c-cream-muted:      rgba(215, 198, 167, 0.12);
-  --c-cream-ring:       rgba(215, 198, 167, 0.30);
+  /* Color — Brand / Accent (Cream Ivory) */
+  --c-cream:            #d7c6a7;   /* Cream Ivory — brand titles & elegant accents */
+  --c-cream-hover:      #e5d7be;
+  --c-cream-muted:      rgba(215, 198, 167, 0.14);
+  --c-cream-ring:       rgba(215, 198, 167, 0.35);
 
-  /* Color — Inspector (shares Cyan with Interactive) */
-  --c-inspector:        #00b4d8;
-  --c-inspector-muted:  rgba(0, 180, 216, 0.12);
-  --c-inspector-ring:   rgba(0, 180, 216, 0.30);
+  /* Color — Inspector (Cyan & Analysis) */
+  --c-inspector:        #38c8dc;   /* Luminous Cyan — causal trace & analysis */
+  --c-inspector-hover:  #4de0f4;
+  --c-inspector-muted:  rgba(56, 200, 220, 0.15);
+  --c-inspector-ring:   rgba(56, 200, 220, 0.35);
 
-  /* Color — Events */
-  --c-event:            #f4a442;   /* Warm Gold — magic events */
-  --c-event-muted:      rgba(244, 164, 66, 0.14);
-  --c-event-ring:       rgba(244, 164, 66, 0.30);
+  /* Color — Events (Warm Gold) */
+  --c-event:            #f4a442;   /* Warm Gold — magic events & narrative */
+  --c-event-muted:      rgba(244, 164, 66, 0.15);
+  --c-event-ring:       rgba(244, 164, 66, 0.35);
 
-  /* Color — Critical / Error */
-  --c-critical:         #e05252;   /* Red — missing, error, critical */
-  --c-critical-muted:   rgba(224, 82, 82, 0.15);
-  --c-critical-ring:    rgba(224, 82, 82, 0.35);
+  /* Color — Critical / Error (Coral Red) */
+  --c-critical:         #e05252;   /* Vivid Coral Red — missing, alerts, strain */
+  --c-critical-muted:   rgba(224, 82, 82, 0.16);
+  --c-critical-ring:    rgba(224, 82, 82, 0.40);
 
-  /* Color — Gold (decorative dividers, Leo character) */
+  /* Color — Gold (Dividers, Accents, Amber) */
   --c-gold:             #D4AF37;   /* Golden Amber */
   --c-gold-light:       #f4a442;
   --c-gold-line:        rgba(212, 175, 55, 0.30);
 
-  /* Color — Text */
-  --c-text:             #e8e0d0;   /* Ivory 100 — primary text */
-  --c-text-2:           #9a9090;   /* Gray 400 — secondary */
-  --c-text-3:           #5a5858;   /* Slate 500 — tertiary / disabled */
+  /* Color — Success / Active */
+  --c-success:          #3dba7e;
+  --c-success-muted:    rgba(61, 186, 126, 0.15);
 
-  /* Color — Border */
-  --c-border:           #0d1f3c;   /* Subtle dark navy */
-  --c-border-hi:        rgba(215, 198, 167, 0.18);  /* Cream highlight */
-  --c-border-gold:      rgba(212, 175, 55, 0.28);
+  /* Color — Text (High-contrast, eye-friendly) */
+  --c-text:             #f0edf6;   /* Ivory White — primary text (17.5:1 AAA) */
+  --c-text-2:           #a2adcb;   /* Soft Slate Blue — secondary text */
+  --c-text-3:           #626f96;   /* Muted Navy — metadata & disabled */
 
-  /* Character tokens — avatar border, name badge, accent bar only */
+  /* Color — Borders (Subtle Glowing Traces) */
+  --c-border:           rgba(80, 105, 165, 0.22);  /* Luminous navy border */
+  --c-border-hi:        rgba(215, 198, 167, 0.28);  /* Cream/Gold highlight */
+  --c-border-gold:      rgba(212, 175, 55, 0.35);
+
+  /* Character tokens */
   --c-adel:             #0F4C5C;   /* Teal Green */
   --c-leo:              #D4AF37;   /* Golden Amber */
   --c-ria:              #B56576;   /* Dusky Rose */
@@ -65,13 +73,13 @@
   /* Typography */
   --f-serif-en:         'Playfair Display', Georgia, serif;
   --f-serif-ko:         'Noto Serif KR', Georgia, serif;
-  --f-ui:               -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --f-ui:               -apple-system, BlinkMacSystemFont, 'Pretendard', 'Segoe UI', sans-serif;
   --f-mono:             'JetBrains Mono', 'IBM Plex Mono', monospace;
 
   /* Type Scale */
-  --t-xs:   0.625rem;   /* 10px */
-  --t-sm:   0.75rem;    /* 12px */
-  --t-base: 0.875rem;   /* 14px */
+  --t-xs:   0.6875rem;  /* 11px */
+  --t-sm:   0.8125rem;  /* 13px */
+  --t-base: 0.9375rem;  /* 15px */
   --t-md:   1rem;       /* 16px */
   --t-lg:   1.125rem;   /* 18px */
   --t-xl:   1.375rem;   /* 22px */
@@ -87,28 +95,29 @@
   --s-12: 48px;  --s-16: 64px;  --s-20: 80px;  --s-24: 96px;
 
   /* Border Radius */
-  --r-sm:   4px;
-  --r-md:   8px;
-  --r-lg:   12px;
-  --r-xl:   16px;
+  --r-sm:   6px;
+  --r-md:   10px;
+  --r-lg:   14px;
+  --r-xl:   18px;
   --r-full: 9999px;
 
-  /* Shadows */
-  --sh-sm:        0 1px 4px rgba(0,0,0,0.5);
-  --sh-md:        0 4px 20px rgba(0,0,0,0.55);
-  --sh-lg:        0 8px 40px rgba(0,0,0,0.65);
-  --sh-primary:   0 0 24px rgba(0, 180, 216, 0.30);
-  --sh-inspector: 0 0 24px rgba(0, 180, 216, 0.20);
-  --sh-event:     0 0 32px rgba(244, 164, 66, 0.25);
+  /* Shadows (Depth & Magical Glow) */
+  --sh-sm:        0 2px 8px rgba(3, 7, 18, 0.4);
+  --sh-md:        0 8px 24px rgba(3, 7, 18, 0.6);
+  --sh-lg:        0 16px 48px rgba(3, 7, 18, 0.8);
+  --sh-primary:   0 0 24px rgba(109, 90, 230, 0.35);
+  --sh-inspector: 0 0 24px rgba(56, 200, 220, 0.25);
+  --sh-event:     0 0 32px rgba(244, 164, 66, 0.30);
+  --sh-cream:     0 0 20px rgba(215, 198, 167, 0.25);
 
   /* Transitions */
-  --tr-fast:   150ms ease;
-  --tr-normal: 260ms ease;
-  --tr-slow:   420ms ease;
+  --tr-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-normal: 260ms cubic-bezier(0.4, 0, 0.2, 1);
+  --tr-slow:   420ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Layout */
-  --inspector-w: 380px;
-  --topbar-h:    52px;
+  --inspector-w: 390px;
+  --topbar-h:    54px;
 }
 
 /* ── 2. Reset & Base ──────────────────────────────────────── */
@@ -217,40 +226,76 @@ ul, ol { list-style: none; }
   font-size: var(--t-base);
   font-weight: 500;
   letter-spacing: 0.01em;
-  transition: background var(--tr-fast), color var(--tr-fast), border-color var(--tr-fast), box-shadow var(--tr-fast);
+  transition: all var(--tr-fast);
   white-space: nowrap;
+  cursor: pointer;
+  border: 1px solid transparent;
 }
 
 .btn-primary {
-  background: var(--c-primary);
-  color: #021029; /* dark navy on cyan: 7.7:1 AAA */
+  background: linear-gradient(135deg, #7c68f7 0%, #5d48e0 100%);
+  color: #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 14px rgba(109, 90, 230, 0.35);
 }
-.btn-primary:hover { background: var(--c-primary-hover); box-shadow: var(--sh-primary); }
+.btn-primary:hover {
+  background: linear-gradient(135deg, #8d7bf9 0%, #6d58ee 100%);
+  box-shadow: 0 6px 20px rgba(109, 90, 230, 0.5);
+  transform: translateY(-1px);
+}
+
+.btn-cream {
+  background: linear-gradient(135deg, #d7c6a7 0%, #c4b08e 100%);
+  color: #070d1e;
+  font-weight: 600;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 14px rgba(215, 198, 167, 0.3);
+}
+.btn-cream:hover {
+  background: linear-gradient(135deg, #e5d7be 0%, #d0bd9c 100%);
+  box-shadow: 0 6px 20px rgba(215, 198, 167, 0.45);
+  transform: translateY(-1px);
+}
 
 .btn-outline {
-  background: transparent;
+  background: rgba(14, 23, 48, 0.6);
+  backdrop-filter: blur(8px);
   color: var(--c-text);
-  border: 1px solid var(--c-border-hi);
+  border: 1px solid var(--c-border);
 }
-.btn-outline:hover { border-color: var(--c-primary); color: var(--c-primary); }
+.btn-outline:hover {
+  border-color: var(--c-border-hi);
+  background: var(--c-surface-hi);
+  color: #ffffff;
+}
 
 .btn-ghost {
   background: transparent;
   color: var(--c-text-2);
 }
-.btn-ghost:hover { color: var(--c-text); background: var(--c-surface); }
+.btn-ghost:hover {
+  color: var(--c-text);
+  background: var(--c-surface-hi);
+}
 
 .btn-teal {
   background: var(--c-inspector-muted);
   color: var(--c-inspector);
   border: 1px solid var(--c-inspector-ring);
 }
-.btn-teal:hover { background: rgba(0,180,216,0.2); box-shadow: var(--sh-inspector); }
+.btn-teal:hover {
+  background: rgba(56, 200, 220, 0.25);
+  box-shadow: var(--sh-inspector);
+}
 
 .btn-gold {
   background: var(--c-event-muted);
   color: var(--c-event);
   border: 1px solid var(--c-event-ring);
+}
+.btn-gold:hover {
+  background: rgba(244, 164, 66, 0.25);
+  box-shadow: var(--sh-event);
 }
 
 .btn-sm { padding: var(--s-2) var(--s-4); font-size: var(--t-sm); border-radius: var(--r-sm); }
@@ -649,24 +694,28 @@ ul, ol { list-style: none; }
   right: 0;
   width: var(--inspector-w);
   height: 100vh;
-  background: var(--c-surface);
+  background: var(--c-surface-drawer);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border-left: 1px solid var(--c-inspector-ring);
   transform: translateX(100%);
   transition: transform var(--tr-slow);
-  z-index: var(--z-drawer, 20);
+  z-index: var(--z-drawer, 40);
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.7);
 }
 
 .inspector-drawer.open {
   transform: translateX(0);
-  box-shadow: -8px 0 40px rgba(69, 196, 214, 0.08);
+  box-shadow: -12px 0 48px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 200, 220, 0.15);
 }
 
 .inspector-drawer__header {
   padding: var(--s-5) var(--s-6);
   border-bottom: 1px solid var(--c-border);
+  background: rgba(14, 23, 48, 0.6);
   flex-shrink: 0;
   display: flex;
   align-items: center;
@@ -679,6 +728,7 @@ ul, ol { list-style: none; }
   color: var(--c-inspector);
   letter-spacing: 0.12em;
   text-transform: uppercase;
+  font-weight: 600;
 }
 
 .inspector-drawer__close {
@@ -689,13 +739,14 @@ ul, ol { list-style: none; }
   justify-content: center;
   border-radius: var(--r-sm);
   color: var(--c-text-2);
-  transition: background var(--tr-fast), color var(--tr-fast);
+  transition: all var(--tr-fast);
 }
-.inspector-drawer__close:hover { background: var(--c-surface-hi); color: var(--c-text); }
+.inspector-drawer__close:hover { background: var(--c-surface-hi); color: #ffffff; }
 
 .inspector-drawer__event-label {
   padding: var(--s-4) var(--s-6);
   border-bottom: 1px solid var(--c-border);
+  background: rgba(14, 23, 48, 0.3);
   flex-shrink: 0;
 }
 
@@ -739,7 +790,7 @@ ul, ol { list-style: none; }
   bottom: 0;
   width: 1px;
   background: var(--c-inspector-ring);
-  opacity: 0.5;
+  opacity: 0.6;
 }
 
 .inspector-section__label {
@@ -762,6 +813,7 @@ ul, ol { list-style: none; }
   background: var(--c-inspector);
   flex-shrink: 0;
   margin-left: calc(var(--s-5) * -1 - 2px);
+  box-shadow: 0 0 6px var(--c-inspector);
 }
 
 .inspector-section__content {
@@ -771,7 +823,8 @@ ul, ol { list-style: none; }
 }
 
 .inspector-condition {
-  background: var(--c-surface-hi);
+  background: rgba(16, 26, 56, 0.7);
+  border: 1px solid var(--c-border);
   border-radius: var(--r-md);
   padding: var(--s-3) var(--s-4);
   font-family: var(--f-mono);
@@ -789,8 +842,8 @@ ul, ol { list-style: none; }
 
 .inspector-condition__key { color: var(--c-text-2); }
 
-.inspector-condition__val { color: var(--c-text); }
-.inspector-condition__val.exceeded { color: var(--c-critical); font-weight: 500; }
+.inspector-condition__val { color: var(--c-text); font-weight: 500; }
+.inspector-condition__val.exceeded { color: var(--c-critical); font-weight: 600; }
 .inspector-condition__val.met { color: #5CE67A; }
 
 .inspector-arrow {
@@ -815,8 +868,9 @@ ul, ol { list-style: none; }
 .graph-modal {
   position: fixed;
   inset: 0;
-  background: rgba(11, 14, 35, 0.75);
-  backdrop-filter: blur(4px);
+  background: rgba(4, 8, 20, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   z-index: var(--z-modal, 30);
   display: flex;
   align-items: center;
@@ -832,7 +886,9 @@ ul, ol { list-style: none; }
 }
 
 .graph-modal__inner {
-  background: var(--c-surface);
+  background: rgba(11, 18, 40, 0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   border: 1px solid var(--c-border-hi);
   border-radius: var(--r-xl);
   width: 900px;
@@ -840,7 +896,7 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: var(--sh-lg);
+  box-shadow: var(--sh-lg), 0 0 40px rgba(0, 0, 0, 0.6);
 }
 
 .graph-modal__header {
@@ -1070,23 +1126,28 @@ ul, ol { list-style: none; }
 /* ── 18. Persona Card ─────────────────────────────────────── */
 .persona-card {
   width: 200px;
-  background: var(--c-surface);
+  background: rgba(14, 23, 48, 0.75);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid var(--c-border);
   border-radius: var(--r-xl);
   overflow: hidden;
   cursor: pointer;
-  transition: border-color var(--tr-normal), transform var(--tr-normal), box-shadow var(--tr-normal);
+  transition: all var(--tr-normal);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
   flex-shrink: 0;
 }
 
 .persona-card:hover {
-  border-color: rgba(255,255,255,0.2);
-  transform: translateY(-4px);
+  border-color: var(--c-border-hi);
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(215, 198, 167, 0.15);
 }
 
 .persona-card.selected {
   border-color: var(--c-primary);
-  box-shadow: var(--sh-primary);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(109, 90, 230, 0.4);
+  transform: translateY(-4px);
 }
 
 .persona-card__portrait {
@@ -1114,8 +1175,8 @@ ul, ol { list-style: none; }
   content: '';
   position: absolute;
   bottom: 0; left: 0; right: 0;
-  height: 50%;
-  background: linear-gradient(to top, var(--c-surface) 0%, transparent 100%);
+  height: 55%;
+  background: linear-gradient(to top, rgba(14, 23, 48, 0.95) 0%, rgba(14, 23, 48, 0.5) 50%, transparent 100%);
 }
 
 .persona-card__info {

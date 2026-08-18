@@ -277,15 +277,15 @@
     </div>
 
     <!-- 60:30:10 Ratio Guide -->
-    <div style="background:var(--c-surface); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-4); display:flex; gap:var(--s-6); align-items:center;">
+    <div style="background:rgba(14, 23, 48, 0.7); backdrop-filter:blur(12px); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-4); display:flex; gap:var(--s-6); align-items:center;">
       <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-cream); font-weight:600;">60:30:10 RULE</div>
       <div style="flex:1; display:flex; gap:2px; height:12px; border-radius:var(--r-sm); overflow:hidden;">
-        <div style="width:60%; background:#021029; border:1px solid rgba(255,255,255,0.1);" title="60% Surface (#021029 / #3a3939)"></div>
+        <div style="width:60%; background:#070d1e; border:1px solid rgba(255,255,255,0.1);" title="60% Surface (#070d1e / #0e1730)"></div>
         <div style="width:30%; background:#d7c6a7;" title="30% Primary / Brand Cream (#d7c6a7)"></div>
-        <div style="width:10%; background:#00b4d8;" title="10% Interactive Cyan (#00b4d8)"></div>
+        <div style="width:10%; background:#6D5AE6;" title="10% Interactive Violet (#6D5AE6)"></div>
       </div>
       <div style="font-size:var(--t-xs); color:var(--c-text-2);">
-        60% Surface Base &middot; 30% Cream Ivory &middot; 10% Glowing Cyan
+        60% Midnight Navy Surface &middot; 30% Cream Ivory &middot; 10% Arcane Violet
       </div>
     </div>
 
@@ -295,38 +295,38 @@
         <div class="ds-label">Surface & Background</div>
         <div class="color-grid" style="grid-template-columns: repeat(auto-fill, 140px);">
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#021029; border-bottom:1px solid rgba(255,255,255,0.08);"></div>
+            <div class="color-swatch__block" style="background:#070d1e; border-bottom:1px solid rgba(255,255,255,0.08);"></div>
             <div class="color-swatch__info">
               <div class="color-swatch__name">--c-bg</div>
-              <div class="color-swatch__hex">#021029 · Deep Navy</div>
+              <div class="color-swatch__hex">#070d1e · Midnight Navy</div>
             </div>
           </div>
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#3a3939;"></div>
+            <div class="color-swatch__block" style="background:#0e1730;"></div>
             <div class="color-swatch__info">
               <div class="color-swatch__name">--c-surface</div>
-              <div class="color-swatch__hex">#3a3939 · Muted Slate</div>
+              <div class="color-swatch__hex">#0e1730 · Rich Navy</div>
             </div>
           </div>
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#2a2929;"></div>
+            <div class="color-swatch__block" style="background:#162347;"></div>
             <div class="color-swatch__info">
               <div class="color-swatch__name">--c-surface-hi</div>
-              <div class="color-swatch__hex">#2a2929 · Overlay</div>
+              <div class="color-swatch__hex">#162347 · Elevated Navy</div>
             </div>
           </div>
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#1f4e5a;"></div>
+            <div class="color-swatch__block" style="background:rgba(10, 17, 38, 0.82);"></div>
             <div class="color-swatch__info">
-              <div class="color-swatch__name">--c-surface-tint</div>
-              <div class="color-swatch__hex">#1f4e5a · Mystic Teal</div>
+              <div class="color-swatch__name">--c-surface-glass</div>
+              <div class="color-swatch__hex">rgba(10,17,38) · Glass</div>
             </div>
           </div>
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#0d1f3c;"></div>
+            <div class="color-swatch__block" style="background:rgba(80, 105, 165, 0.22);"></div>
             <div class="color-swatch__info">
               <div class="color-swatch__name">--c-border</div>
-              <div class="color-swatch__hex">#0d1f3c · Subtle Navy</div>
+              <div class="color-swatch__hex">rgba(80,105,165) · Border</div>
             </div>
           </div>
         </div>
@@ -344,10 +344,17 @@
             </div>
           </div>
           <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#00b4d8;"></div>
+            <div class="color-swatch__block" style="background:#6D5AE6;"></div>
             <div class="color-swatch__info">
-              <div class="color-swatch__name">--c-primary (Cyan)</div>
-              <div class="color-swatch__hex">#00b4d8 · Interactive</div>
+              <div class="color-swatch__name">--c-primary</div>
+              <div class="color-swatch__hex">#6D5AE6 · Arcane Violet</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#38c8dc;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-inspector</div>
+              <div class="color-swatch__hex">#38c8dc · Cyan Trace</div>
             </div>
           </div>
           <div class="color-swatch">
@@ -368,14 +375,7 @@
             <div class="color-swatch__block" style="background:#e05252;"></div>
             <div class="color-swatch__info">
               <div class="color-swatch__name">--c-critical</div>
-              <div class="color-swatch__hex">#e05252 · Error / Alert</div>
-            </div>
-          </div>
-          <div class="color-swatch">
-            <div class="color-swatch__block" style="background:#6b3fa0;"></div>
-            <div class="color-swatch__info">
-              <div class="color-swatch__name">--c-accent-rare</div>
-              <div class="color-swatch__hex">#6b3fa0 · Event Badge</div>
+              <div class="color-swatch__hex">#e05252 · Alert / Missing</div>
             </div>
           </div>
           <div class="color-swatch">
