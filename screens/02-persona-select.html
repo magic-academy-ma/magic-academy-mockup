@@ -234,9 +234,9 @@
     <div class="card-row">
 
       <!-- Adel -->
-      <div class="persona-card" data-id="adel" onclick="selectPersona(this, 'Adel', 'ISTJ', '방어 마법', 0, 0)">
-        <div class="persona-card__portrait char-adel"
-             style="background-image: url('../assets/character.png');"></div>
+      <div class="persona-card" data-id="adel" onclick="selectPersona(this, 'Adel', 'ISTJ', '방어 마법', '../assets/character/Adel_ISTJ.png')">
+        <div class="persona-card__portrait"
+             style="background-image: url('../assets/character/Adel_ISTJ.png'); background-size: cover; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Adel</div>
           <div class="persona-card__mbti">ISTJ</div>
@@ -250,9 +250,9 @@
       </div>
 
       <!-- Leo -->
-      <div class="persona-card selected" data-id="leo" onclick="selectPersona(this, 'Leo', 'ESTP', '마법 생물', -44, 0)">
-        <div class="persona-card__portrait char-leo"
-             style="background-image: url('../assets/character.png');"></div>
+      <div class="persona-card selected" data-id="leo" onclick="selectPersona(this, 'Leo', 'ESTP', '마법 생물', '../assets/character/Leo_ESTP.png')">
+        <div class="persona-card__portrait"
+             style="background-image: url('../assets/character/Leo_ESTP.png'); background-size: cover; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Leo</div>
           <div class="persona-card__mbti">ESTP</div>
@@ -266,9 +266,9 @@
       </div>
 
       <!-- Ria -->
-      <div class="persona-card" data-id="ria" onclick="selectPersona(this, 'Ria', 'INFP', '고대 마법', -88, 0)">
-        <div class="persona-card__portrait char-ria"
-             style="background-image: url('../assets/character.png');"></div>
+      <div class="persona-card" data-id="ria" onclick="selectPersona(this, 'Ria', 'INFP', '고대 마법', '../assets/character/Ria_INFP.png')">
+        <div class="persona-card__portrait"
+             style="background-image: url('../assets/character/Ria_INFP.png'); background-size: cover; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Ria</div>
           <div class="persona-card__mbti">INFP</div>
@@ -282,9 +282,9 @@
       </div>
 
       <!-- Kai -->
-      <div class="persona-card" data-id="kai" onclick="selectPersona(this, 'Kai', 'ENTJ', '마법 도구 제작', 0, -249)">
-        <div class="persona-card__portrait char-kai"
-             style="background-image: url('../assets/character.png'); background-size:392px auto; background-position:0 -196px;"></div>
+      <div class="persona-card" data-id="kai" onclick="selectPersona(this, 'Kai', 'ENTJ', '마법 도구 제작', '../assets/character/Kai_ENTJ.png')">
+        <div class="persona-card__portrait"
+             style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size: cover; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Kai</div>
           <div class="persona-card__mbti">ENTJ</div>
@@ -298,76 +298,58 @@
       </div>
 
       <!-- Sera -->
-      <div class="persona-card" data-id="sera" onclick="selectPersona(this, 'Sera', 'ESFJ', '마법약', -196, -196)">
-        <div class="persona-card__portrait char-sera"
-             style="background-image: url('../assets/character.png'); background-size:392px auto; background-position:-196px -196px;"></div>
+      <div class="persona-card" data-id="sera" onclick="selectPersona(this, 'Sera', 'ESFJ', '약초학 & 치유', '../assets/character/Sera_ESFJ.png')">
+        <div class="persona-card__portrait"
+             style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size: cover; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Sera</div>
           <div class="persona-card__mbti">ESFJ</div>
-          <div class="persona-card__major">마법약</div>
+          <div class="persona-card__major">약초학 & 치유</div>
           <div class="persona-traits">
             <span class="trait-tag">사교적</span>
-            <span class="trait-tag">외향</span>
-            <span class="trait-tag">따뜻함</span>
+            <span class="trait-tag">친화력</span>
+            <span class="trait-tag">조화</span>
           </div>
         </div>
       </div>
 
-    </div><!-- end card-row -->
-  </div><!-- end page-body -->
+    </div>
+  </div>
 
-  <!-- Footer -->
+  <!-- Footer with Selected Summary -->
   <div class="page-footer">
     <div class="selected-summary visible" id="selected-summary">
-      <div class="selected-summary__portrait char-leo"
-           style="background-image: url('../assets/character.png'); background-position: -32px -6px;"
-           id="summary-portrait"></div>
+      <div class="selected-summary__portrait" id="summary-portrait" style="background-image: url('../assets/character/Leo_ESTP.png'); background-size: cover; background-position: center top;"></div>
       <div>
         <div class="selected-summary__name" id="summary-name">Leo</div>
-        <div class="selected-summary__mbti" id="summary-mbti">ESTP · 마법 생물</div>
+        <div class="selected-summary__mbti" id="summary-mbti">ESTP &middot; 마법 생물</div>
       </div>
     </div>
 
-    <div style="display:flex; gap:var(--s-3); align-items:center;">
-      <span style="font-size:var(--t-sm); color:var(--c-text-2);">선택 후 초기 설정을 구성합니다</span>
-      <button id="btn-next" class="btn btn-primary"
-              onclick="window.location.href='06-persona-setup.html'">
-        설정으로 →
-      </button>
-    </div>
+    <button class="btn btn-primary" id="confirm-btn" onclick="startWithPersona()" style="padding: var(--s-3) var(--s-8);">
+      이 Persona로 시작하기 &rarr;
+    </button>
   </div>
 
 </div>
 
 <script src="../js/magic-academy.js"></script>
 <script>
-  const charData = {
-    adel: { mbti: 'ISTJ', major: '방어 마법', portraitX: '0px', portraitY: '-6px', size: '96px 120px' },
-    leo:  { mbti: 'ESTP', major: '마법 생물', portraitX: '-32px', portraitY: '-6px', size: '96px 120px' },
-    ria:  { mbti: 'INFP', major: '고대 마법', portraitX: '-64px', portraitY: '-6px', size: '96px 120px' },
-    kai:  { mbti: 'ENTJ', major: '마법 도구 제작', portraitX: '0px', portraitY: '-40px', size: '64px 80px' },
-    sera: { mbti: 'ESFJ', major: '마법약', portraitX: '-32px', portraitY: '-40px', size: '64px 80px' },
-  };
+  let currentSelectedId = 'leo';
 
-  function selectPersona(card, name, mbti, major) {
+  function selectPersona(el, name, mbti, major, imgPath) {
     document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
-    card.classList.add('selected');
+    el.classList.add('selected');
+    currentSelectedId = el.dataset.id;
 
-    const id = card.dataset.id;
-    const data = charData[id];
-    const summary = document.getElementById('selected-summary');
-    const portrait = document.getElementById('summary-portrait');
-    const nameEl = document.getElementById('summary-name');
-    const mbtiEl = document.getElementById('summary-mbti');
+    document.getElementById('summary-name').textContent = name;
+    document.getElementById('summary-mbti').textContent = `${mbti} · ${major}`;
+    document.getElementById('summary-portrait').style.backgroundImage = `url('${imgPath}')`;
+    document.getElementById('selected-summary').classList.add('visible');
+  }
 
-    portrait.className = 'selected-summary__portrait char-' + id;
-    portrait.style.backgroundImage = "url('../assets/character.png')";
-    portrait.style.backgroundSize = data.size;
-    portrait.style.backgroundPosition = data.portraitX + ' ' + data.portraitY;
-
-    nameEl.textContent = name;
-    mbtiEl.textContent = data.mbti + ' · ' + data.major;
-    summary.classList.add('visible');
+  function startWithPersona() {
+    window.location.href = `06-persona-setup.html?char=${currentSelectedId}`;
   }
 </script>
 </body>

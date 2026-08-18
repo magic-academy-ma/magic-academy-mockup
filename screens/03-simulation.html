@@ -117,16 +117,17 @@
     .agent-list-item.missing { opacity: 0.85; }
     .agent-list-portrait {
       width: 32px; height: 32px; border-radius: 50%;
-      background-image: url('../assets/character.png');
       background-repeat: no-repeat; flex-shrink: 0;
       border: 1.5px solid var(--c-border);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+      background-size: cover;
+      background-position: center top;
     }
-    .char-adel-sm { background-size: 96px 120px; background-position: 0 -6px; }
-    .char-leo-sm  { background-size: 96px 120px; background-position: -32px -6px; }
-    .char-ria-sm  { background-size: 96px 120px; background-position: -64px -6px; }
-    .char-kai-sm  { background-size: 64px 80px;  background-position: 0 -40px; }
-    .char-sera-sm { background-size: 64px 80px;  background-position: -32px -40px; }
+    .char-adel-sm { background-image: url('../assets/character/Adel_ISTJ.png'); }
+    .char-leo-sm  { background-image: url('../assets/character/Leo_ESTP.png'); }
+    .char-ria-sm  { background-image: url('../assets/character/Ria_INFP.png'); }
+    .char-kai-sm  { background-image: url('../assets/character/Kai_ENTJ.png'); }
+    .char-sera-sm { background-image: url('../assets/character/Sera_ESFJ.png'); }
     .agent-list-info { flex: 1; min-width: 0; }
     .agent-list-name {
       display: flex; align-items: center; gap: var(--s-2);

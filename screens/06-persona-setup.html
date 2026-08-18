@@ -21,15 +21,15 @@
     }
     .setup-portrait-panel__bg {
       position: absolute; inset: 0;
-      background-image: url('../assets/character.png');
-      background-size: 640px auto;
-      background-position: -48px 0;
+      background-image: url('../assets/character/Leo_ESTP.png');
+      background-size: cover;
+      background-position: center top;
       background-repeat: no-repeat;
-      opacity: 0.9;
+      opacity: 0.95;
     }
     .setup-portrait-panel__overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 35%, rgba(6, 11, 26, 0.8) 70%, #060b1a 95%);
+      background: linear-gradient(to bottom, transparent 30%, rgba(7, 17, 40, 0.75) 65%, #071128 95%);
     }
     .setup-portrait-panel__info {
       position: absolute;
@@ -334,7 +334,29 @@
 </div>
 <script src="../js/magic-academy.js"></script>
 <script>
-  /* MBTI → Big Five 기본값 (mbti-big-five-v0.1 기준 모의값) */
+  const CHAR_DATA = {
+    adel: { name: 'Adel', mbti: 'ISTJ', major: '방어 마법', interest: '규율', img: '../assets/character/Adel_ISTJ.png', desc: '원칙과 질서를 중시하는 수호계 마법학도. 마법 도서관의 규율을 철저히 지킵니다.' },
+    leo: { name: 'Leo', mbti: 'ESTP', major: '마법공학과', interest: '마법 생물', img: '../assets/character/Leo_ESTP.png', desc: '충동적이고 실용적인 Leo는 규칙보다 경험을 중시한다. 마법 생물과의 교감에 뛰어나며 위험한 상황도 즐긴다.' },
+    ria: { name: 'Ria', mbti: 'INFP', major: '고대 마법', interest: '룬 문자', img: '../assets/character/Ria_INFP.png', desc: '직관과 감수성이 풍부한 몽상가. 잊혀진 고대 룬 문자의 속삭임을 듣습니다.' },
+    kai: { name: 'Kai', mbti: 'ENTJ', major: '마법 도구 제작', interest: '아티팩트', img: '../assets/character/Kai_ENTJ.png', desc: '냉철한 전략가이자 아티팩트 제작자. 마법 사회의 효율적 구조를 설계하고자 합니다.' },
+    sera: { name: 'Sera', mbti: 'ESFJ', major: '약초학 & 치유', interest: '중재', img: '../assets/character/Sera_ESFJ.png', desc: '온화하고 친화력 있는 치유 마법사. 학생들 사이의 갈등을 중재하고 조화를 추구합니다.' }
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const charParam = urlParams.get('char') || 'leo';
+  const charInfo = CHAR_DATA[charParam] || CHAR_DATA.leo;
+
+  document.querySelector('.setup-portrait-panel__bg').style.backgroundImage = `url('${charInfo.img}')`;
+  document.querySelector('.setup-portrait-panel__name').textContent = charInfo.name;
+  document.querySelector('.setup-portrait-panel__sub').textContent = `${charInfo.mbti} · ${charInfo.major} · 2학년`;
+  document.querySelector('.setup-portrait-panel__desc').textContent = charInfo.desc;
+  document.getElementById('field-mbti').textContent = charInfo.mbti;
+  document.getElementById('field-interest').textContent = charInfo.interest;
+  document.getElementById('nav-char-name').textContent = '— ' + charInfo.name;
+  document.getElementById('field-major').textContent = charInfo.major;
+  document.getElementById('field-interest-val').textContent = charInfo.interest;
+
+  /* MBTI → Big Five 기본값 */
   const MBTI_DEFAULTS = {
     ISTJ: { openness: -20, conscientiousness: 35, extraversion: -25, agreeableness: 10, stability: 25 },
     ESTP: { openness:  15, conscientiousness:-20, extraversion:  30, agreeableness:-10, stability: 20 },
@@ -356,6 +378,16 @@
       if (v) v.textContent = fmt(d[f]);
     });
   }
+
+  // Set initial MBTI button selection
+  document.querySelectorAll('.mbti-btn').forEach(btn => {
+    if (btn.dataset.mbti === charInfo.mbti) {
+      btn.classList.add('selected');
+      applyDefaults(charInfo.mbti);
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
 
   document.querySelectorAll('.mbti-btn').forEach(btn => {
     btn.addEventListener('click', () => {
