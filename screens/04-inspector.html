@@ -23,7 +23,7 @@
     }
     .bg-overlay {
       position: absolute; inset: 0;
-      background: radial-gradient(circle at 50% 20%, rgba(11, 24, 56, 0.75) 0%, rgba(6, 13, 32, 0.97) 85%);
+      background: radial-gradient(circle at 40% 20%, rgba(11, 24, 56, 0.78) 0%, rgba(6, 13, 32, 0.98) 85%);
       pointer-events: none;
     }
 
@@ -70,213 +70,290 @@
     }
     .topbar__right { display: flex; align-items: center; gap: var(--s-3); }
 
-    /* ── Inspector 2-Layer Container ── */
-    .inspector-container {
+    /* ── Main Layout: Cinematic Forensic 2-Column (360px : 1fr) ── */
+    .forensic-layout {
       flex: 1;
-      padding: var(--s-5) var(--s-7);
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: var(--s-4);
+      padding: var(--s-4) var(--s-6);
       z-index: 10;
       height: calc(900px - 52px);
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-4);
-      overflow-y: auto;
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
-    /* ── LAYER 1: Narrative Summary (1-Sentence Human Friendly) ── */
-    .layer-summary-card {
+    /* ── LEFT COLUMN: Persona & Human-Friendly Story ── */
+    .forensic-left {
       background: rgba(11, 24, 56, 0.88);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border: 1px solid var(--c-border);
       border-radius: var(--r-lg);
-      padding: var(--s-5) var(--s-6);
-      box-shadow: 0 12px 36px rgba(0, 0, 0, 0.45);
+      padding: var(--s-4) var(--s-5);
       display: flex;
       flex-direction: column;
       gap: var(--s-3);
-      position: relative;
-      flex-shrink: 0;
+      box-shadow: 0 12px 40px rgba(0, 0, 0, 0.45);
+      overflow: hidden;
+      height: 100%;
     }
-    .summary-header {
+
+    .event-meta-tag {
       display: flex;
       align-items: center;
       justify-content: space-between;
+      border-bottom: 1px solid var(--c-border);
+      padding-bottom: var(--s-2);
     }
-    .summary-event-tag {
-      display: flex;
-      align-items: center;
-      gap: var(--s-2);
+    .event-tag-title {
       font-family: var(--f-mono);
       font-size: 11px;
       color: var(--c-cream);
       font-weight: 600;
       letter-spacing: 0.1em;
       text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .summary-event-tag::before {
+    .event-tag-title::before {
       content: '●';
       color: var(--c-critical);
-      font-size: 12px;
+      font-size: 10px;
       animation: ring-pulse-critical 1.5s infinite;
     }
 
-    .summary-title-row {
+    /* Persona Portrait & Intro Card */
+    .persona-card {
       display: flex;
+      gap: var(--s-3);
+      padding: var(--s-3);
+      background: rgba(6, 13, 32, 0.65);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
       align-items: center;
-      gap: var(--s-4);
-      margin-top: 2px;
     }
-    .summary-title {
+    .persona-card__portrait {
+      width: 58px;
+      height: 74px;
+      border-radius: var(--r-sm);
+      background-image: url('../assets/character/Adel_ISTJ.png');
+      background-size: cover;
+      background-position: center top;
+      border: 1.5px solid var(--c-border-hi);
+      flex-shrink: 0;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+    .persona-card__info { flex: 1; min-width: 0; }
+    .persona-card__name {
       font-family: var(--f-serif-ko);
-      font-size: 26px;
+      font-size: var(--t-lg);
       font-weight: 600;
       color: var(--c-text);
+      display: flex;
+      align-items: center;
+      gap: 6px;
     }
-    .summary-badge-status {
+    .persona-card__status {
       font-family: var(--f-mono);
-      font-size: 11px;
-      padding: 3px 8px;
-      border-radius: var(--r-sm);
+      font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 3px;
       background: var(--c-critical-muted);
       color: var(--c-critical);
       border: 1px solid var(--c-critical-ring);
       font-weight: 600;
     }
-
-    /* 1-Sentence Narrative Summary */
-    .summary-narrative {
-      font-family: var(--f-serif-ko);
-      font-size: var(--t-md);
-      color: var(--c-text);
-      line-height: 1.6;
-      background: rgba(6, 13, 32, 0.6);
-      border: 1px solid rgba(70, 100, 180, 0.2);
-      border-left: 3px solid var(--c-cream);
-      border-radius: var(--r-md);
-      padding: var(--s-3) var(--s-4);
-      margin-top: 2px;
-    }
-
-    /* Quick status chips */
-    .summary-chips {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-      margin-top: 2px;
-    }
-    .summary-chip {
+    .persona-card__mbti {
       font-family: var(--f-mono);
       font-size: 11px;
-      color: var(--c-text-2);
-      background: rgba(6, 13, 32, 0.5);
-      border: 1px solid var(--c-border);
-      padding: 4px 10px;
-      border-radius: var(--r-full);
-      display: flex;
-      align-items: center;
-      gap: 6px;
+      color: var(--c-cream);
+      margin-top: 2px;
     }
-    .summary-chip strong { color: var(--c-text); }
+    .persona-card__major {
+      font-size: 11px;
+      color: var(--c-text-2);
+      margin-top: 2px;
+    }
 
-    /* ── Layer Toggle Button ── */
-    .toggle-tech-btn {
-      align-self: flex-start;
-      margin-top: var(--s-2);
-      background: rgba(94, 96, 232, 0.16);
-      border: 1px solid var(--c-primary-ring);
-      color: var(--c-text);
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      padding: 7px 16px;
+    /* 1-Sentence Human Friendly Narrative */
+    .narrative-box {
+      background: rgba(6, 13, 32, 0.65);
+      border: 1px solid rgba(70, 100, 180, 0.25);
+      border-left: 3px solid var(--c-cream);
       border-radius: var(--r-md);
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: var(--s-2);
-      transition: all var(--tr-fast);
+      padding: var(--s-3);
+    }
+    .narrative-box__label {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--c-cream);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
       font-weight: 600;
     }
-    .toggle-tech-btn:hover {
-      background: rgba(94, 96, 232, 0.3);
-      border-color: var(--c-primary);
-      box-shadow: 0 0 16px rgba(94, 96, 232, 0.35);
-    }
-    .toggle-tech-btn svg {
-      transition: transform var(--tr-normal);
-    }
-    .toggle-tech-btn.expanded svg {
-      transform: rotate(180deg);
+    .narrative-box__text {
+      font-family: var(--f-serif-ko);
+      font-size: 13px;
+      color: var(--c-text);
+      line-height: 1.55;
     }
 
-    /* ── LAYER 2: Deep Technical Fields (Collapsible / Expandable) ── */
-    .layer-tech-panel {
-      display: none;
+    /* Stress Gauge */
+    .stress-box {
+      background: rgba(6, 13, 32, 0.65);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+    }
+    .stress-box__header {
+      display: flex;
+      justify-content: space-between;
+      font-family: var(--f-mono);
+      font-size: 11px;
+      margin-bottom: 6px;
+    }
+    .stress-box__track {
+      height: 6px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: var(--r-full);
+      position: relative;
+    }
+    .stress-box__fill {
+      height: 100%;
+      width: 92%;
+      border-radius: var(--r-full);
+      background: linear-gradient(90deg, #5e60e8, var(--c-critical));
+      box-shadow: 0 0 10px rgba(219, 76, 76, 0.5);
+    }
+
+    /* Runtime Return Forecast */
+    .runtime-forecast {
+      margin-top: auto;
+      background: rgba(94, 96, 232, 0.12);
+      border: 1px solid var(--c-primary-ring);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .runtime-forecast__label {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--c-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    .runtime-forecast__val {
+      font-size: var(--t-xs);
+      color: var(--c-text);
+      font-weight: 500;
+    }
+
+    /* ── RIGHT COLUMN: 4-Stage Causal Pipeline (2x2 Grid) ── */
+    .forensic-right {
+      display: flex;
       flex-direction: column;
       gap: var(--s-3);
-      animation: float-up 350ms cubic-bezier(0.16, 1, 0.3, 1) both;
-    }
-    .layer-tech-panel.active {
-      display: flex;
+      height: 100%;
+      overflow: hidden;
     }
 
-    /* 4 Technical Columns Grid */
-    .tech-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: var(--s-3);
+    .pipeline-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(11, 24, 56, 0.85);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: 8px var(--s-4);
+      flex-shrink: 0;
     }
-    .tech-col {
+    .pipeline-header__title {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      color: var(--c-cream);
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* 2x2 Causal Grid */
+    .causal-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: var(--s-3);
+      min-height: 0;
+    }
+
+    .causal-card {
       background: rgba(11, 24, 56, 0.85);
       backdrop-filter: blur(16px);
       border: 1px solid var(--c-border);
       border-radius: var(--r-lg);
+      padding: var(--s-4);
       display: flex;
       flex-direction: column;
-      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      gap: var(--s-2);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
       overflow: hidden;
+      position: relative;
     }
-    .tech-col__header {
-      padding: var(--s-3) var(--s-4);
-      border-bottom: 1px solid var(--c-border);
-      background: rgba(6, 13, 32, 0.7);
+    .causal-card:hover {
+      border-color: rgba(70, 100, 180, 0.45);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45), 0 0 16px rgba(52, 179, 199, 0.12);
+    }
+
+    .causal-card__header {
       display: flex;
       align-items: center;
-      gap: var(--s-2);
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(70, 100, 180, 0.2);
+      padding-bottom: 6px;
       flex-shrink: 0;
     }
-    .step-badge {
+    .causal-card__badge {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--f-mono);
+      font-size: 11px;
+      color: var(--c-cream);
+      font-weight: 600;
+      letter-spacing: 0.06em;
+    }
+    .causal-step-num {
       width: 18px; height: 18px; border-radius: 50%;
       background: var(--c-inspector); color: #060d20;
       font-family: var(--f-mono); font-size: 10px; font-weight: 700;
       display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-    .tech-col__title {
-      font-family: var(--f-mono); font-size: 11px;
-      color: var(--c-cream); letter-spacing: 0.08em; text-transform: uppercase; font-weight: 600;
-    }
-    .tech-col__body {
-      flex: 1;
-      padding: var(--s-3) var(--s-4);
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-3);
     }
 
-    .tech-card {
-      background: rgba(6, 13, 32, 0.55);
+    .causal-card__body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-2);
+      font-size: var(--t-xs);
+      overflow: hidden;
+    }
+
+    /* Sub Data Cards */
+    .data-pill {
+      background: rgba(6, 13, 32, 0.6);
       border: 1px solid rgba(70, 100, 180, 0.2);
       border-radius: var(--r-md);
-      padding: var(--s-3);
-      font-size: var(--t-xs);
-    }
-    .tech-card-title {
-      font-family: var(--f-mono); font-size: 10px;
-      color: var(--c-text-3); letter-spacing: 0.08em; text-transform: uppercase;
-      margin-bottom: 6px; display: flex; justify-content: space-between;
-    }
-    .tech-card-val {
-      color: var(--c-text);
+      padding: var(--s-2) var(--s-3);
+      font-size: 11px;
       line-height: 1.5;
     }
   </style>
@@ -298,7 +375,7 @@
       <div class="topbar__brand">Magic Academy</div>
       <div class="inspector-badge">
         <div class="inspector-badge-dot"></div>
-        Inspector &middot; 2-Layer Causal View
+        Causal Forensic Observatory
       </div>
     </div>
 
@@ -314,187 +391,191 @@
     </div>
   </div>
 
-  <!-- Main Container -->
-  <div class="inspector-container">
+  <!-- Main Forensic 2-Column View -->
+  <div class="forensic-layout">
 
-    <!-- ── LAYER 1: 1-Sentence Human Narrative Summary ── -->
-    <div class="layer-summary-card">
-      <div class="summary-header">
-        <div class="summary-event-tag">
-          MAGIC EVENT &middot; TICK 10 &middot; 도서관 3층 결계 구역
+    <!-- ── LEFT COLUMN (360px): Persona & Narrative ── -->
+    <div class="forensic-left">
+      <div class="event-meta-tag">
+        <div class="event-tag-title">
+          MAGIC EVENT #04
         </div>
-        <span class="summary-badge-status">CRITICAL INCIDENT</span>
+        <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);">TICK 10</span>
       </div>
 
-      <div class="summary-title-row">
-        <div style="width:44px; height:54px; border-radius:var(--r-sm); background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi);"></div>
-        <div>
-          <div class="summary-title">학생 실종 (Adel)</div>
-          <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream); margin-top:2px;">ISTJ &middot; 방어마법학과 2학년</div>
-        </div>
-      </div>
-
-      <!-- 1-Sentence Narrative Summary -->
-      <div class="summary-narrative">
-        &ldquo;Adel의 스트레스가 10틱 연속 한계치(90)를 초과하고 누적 피로가 극에 달해 도서관 3층 결계 구역에서 자리를 피했습니다.&rdquo;
-      </div>
-
-      <!-- Quick Context Chips -->
-      <div class="summary-chips">
-        <div class="summary-chip">
-          <span>스트레스:</span> <strong style="color:var(--c-critical);">92 / 90 (임계 초과)</strong>
-        </div>
-        <div class="summary-chip">
-          <span>피로도:</span> <strong>84 / 80</strong>
-        </div>
-        <div class="summary-chip">
-          <span>런타임 상태:</span> <strong style="color:var(--c-critical);">MISSING (큐 제외)</strong>
-        </div>
-        <div class="summary-chip">
-          <span>예상 복귀:</span> <strong style="color:var(--c-success);">TICK 14 (회복 시)</strong>
+      <!-- Target Persona Card -->
+      <div class="persona-card">
+        <div class="persona-card__portrait"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">
+            Adel
+            <span class="persona-card__status">MISSING</span>
+          </div>
+          <div class="persona-card__mbti">ISTJ &middot; 2학년</div>
+          <div class="persona-card__major">방어마법학과</div>
         </div>
       </div>
 
-      <!-- Layer 2 Progressive Disclosure Toggle Button -->
-      <button class="toggle-tech-btn expanded" id="toggle-btn" onclick="toggleTechLayer()">
-        <span id="toggle-btn-text">원인 상세 보기 (Technical Fields)</span>
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5L6 8L9.5 4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </button>
+      <!-- 1-Sentence Human Narrative -->
+      <div class="narrative-box">
+        <div class="narrative-box__label">서사 요약 (Narrative)</div>
+        <div class="narrative-box__text">
+          &ldquo;Adel의 스트레스가 10틱 연속 한계치(90)를 초과하고 누적 피로가 극에 달해 도서관 3층 결계 구역에서 자리를 피했습니다.&rdquo;
+        </div>
+      </div>
+
+      <!-- Stress Gauge -->
+      <div class="stress-box">
+        <div class="stress-box__header">
+          <span style="color:var(--c-text-2);">스트레스 상태</span>
+          <span style="color:var(--c-critical); font-weight:700;">92 / 90 (임계 초과)</span>
+        </div>
+        <div class="stress-box__track">
+          <div class="stress-box__fill"></div>
+        </div>
+        <div style="font-size:10px; color:var(--c-text-3); margin-top:6px; display:flex; justify-content:space-between;">
+          <span>정상 0~89</span>
+          <span style="color:var(--c-critical);">임계치 90 돌파</span>
+        </div>
+      </div>
+
+      <!-- Runtime Return Forecast -->
+      <div class="runtime-forecast">
+        <div class="runtime-forecast__label">RUNTIME COMMIT EFFECT</div>
+        <div class="runtime-forecast__val">상태: MISSING (시뮬레이션 큐 일시 제외)</div>
+        <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">
+          예상 복귀: <strong>TICK 14</strong> (스트레스 &lt; 60 회복 시)
+        </div>
+      </div>
     </div>
 
-    <!-- ── LAYER 2: Deep Technical Fields (Collapsible) ── -->
-    <div class="layer-tech-panel active" id="tech-panel">
-      <div class="tech-grid">
+    <!-- ── RIGHT COLUMN: 4-Stage Causal Pipeline (2x2 Grid) ── -->
+    <div class="forensic-right">
 
-        <!-- Column 1: Condition Check -->
-        <div class="tech-col">
-          <div class="tech-col__header">
-            <span class="step-badge">1</span>
-            <span class="tech-col__title">1. CONDITION</span>
-          </div>
-          <div class="tech-col__body">
-            <div class="tech-card" style="border-color:var(--c-critical-ring); background:rgba(219,76,76,0.08);">
-              <div class="tech-card-title">
-                <span>임계 조건 평가</span>
-                <span style="color:var(--c-critical);">MET</span>
-              </div>
-              <div class="tech-card-val" style="font-family:var(--f-mono); font-size:11px;">
-                • agent = <strong>Adel (s-1)</strong><br>
-                • stress = <strong>92 / 90 (TRUE)</strong><br>
-                • fatigue = <strong>84 / 80 (TRUE)</strong><br>
-                • recent_conflicts = <strong>3건 (TRUE)</strong>
-              </div>
+      <div class="pipeline-header">
+        <div class="pipeline-header__title">
+          <span>인과 추론 파이프라인 (Causal Inference Pipeline)</span>
+        </div>
+        <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-inspector);">
+          Deterministic &middot; Verified
+        </span>
+      </div>
+
+      <!-- 2x2 Causal Pipeline Grid -->
+      <div class="causal-grid">
+
+        <!-- Stage 1: Condition Check -->
+        <div class="causal-card">
+          <div class="causal-card__header">
+            <div class="causal-card__badge">
+              <span class="causal-step-num">1</span>
+              <span>Condition Check</span>
             </div>
-
-            <div class="tech-card">
-              <div class="tech-card-title">Trigger Reason</div>
-              <div class="tech-card-val" style="color:var(--c-text-2);">
-                스트레스 및 피로도 누적으로 방어 결계 통제력 상실 감지.
+            <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-critical); font-weight:700;">MET</span>
+          </div>
+          <div class="causal-card__body">
+            <div class="data-pill" style="border-color:var(--c-critical-ring); background:rgba(219,76,76,0.08);">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-critical); font-weight:600; margin-bottom:2px;">[ 임계 조건 검사 ]</div>
+              • <code>stress &gt;= 90</code>: <strong>92 (TRUE)</strong><br>
+              • <code>fatigue &gt;= 80</code>: <strong>84 (TRUE)</strong><br>
+              • <code>recent_conflicts</code>: <strong>3건 (TRUE)</strong>
+            </div>
+            <div class="data-pill" style="margin-top:auto;">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);">발생 판정</div>
+              <div style="color:var(--c-text-2); margin-top:2px;">
+                스트레스 누적으로 방어 결계 통제력 상실 감지.
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Column 2: Memory Retrieval (pgvector) -->
-        <div class="tech-col">
-          <div class="tech-col__header">
-            <span class="step-badge">2</span>
-            <span class="tech-col__title">2. MEMORY RETRIEVAL</span>
+        <!-- Stage 2: Memory Retrieval (pgvector) -->
+        <div class="causal-card">
+          <div class="causal-card__header">
+            <div class="causal-card__badge">
+              <span class="causal-step-num">2</span>
+              <span>Memory Retrieval</span>
+            </div>
+            <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector);">pgvector 1536d</span>
           </div>
-          <div class="tech-col__body">
-            <div class="tech-card">
-              <div class="tech-card-title">
-                <span>mem_01j5a (Tick 8)</span>
-                <span style="color:var(--c-inspector);">유사도 0.892</span>
+          <div class="causal-card__body">
+            <div class="data-pill">
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600;">
+                <span>mem_01j5a87b (관찰)</span>
+                <span>유사도 0.892</span>
               </div>
-              <div class="tech-card-val">
+              <div style="color:var(--c-text); margin-top:2px;">
                 "도서관 금서 구역 결계 균열 목격. 방어 마법진 순환 이상."
               </div>
             </div>
-
-            <div class="tech-card">
-              <div class="tech-card-title">
-                <span>mem_01j5b (Tick 9)</span>
-                <span style="color:var(--c-cream);">유사도 0.841</span>
+            <div class="data-pill" style="margin-top:auto;">
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600;">
+                <span>mem_01j5a99c (대화)</span>
+                <span>유사도 0.841</span>
               </div>
-              <div class="tech-card-val">
-                "Leo가 마법 생물을 유인해 심한 말다툼 벌임."
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Column 3: Policy & Rule Engine -->
-        <div class="tech-col">
-          <div class="tech-col__header">
-            <span class="step-badge">3</span>
-            <span class="tech-col__title">3. POLICY EVALUATION</span>
-          </div>
-          <div class="tech-col__body">
-            <div class="tech-card">
-              <div class="tech-card-title">Policy Engine Contract</div>
-              <div class="tech-card-val" style="font-family:var(--f-mono); font-size:11px;">
-                • Version: <strong>policy-mvp-0.1</strong><br>
-                • Rule: <strong>RULE_STUDENT_MISSING</strong><br>
-                • Priority: <strong>CRITICAL (P1)</strong><br>
-                • Conflict: <strong>0 (단독 승인)</strong>
-              </div>
-            </div>
-
-            <div class="tech-card" style="background:rgba(212,178,111,0.1); border-color:var(--c-cream-ring);">
-              <div class="tech-card-title" style="color:var(--c-cream);">LLM Decision Narrative</div>
-              <div class="tech-card-val" style="font-family:var(--f-serif-ko); font-size:11px; line-height:1.45;">
-                "규율을 지키지 못했다는 자책감과 피로로 잠시 숨고 싶다."
+              <div style="color:var(--c-text); margin-top:2px;">
+                "Leo가 마법 생물을 유인하려 해 심한 말다툼 벌임."
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Column 4: Runtime Effect & Commit -->
-        <div class="tech-col">
-          <div class="tech-col__header">
-            <span class="step-badge">4</span>
-            <span class="tech-col__title">4. RUNTIME EFFECT</span>
+        <!-- Stage 3: Policy Evaluation & Narrative -->
+        <div class="causal-card">
+          <div class="causal-card__header">
+            <div class="causal-card__badge">
+              <span class="causal-step-num">3</span>
+              <span>Policy Evaluation</span>
+            </div>
+            <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-success);">APPROVED</span>
           </div>
-          <div class="tech-col__body">
-            <div class="tech-card" style="border-color:var(--c-critical-ring); background:rgba(219,76,76,0.1);">
-              <div class="tech-card-title" style="color:var(--c-critical);">State Commit</div>
-              <div class="tech-card-val" style="font-family:var(--f-mono); font-size:11px;">
-                Adel.status = <strong>MISSING</strong><br>
-                Adel.is_active = <strong>False</strong><br>
-                duration = <strong>4 TICKS</strong>
+          <div class="causal-card__body">
+            <div class="data-pill">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600;">[ Rule Engine Contract ]</div>
+              • Policy: <code>policy-mvp-0.1</code><br>
+              • Rule: <code>RULE_STUDENT_MISSING</code> (Priority P1)<br>
+              • Contention: <strong>0 (단독 실행 승인)</strong>
+            </div>
+            <div class="data-pill" style="margin-top:auto; background:rgba(212,178,111,0.1); border-color:var(--c-cream-ring);">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">LLM Decision 서사</div>
+              <div style="font-family:var(--f-serif-ko); font-size:11px; color:var(--c-text); margin-top:2px; line-height:1.4;">
+                &ldquo;규율을 지키지 못했다는 자책감과 피로로 잠시 숨고 싶다.&rdquo;
               </div>
             </div>
+          </div>
+        </div>
 
-            <div class="tech-card" style="border-color:var(--c-success); background:rgba(56,178,119,0.1);">
-              <div class="tech-card-title" style="color:var(--c-success);">복귀 시퀀스</div>
-              <div class="tech-card-val" style="font-size:11px;">
-                TICK 14 도달 시 <code>STATUS_ENDED</code> 자동 발동 및 ACTIVE 복귀.
+        <!-- Stage 4: Commit & Runtime Effect -->
+        <div class="causal-card">
+          <div class="causal-card__header">
+            <div class="causal-card__badge">
+              <span class="causal-step-num">4</span>
+              <span>Runtime Effect</span>
+            </div>
+            <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">COMMITTED</span>
+          </div>
+          <div class="causal-card__body">
+            <div class="data-pill" style="border-color:var(--c-critical-ring); background:rgba(219,76,76,0.08);">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-critical); font-weight:600;">[ State Commit ]</div>
+              • <code>status</code>: <strong style="color:var(--c-critical);">MISSING</strong> &middot; <code>is_active</code>: <strong>False</strong><br>
+              • <code>inactive_duration</code>: <strong>4 TICKS</strong> (T10~T14 제외)
+            </div>
+            <div class="data-pill" style="margin-top:auto; border-color:var(--c-success); background:rgba(56,178,119,0.08);">
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-success); font-weight:600;">[ 복귀 시퀀스 (Recovery) ]</div>
+              <div style="color:var(--c-text); margin-top:2px;">
+                TICK 14 도달 시 <code>STATUS_ENDED</code> 발동 ➔ ACTIVE 복귀
               </div>
             </div>
           </div>
         </div>
 
       </div>
+
     </div>
 
   </div>
 </div>
 
 <script src="../js/magic-academy.js"></script>
-<script>
-  let isTechExpanded = true;
-
-  function toggleTechLayer() {
-    isTechExpanded = !isTechExpanded;
-    const panel = document.getElementById('tech-panel');
-    const btn = document.getElementById('toggle-btn');
-    const btnText = document.getElementById('toggle-btn-text');
-
-    panel.classList.toggle('active', isTechExpanded);
-    btn.classList.toggle('expanded', isTechExpanded);
-    btnText.textContent = isTechExpanded ? '원인 상세 접기 (Technical Fields)' : '원인 상세 보기 (Technical Fields) ▾';
-  }
-</script>
 </body>
 </html>
