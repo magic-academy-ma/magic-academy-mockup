@@ -363,13 +363,13 @@
     </div>
   </div>
 
-  <!-- ── Left Panel: Agent 목록 (5 Students Only) ── -->
+  <!-- ── Left Panel: Agent 목록 (Students 5 + Professor 1) ── -->
   <div class="sim-left">
     <div class="sim-left__header">
-      <div class="sim-left__count">STUDENTS (5)</div>
+      <div class="sim-left__count">AGENTS (6)</div>
     </div>
     <div class="sim-left__search">
-      <input type="text" placeholder="🔍  학생 검색...">
+      <input type="text" placeholder="🔍  에이전트 검색...">
     </div>
     <div class="sim-left__list">
       <div class="agent-list-item selected" data-agent="leo">
@@ -409,6 +409,14 @@
         <div class="agent-list-info">
           <div class="agent-list-name">Sera</div>
           <div class="agent-list-loc">도서관 · 자습</div>
+        </div>
+        <div class="agent-list-status"></div>
+      </div>
+      <div class="agent-list-item" data-agent="aldric" style="border-top:1px solid rgba(70,100,180,0.18); margin-top:4px; padding-top:8px;">
+        <div class="agent-list-portrait" style="background:#1a2850; display:flex; align-items:center; justify-content:center; font-family:var(--f-serif-en); font-weight:700; font-size:11px; color:var(--c-cream);">PA</div>
+        <div class="agent-list-info">
+          <div class="agent-list-name">Prof. Aldric <span style="font-family:var(--f-mono); font-size:9px; color:var(--c-cream); border:1px solid var(--c-cream-ring); border-radius:2px; padding:0 3px;">PROF</span></div>
+          <div class="agent-list-loc">강의동 A · 강의 진행</div>
         </div>
         <div class="agent-list-status"></div>
       </div>
@@ -531,15 +539,20 @@
     </div>
   </div>
 
-  <!-- ── Agent Movement Paths (SVG) ── -->
-  <svg class="paths-svg" viewBox="0 0 1440 900" xmlns="http://www.w3.org/2000/svg">
-    <path class="footprint-trail" d="M 310 684 Q 340 660 370 630 Q 400 600 430 570" style="animation-delay: 0s;"/>
-    <path class="movement-path" d="M 640 513 Q 620 530 600 548 Q 580 566 570 578"/>
-    <path class="movement-path" d="M 700 576 Q 680 560 660 550" style="animation-delay:-0.5s;"/>
-  </svg>
+  <!-- ── 6 Agent Markers (5 Students + 1 Professor) — UI Components Only ── -->
 
-  <!-- ── 5 Agent Markers Only (No unnecessary badges or extras) ── -->
+  <!-- Professor Aldric -->
+  <div class="agent-marker"
+       style="left: 36%; top: 38%;"
+       data-agent="Aldric"
+       data-loc="강의동 A"
+       data-stress="15" data-fatigue="35" data-sat="90">
+    <div class="agent-marker__portrait"
+         style="background:#1a2850; display:flex; align-items:center; justify-content:center; font-family:var(--f-serif-en); font-weight:700; font-size:12px; color:var(--c-cream); border:1.5px solid var(--c-cream-ring);">PA</div>
+    <div class="agent-marker__label" style="color:var(--c-cream);">Prof. Aldric</div>
+  </div>
 
+  <!-- Adel (Missing) -->
   <div class="agent-marker state-missing"
        style="left: 19%; top: 74%;"
        data-agent="Adel"
@@ -551,6 +564,7 @@
     <div class="agent-marker__label" style="color: var(--c-critical);">Adel · MISSING</div>
   </div>
 
+  <!-- Kai -->
   <div class="agent-marker"
        style="left: 44%; top: 56%;"
        data-agent="Kai"
@@ -562,6 +576,7 @@
     <div class="agent-marker__label">Kai</div>
   </div>
 
+  <!-- Ria -->
   <div class="agent-marker"
        style="left: 49%; top: 63%;"
        data-agent="Ria"
@@ -572,6 +587,7 @@
     <div class="agent-marker__label">Ria</div>
   </div>
 
+  <!-- Leo (Selected) -->
   <div class="agent-marker state-selected"
        style="left: 54%; top: 35%;"
        data-agent="Leo"
@@ -582,6 +598,7 @@
     <div class="agent-marker__label" style="color:var(--c-primary);">Leo <span style="font-size:9px; border:1px solid var(--c-primary); border-radius:2px; padding:0 2px;">P</span></div>
   </div>
 
+  <!-- Sera -->
   <div class="agent-marker"
        style="left: 68%; top: 32%;"
        data-agent="Sera"
