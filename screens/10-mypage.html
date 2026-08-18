@@ -44,9 +44,9 @@
     .profile-avatar {
       width: 64px; height: 64px;
       border-radius: 50%;
-      background-image: url('../assets/character.png');
-      background-size: 192px 240px;
-      background-position: -44px -6px;
+      background-image: url('../assets/character/Leo_ESTP.png');
+      background-size: cover;
+      background-position: center top;
       border: 2px solid var(--c-primary);
       box-shadow: 0 0 16px var(--c-primary-muted);
     }
@@ -101,7 +101,6 @@
     .my-sim-card {
       background: rgba(14, 23, 48, 0.7);
       backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
       border: 1px solid var(--c-border);
       border-radius: var(--r-lg);
       overflow: hidden;
@@ -110,15 +109,14 @@
       box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
     }
     .my-sim-card:hover {
-      border-color: var(--c-border-hi);
-      transform: translateY(-3px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(215, 198, 167, 0.12);
+      border-color: var(--c-primary);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(109, 90, 230, 0.25);
     }
     .my-sim-card__thumb {
-      height: 90px; position: relative; overflow: hidden;
+      height: 120px;
       background-image: url('../assets/concept/concept_v1.1.png');
       background-size: cover; background-position: center;
-      filter: brightness(0.65) saturate(0.8);
     }
     .my-sim-card__body { padding: var(--s-3) var(--s-4); }
     .my-sim-card__name { font-size: var(--t-sm); font-weight: 500; color: var(--c-text); }
@@ -142,12 +140,12 @@
     .persona-used-card.active { border-color: var(--c-primary); background: rgba(109, 90, 230, 0.15); }
     .persona-used-portrait {
       width: 44px; height: 44px; border-radius: 50%;
-      background-image: url('../assets/character.png');
-      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center top;
       border: 2px solid var(--c-border);
     }
-    .persona-used-portrait.char-leo { background-size: 132px 165px; background-position: -44px -7px; }
-    .persona-used-portrait.char-adel { background-size: 132px 165px; background-position: 0 -7px; }
+    .persona-used-portrait.char-leo { background-image: url('../assets/character/Leo_ESTP.png'); }
+    .persona-used-portrait.char-adel { background-image: url('../assets/character/Adel_ISTJ.png'); }
 
     /* Stats row */
     .stats-row {
