@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>온보딩 — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .ob-screen {
+      width: 1440px; height: 900px;
+      display: flex;
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* Right campus image */
+    .ob-campus {
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }
+    .ob-campus__img {
+      position: absolute;
+      inset: -2px;
+      background-image: url('../assets/concept/onboading_v1.1.png');
+      background-size: cover;
+      background-position: center right;
+      transition: transform 1.2s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+    .ob-campus__vignette {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to right, var(--c-bg) 0%, transparent 8%);
+      pointer-events: none;
+    }
+
+    /* Slide transition */
+    .ob-slide { display: none; flex-direction: column; height: 100%; }
+    .ob-slide.active { display: flex; animation: float-up 500ms ease both; }
+
+    /* Gold corner accent */
+    .ob-corner {
+      position: absolute;
+      top: var(--s-8);
+      right: var(--s-8);
+      width: 40px;
+      height: 40px;
+      pointer-events: none;
+    }
+    .ob-corner::before,
+    .ob-corner::after {
+      content: '';
+      position: absolute;
+      background: var(--c-gold);
+      opacity: 0.4;
+    }
+    .ob-corner::before { top: 0; right: 0; width: 1px; height: 40px; }
+    .ob-corner::after  { top: 0; right: 0; width: 40px; height: 1px; }
+
+    /* Progress dots */
+    .ob-dots {
+      display: flex;
+      gap: var(--s-2);
+      margin-top: var(--s-4);
+    }
+    .ob-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--c-border-hi);
+      transition: background var(--tr-normal), width var(--tr-normal);
+    }
+    .ob-dot.active {
+      background: var(--c-gold);
+      width: 16px;
+      border-radius: 2px;
+    }
+
+    /* Slide-specific illustration overlays */
+    .ob-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-2) var(--s-3);
+      background: var(--c-event-muted);
+      border: 1px solid var(--c-event-ring);
+      border-radius: var(--r-sm);
+      margin-bottom: var(--s-6);
+    }
+    .ob-badge-dot {
+      width: 5px; height: 5px;
+      border-radius: 50%;
+      background: var(--c-event);
+    }
+    .ob-badge-text {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-event);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* Inline agent mini-preview */
+    .ob-agents {
+      display: flex;
+      gap: -8px;
+      margin-top: var(--s-5);
+    }
+    .ob-agent-portrait {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      border: 2px solid var(--c-bg);
+      background-color: var(--c-surface-hi);
+      background-image: url('../assets/character.png');
+      background-repeat: no-repeat;
+      background-size: 96px 120px;
+      margin-left: -6px;
+    }
+    .ob-agent-portrait:first-child { margin-left: 0; }
+    .ob-agent-portrait.char-adel { background-position: 0 -6px; }
+    .ob-agent-portrait.char-leo  { background-position: -32px -6px; }
+    .ob-agent-portrait.char-ria  { background-position: -64px -6px; }
+    .ob-agent-portrait.char-kai  { background-size: 64px 80px; background-position: 0 -40px; }
+    .ob-agent-portrait.char-sera { background-size: 64px 80px; background-position: -32px -40px; }
+
+    /* Inspector mini-preview for slide 3 */
+    .ob-inspector-preview {
+      margin-top: var(--s-5);
+      background: var(--c-surface);
+      border: 1px solid var(--c-inspector-ring);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+      width: 100%;
+    }
+    .ob-inspector-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      padding: var(--s-1) 0;
+    }
+    .ob-inspector-row-icon {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--c-inspector);
+      flex-shrink: 0;
+    }
+    .ob-inspector-row-label {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-inspector);
+      letter-spacing: 0.08em;
+    }
+    .ob-inspector-row-val {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-2);
+      margin-left: auto;
+    }
+    .ob-inspector-sep {
+      height: 1px;
+      background: var(--c-border);
+      margin: var(--s-1) 0;
+    }
+  </style>
+</head>
+<body>
+
+<div class="ob-screen">
+
+  <!-- ── Left Panel ── -->
+  <div class="onboarding-panel">
+    <div class="onboarding__brand">MAGIC ACADEMY</div>
+
+    <!-- Slide 1 -->
+    <div class="ob-slide active" id="slide-1">
+      <div style="margin-top: auto; padding-bottom: var(--s-4);">
+        <div class="ob-badge">
+          <div class="ob-badge-dot"></div>
+          <span class="ob-badge-text">Multi-Agent Simulation</span>
+        </div>
+
+        <h1 class="onboarding__title">마법학교가<br>살아 움직인다.</h1>
+
+        <div class="gold-divider" style="margin: var(--s-6) 0;">
+          <div class="gold-divider__dot"></div>
+        </div>
+
+        <p class="onboarding__desc">
+          학생들은 스스로 움직이고,<br>
+          세계는 그들의 상태에 반응한다.
+        </p>
+
+        <div class="ob-agents" style="margin-top: var(--s-6);">
+          <div class="ob-agent-portrait char-adel"></div>
+          <div class="ob-agent-portrait char-leo"></div>
+          <div class="ob-agent-portrait char-ria"></div>
+          <div class="ob-agent-portrait char-kai"></div>
+          <div class="ob-agent-portrait char-sera"></div>
+          <span style="font-size: var(--t-xs); color: var(--c-text-2); margin-left: var(--s-3); display:flex; align-items:center;">
+            5 Agents · Running
+          </span>
+        </div>
+      </div>
+
+      <button class="onboarding__cta" onclick="goToSlide(2)">
+        세계 관찰하기
+      </button>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="ob-slide" id="slide-2">
+      <div style="margin-top: auto; padding-bottom: var(--s-4);">
+        <div class="ob-badge">
+          <div class="ob-badge-dot"></div>
+          <span class="ob-badge-text">Agent Intelligence</span>
+        </div>
+
+        <h1 class="onboarding__title">학생들은<br>스스로 결정한다.</h1>
+
+        <div class="gold-divider" style="margin: var(--s-6) 0;">
+          <div class="gold-divider__dot"></div>
+        </div>
+
+        <p class="onboarding__desc">
+          수업을 듣고, 관계를 맺고, 갈등한다.<br>
+          당신은 지시하지 않고 관찰한다.
+        </p>
+
+        <div style="margin-top: var(--s-5); display: flex; flex-direction: column; gap: var(--s-2);">
+          <div style="display:flex; align-items:center; gap: var(--s-3);">
+            <div style="width:8px; height:8px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+            <span style="font-size: var(--t-sm); color: var(--c-text-2);">스트레스·피로·만족도 내부 상태 보유</span>
+          </div>
+          <div style="display:flex; align-items:center; gap: var(--s-3);">
+            <div style="width:8px; height:8px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+            <span style="font-size: var(--t-sm); color: var(--c-text-2);">관계·조직·사건 세 축으로 세계 작동</span>
+          </div>
+          <div style="display:flex; align-items:center; gap: var(--s-3);">
+            <div style="width:8px; height:8px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+            <span style="font-size: var(--t-sm); color: var(--c-text-2);">Tick 단위로 상태 변화·이동·사건 발생</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="onboarding__cta" onclick="goToSlide(3)">
+        다음
+      </button>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="ob-slide" id="slide-3">
+      <div style="margin-top: auto; padding-bottom: var(--s-4);">
+        <div class="ob-badge" style="background: var(--c-inspector-muted); border-color: var(--c-inspector-ring);">
+          <div class="ob-badge-dot" style="background: var(--c-inspector);"></div>
+          <span class="ob-badge-text" style="color: var(--c-inspector);">Observatory</span>
+        </div>
+
+        <h1 class="onboarding__title">원인은<br>명확하게.</h1>
+
+        <div class="gold-divider" style="margin: var(--s-6) 0;">
+          <div class="gold-divider__dot"></div>
+        </div>
+
+        <p class="onboarding__desc">
+          Magic Event가 발생하면,<br>
+          Inspector가 정확한 인과관계를 보여준다.
+        </p>
+
+        <div class="ob-inspector-preview">
+          <div class="ob-inspector-row">
+            <div class="ob-inspector-row-icon"></div>
+            <span class="ob-inspector-row-label">Condition</span>
+            <span class="ob-inspector-row-val">stress &gt; 90</span>
+          </div>
+          <div class="ob-inspector-sep"></div>
+          <div class="ob-inspector-row">
+            <div class="ob-inspector-row-icon"></div>
+            <span class="ob-inspector-row-label">Candidate</span>
+            <span class="ob-inspector-row-val">STUDENT_MISSING</span>
+          </div>
+          <div class="ob-inspector-sep"></div>
+          <div class="ob-inspector-row">
+            <div class="ob-inspector-row-icon"></div>
+            <span class="ob-inspector-row-label">Commit</span>
+            <span class="ob-inspector-row-val" style="color: var(--c-critical);">MISSING · 4T</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="onboarding__cta"
+        onclick="window.location.href='02-persona-select.html'"
+        style="background: var(--c-primary); border-color: var(--c-primary);">
+        Persona 선택하기
+      </button>
+    </div>
+
+    <!-- Pagination -->
+    <div class="onboarding__pagination" style="padding-top: var(--s-6);">
+      <div class="ob-dots" id="ob-dots">
+        <div class="ob-dot active" onclick="goToSlide(1)"></div>
+        <div class="ob-dot" onclick="goToSlide(2)"></div>
+        <div class="ob-dot" onclick="goToSlide(3)"></div>
+      </div>
+      <div style="flex:1;"></div>
+      <span class="onboarding__page-num" id="ob-pagenum">01 / 03</span>
+    </div>
+  </div>
+
+  <!-- ── Right Campus ── -->
+  <div class="ob-campus">
+    <div class="ob-campus__img" id="ob-campus-img"></div>
+    <div class="ob-campus__vignette"></div>
+    <div class="ob-corner"></div>
+
+    <!-- Slide 3: teal causal overlay hint -->
+    <div id="ob-teal-hint" style="display:none; position:absolute; bottom: 40px; right: 40px;">
+      <div style="
+        background: var(--c-inspector-muted);
+        border: 1px solid var(--c-inspector-ring);
+        border-radius: var(--r-lg);
+        padding: var(--s-4) var(--s-5);
+        width: 220px;
+        backdrop-filter: blur(12px);
+      ">
+        <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:var(--s-2);">Inspector Active</div>
+        <div style="font-family:var(--f-serif-ko); font-size:var(--t-lg); color:var(--c-text);">학생 실종</div>
+        <div style="font-size:var(--t-sm); color:var(--c-text-2); margin-top:var(--s-1);">Tick 10 · Adel</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script src="../js/magic-academy.js"></script>
+<script>
+  let currentSlide = 1;
+  const totalSlides = 3;
+
+  function goToSlide(n) {
+    // hide all
+    document.querySelectorAll('.ob-slide').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.ob-dot').forEach((d, i) => {
+      d.classList.toggle('active', i === n - 1);
+    });
+
+    // show target
+    const target = document.getElementById('slide-' + n);
+    if (target) target.classList.add('active');
+    document.getElementById('ob-pagenum').textContent = `0${n} / 0${totalSlides}`;
+
+    // campus image shift
+    const campusImg = document.getElementById('ob-campus-img');
+    const hints = {
+      1: 'center right',
+      2: 'center center',
+      3: '30% center',
+    };
+    campusImg.style.backgroundPosition = hints[n] || 'center';
+
+    // slide 3 special elements
+    const tealHint = document.getElementById('ob-teal-hint');
+    if (tealHint) tealHint.style.display = n === 3 ? 'block' : 'none';
+
+    currentSlide = n;
+  }
+
+  // keyboard navigation
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      if (currentSlide < totalSlides) goToSlide(currentSlide + 1);
+      else window.location.href = '02-persona-select.html';
+    }
+    if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      if (currentSlide > 1) goToSlide(currentSlide - 1);
+    }
+  });
+</script>
+</body>
+</html>

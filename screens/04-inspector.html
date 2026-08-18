@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Inspector — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
+    .sim-map {
+      position: absolute; inset: 0;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.65) saturate(0.8);
+    }
+    .sim-vignette {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(11,14,35,0.2) 0%, transparent 30%,
+                  rgba(11,14,35,0.5) 70%, rgba(11,14,35,0.8) 100%);
+    }
+    .topbar { position: absolute; }
+    .inspector-drawer { position: absolute; }
+
+    /* Inspector open by default */
+    .inspector-drawer.open { transform: translateX(0); }
+
+    /* Section headers with step numbers */
+    .step-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 18px; height: 18px;
+      border-radius: 50%;
+      background: var(--c-inspector);
+      color: var(--c-bg);
+      font-family: var(--f-mono);
+      font-size: 9px;
+      font-weight: 700;
+      flex-shrink: 0;
+    }
+
+    /* Condition block */
+    .condition-block {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+    }
+    .condition-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: var(--s-1) 0;
+      gap: var(--s-4);
+    }
+    .condition-key { color: var(--c-text-3); }
+    .condition-val { color: var(--c-text); }
+    .condition-val.exceeded { color: var(--c-critical); font-weight: 600; }
+    .condition-val.met { color: #5CE67A; }
+    .condition-sep { height: 1px; background: var(--c-border); margin: var(--s-1) 0; }
+
+    /* LLM narrative block */
+    .llm-block {
+      background: var(--c-event-muted);
+      border: 1px solid var(--c-event-ring);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+    }
+    .llm-label {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-event);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-2);
+    }
+    .llm-text {
+      font-family: var(--f-serif-ko);
+      font-size: var(--t-base);
+      color: var(--c-text);
+      line-height: 1.6;
+    }
+
+    /* Policy outcome */
+    .policy-block {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-1);
+    }
+    .policy-row {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      font-size: var(--t-xs);
+    }
+    .policy-key { color: var(--c-text-2); font-family: var(--f-mono); }
+    .policy-val { color: var(--c-text); font-family: var(--f-mono); }
+
+    /* Commit block */
+    .commit-block {
+      border: 1px solid var(--c-critical-ring);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+      background: var(--c-critical-muted);
+    }
+    .commit-event {
+      font-family: var(--f-mono);
+      font-size: var(--t-sm);
+      color: var(--c-critical);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .commit-detail {
+      font-size: var(--t-xs);
+      color: var(--c-text-2);
+      margin-top: var(--s-1);
+      line-height: 1.5;
+    }
+
+    /* Runtime effect */
+    .effect-block {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+    }
+    .effect-row {
+      display: flex;
+      align-items: flex-start;
+      gap: var(--s-2);
+      padding: var(--s-1) 0;
+      font-size: var(--t-xs);
+    }
+    .effect-icon {
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 1.5px solid var(--c-inspector);
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .effect-icon-dot {
+      width: 4px; height: 4px;
+      border-radius: 50%;
+      background: var(--c-inspector);
+    }
+    .effect-text { color: var(--c-text-2); line-height: 1.5; }
+    .effect-text strong { color: var(--c-text); font-weight: 500; }
+
+    /* Stress gauge */
+    .stress-gauge {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+    }
+    .stress-gauge__header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: var(--s-2);
+    }
+    .stress-gauge__label {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-2);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .stress-gauge__val {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-critical);
+    }
+    .stress-gauge__track {
+      height: 6px;
+      background: var(--c-border-hi);
+      border-radius: var(--r-full);
+      position: relative;
+      overflow: visible;
+    }
+    .stress-gauge__fill {
+      height: 100%;
+      background: linear-gradient(90deg, #8B5CF6, var(--c-critical));
+      border-radius: var(--r-full);
+      width: 92%;
+      position: relative;
+    }
+    .stress-gauge__threshold {
+      position: absolute;
+      right: 11.5%; /* 90/100 = 90%, so threshold at 10% from right = 90% from left */
+      top: -4px;
+      bottom: -4px;
+      width: 1.5px;
+      background: rgba(255,255,255,0.4);
+    }
+    .stress-gauge__threshold-label {
+      position: absolute;
+      right: 11%;
+      top: -20px;
+      font-family: var(--f-mono);
+      font-size: 9px;
+      color: var(--c-text-3);
+      letter-spacing: 0.06em;
+    }
+
+    /* Arrow between sections */
+    .inspector-flow-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 20px;
+      color: var(--c-inspector);
+    }
+
+    /* Simulation left panel */
+    .sim-left-panel {
+      position: absolute;
+      left: var(--s-6);
+      top: calc(var(--topbar-h) + var(--s-4));
+      bottom: var(--s-6);
+      width: 200px;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+    }
+
+    /* Adel MISSING state visible on map */
+    .paths-svg {
+      position: absolute; inset: 0;
+      pointer-events: none; z-index: 5;
+    }
+    .causal-line {
+      stroke: var(--c-inspector);
+      stroke-width: 1.5;
+      stroke-dasharray: 6 4;
+      fill: none;
+      opacity: 0.5;
+      animation: path-dash 2.5s linear infinite;
+    }
+  </style>
+</head>
+<body>
+
+<div class="sim-screen">
+
+  <div class="sim-map"></div>
+  <div class="sim-vignette"></div>
+
+  <!-- Inspector causal lines on map -->
+  <svg class="paths-svg" viewBox="0 0 1440 900">
+    <path class="causal-line" d="M 94 684 Q 600 400 1060 280"/>
+    <path class="footprint-trail" d="M 94 684 Q 80 720 65 760" style="animation-delay:0.5s;"/>
+    <circle cx="94" cy="684" r="20" stroke="var(--c-critical)" stroke-width="1.5" fill="none" opacity="0.5" style="animation: ring-pulse-critical 1.5s ease infinite;"/>
+  </svg>
+
+  <!-- Adel MISSING marker -->
+  <div class="agent-marker state-missing"
+       style="left: 6.5%; top: 76%; z-index:6;">
+    <div class="agent-marker__portrait char-adel"
+         style="background-image: url('../assets/character.png');"></div>
+    <div class="agent-marker__label" style="color:var(--c-critical);">Adel · MISSING</div>
+  </div>
+
+  <!-- ── Top Bar ── -->
+  <div class="topbar">
+    <a href="03-simulation.html" class="control-btn" title="시뮬레이션으로">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+        <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <div class="topbar__brand">Magic Academy</div>
+    <div class="topbar__sep"></div>
+    <div class="topbar__tick">TICK <span>10</span></div>
+    <div style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-3);margin-left:var(--s-2);">DAY 01 · 09:20</div>
+    <div class="topbar__sep"></div>
+    <span class="chip chip-inspector" style="margin-left:var(--s-2);">Inspector Active</span>
+    <span class="chip chip-event" style="margin-left:var(--s-2);">STUDENT_MISSING</span>
+    <div style="margin-left:auto; display:flex; gap:var(--s-2);">
+      <button class="control-btn" onclick="window.location.href='05-relationship.html'" title="관계 그래프">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L9 4M5 7L9 10" stroke="currentColor" stroke-width="1.2"/></svg>
+      </button>
+      <a href="../index.html" class="control-btn" title="Navigator">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="3" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ── Inspector Drawer (OPEN) ── -->
+  <div class="inspector-drawer open" id="inspector"
+       style="height:900px; display:flex; flex-direction:column;">
+
+    <div class="inspector-drawer__header">
+      <span class="inspector-drawer__title">Inspector</span>
+      <button class="inspector-drawer__close" onclick="window.location.href='03-simulation.html'">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+
+    <div class="inspector-drawer__event-label">
+      <div style="display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-2);">
+        <span class="chip chip-event">MAGIC EVENT</span>
+        <span class="chip chip-critical">TICK 10</span>
+      </div>
+      <div class="inspector-drawer__event-name">학생 실종</div>
+      <div class="inspector-drawer__event-meta" style="display:flex; align-items:center; gap:var(--s-2); margin-top:var(--s-2);">
+        <div style="
+          width:20px; height:20px; border-radius:50%;
+          background-image: url('../assets/character.png');
+          background-size: 60px 75px; background-position: 0 -4px;
+          border: 1.5px solid var(--c-critical); opacity:0.7;
+          flex-shrink:0;
+        "></div>
+        <span>Adel · stress 임계값 10 Tick 연속 초과</span>
+      </div>
+    </div>
+
+    <div class="inspector-drawer__body">
+
+      <!-- Step 1: Condition -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">1</span>
+          Condition
+        </div>
+        <div class="condition-block">
+          <div class="condition-row">
+            <span class="condition-key">agent</span>
+            <span class="condition-val">Adel</span>
+          </div>
+          <div class="condition-sep"></div>
+          <div class="condition-row">
+            <span class="condition-key">stress</span>
+            <span class="condition-val exceeded">92 <span style="color:var(--c-text-3);">/ 90 ✗</span></span>
+          </div>
+          <div class="condition-row">
+            <span class="condition-key">exceed_ticks</span>
+            <span class="condition-val met">10 / 10 ✓</span>
+          </div>
+          <div class="condition-sep"></div>
+          <div class="condition-row">
+            <span class="condition-key">event_type</span>
+            <span class="condition-val">STUDENT_MISSING</span>
+          </div>
+          <div class="condition-row">
+            <span class="condition-key">threshold</span>
+            <span class="condition-val">90</span>
+          </div>
+        </div>
+
+        <!-- Stress gauge -->
+        <div class="stress-gauge" style="margin-top:var(--s-3);">
+          <div class="stress-gauge__header">
+            <span class="stress-gauge__label">Stress</span>
+            <span class="stress-gauge__val">92 / 100</span>
+          </div>
+          <div class="stress-gauge__track">
+            <div class="stress-gauge__fill"></div>
+            <div class="stress-gauge__threshold"></div>
+            <div class="stress-gauge__threshold-label">90</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="inspector-flow-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Step 2: Candidate -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">2</span>
+          Candidate
+        </div>
+        <div class="policy-block">
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">event</span>
+            <span class="policy-val" style="margin-left:auto;">STUDENT_MISSING</span>
+          </div>
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">priority</span>
+            <span class="policy-val" style="margin-left:auto;">HIGH</span>
+          </div>
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">confidence</span>
+            <span class="policy-val met" style="margin-left:auto;">1.0</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inspector-flow-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Step 3: Policy -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">3</span>
+          Policy
+        </div>
+        <div class="policy-block">
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">inactive_ticks</span>
+            <span class="policy-val" style="margin-left:auto;">4</span>
+          </div>
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">recovery_condition</span>
+            <span class="policy-val" style="margin-left:auto;">stress &lt; 60</span>
+          </div>
+          <div class="policy-row">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
+            <span class="policy-key">visible</span>
+            <span class="policy-val" style="margin-left:auto; color:var(--c-critical);">false</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="inspector-flow-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Step 4: Conflict Resolution -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">4</span>
+          Conflict Resolution
+        </div>
+        <div class="inspector-section__content">
+          <span style="color:var(--c-text-3);">충돌 없음 — 다른 이벤트와 경합 없이 단독 처리</span>
+        </div>
+      </div>
+
+      <div class="inspector-flow-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Step 5: Commit -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">5</span>
+          Commit
+        </div>
+        <div class="commit-block">
+          <div class="commit-event">STUDENT_MISSING COMMITTED</div>
+          <div class="commit-detail" style="margin-top:var(--s-2);">
+            Adel.status = MISSING<br>
+            Adel.inactive_until = TICK 14<br>
+            narrative: "너무 힘들면, 잠시 실종."
+          </div>
+        </div>
+
+        <!-- LLM Narrative -->
+        <div class="llm-block" style="margin-top:var(--s-3);">
+          <div class="llm-label">LLM 서술</div>
+          <div class="llm-text">너무 힘들면, 잠시 실종.</div>
+        </div>
+      </div>
+
+      <div class="inspector-flow-arrow">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+
+      <!-- Step 6: Runtime Effect -->
+      <div class="inspector-section">
+        <div class="inspector-section__label">
+          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">6</span>
+          Runtime Effect
+        </div>
+        <div class="effect-block">
+          <div class="effect-row">
+            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
+            <span class="effect-text">Agent Runtime 실행 대상에서 <strong>Adel 제외</strong> (TICK 10 ~ 14)</span>
+          </div>
+          <div class="effect-row">
+            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
+            <span class="effect-text">다른 Agent의 Adel 관련 행동 계획 <strong>중단</strong></span>
+          </div>
+          <div class="effect-row">
+            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
+            <span class="effect-text">TICK 14 또는 stress &lt; 60 달성 시 <strong>자동 복귀</strong></span>
+          </div>
+          <div class="effect-row">
+            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
+            <span class="effect-text">복귀 시 STATUS_ENDED 이벤트 발생 후 ACTIVE 전환</span>
+          </div>
+        </div>
+
+        <!-- Return forecast -->
+        <div style="
+          margin-top: var(--s-3);
+          padding: var(--s-2) var(--s-3);
+          border-radius: var(--r-sm);
+          background: var(--c-primary-muted);
+          border: 1px solid var(--c-primary-ring);
+          font-family: var(--f-mono);
+          font-size: var(--t-xs);
+          color: var(--c-primary);
+          display: flex; align-items: center; gap: var(--s-2);
+        ">
+          <div style="width:5px;height:5px;border-radius:50%;background:var(--c-primary);flex-shrink:0;"></div>
+          예상 복귀: TICK 14 · STATUS_ENDED → ACTIVE
+        </div>
+      </div>
+
+      <!-- Close / Back -->
+      <div style="padding-top: var(--s-4); display:flex; gap:var(--s-2);">
+        <button class="btn btn-ghost btn-sm" onclick="window.location.href='03-simulation.html'" style="flex:1;">
+          ← 시뮬레이션으로
+        </button>
+      </div>
+
+    </div><!-- end body -->
+  </div><!-- end inspector-drawer -->
+
+</div>
+
+<script src="../js/magic-academy.js"></script>
+</body>
+</html>

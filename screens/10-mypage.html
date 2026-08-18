@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>마이페이지 — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .screen { width: 1440px; height: 900px; display: flex; flex-direction: column; background: var(--c-bg); }
+
+    .my-nav {
+      display: flex; align-items: center; gap: var(--s-4);
+      padding: 0 var(--s-8);
+      height: var(--topbar-h);
+      border-bottom: 1px solid var(--c-border);
+      flex-shrink: 0;
+      background: var(--c-surface);
+    }
+    .my-nav__brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-base); font-weight: 600;
+      color: var(--c-text); letter-spacing: 0.04em;
+    }
+
+    .my-body {
+      flex: 1; overflow-y: auto;
+      display: flex; gap: 0;
+    }
+
+    /* Left sidebar */
+    .my-sidebar {
+      width: 280px;
+      flex-shrink: 0;
+      border-right: 1px solid var(--c-border);
+      padding: var(--s-8) var(--s-6);
+      display: flex; flex-direction: column; gap: var(--s-6);
+    }
+    .profile-avatar {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background-image: url('../assets/character.png');
+      background-size: 192px 240px;
+      background-position: -44px -6px;
+      border: 2px solid var(--c-primary);
+    }
+    .profile-name {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-xl); font-weight: 600;
+      color: var(--c-text); margin-top: var(--s-3);
+    }
+    .profile-email { font-size: var(--t-sm); color: var(--c-text-2); margin-top: 2px; }
+
+    .my-menu { display: flex; flex-direction: column; gap: 2px; }
+    .my-menu-item {
+      display: flex; align-items: center; gap: var(--s-3);
+      padding: var(--s-3) var(--s-4);
+      border-radius: var(--r-md);
+      font-size: var(--t-sm); color: var(--c-text-2);
+      cursor: pointer;
+      transition: background var(--tr-fast), color var(--tr-fast);
+    }
+    .my-menu-item:hover { background: var(--c-surface-hi); color: var(--c-text); }
+    .my-menu-item.active { background: var(--c-primary-muted); color: var(--c-primary); }
+    .my-menu-icon { width: 16px; height: 16px; flex-shrink: 0; }
+
+    /* Main content */
+    .my-content {
+      flex: 1;
+      padding: var(--s-8);
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-8);
+    }
+
+    .my-section-title {
+      font-size: var(--t-base); font-weight: 500;
+      color: var(--c-text); margin-bottom: var(--s-4);
+    }
+
+    /* Sim cards */
+    .my-sim-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: var(--s-4);
+    }
+    .my-sim-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      cursor: pointer;
+      transition: border-color var(--tr-fast), transform var(--tr-fast);
+    }
+    .my-sim-card:hover { border-color: var(--c-border-hi); transform: translateY(-2px); }
+    .my-sim-card__thumb {
+      height: 90px; position: relative; overflow: hidden;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.6) saturate(0.7);
+    }
+    .my-sim-card__body { padding: var(--s-3) var(--s-4); }
+    .my-sim-card__name { font-size: var(--t-sm); font-weight: 500; color: var(--c-text); }
+    .my-sim-card__meta { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-text-2); margin-top: 2px; }
+
+    /* Persona used */
+    .persona-used-row {
+      display: flex; gap: var(--s-4);
+    }
+    .persona-used-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s-4);
+      display: flex; align-items: center; gap: var(--s-3);
+      cursor: pointer;
+      transition: border-color var(--tr-fast);
+    }
+    .persona-used-card:hover { border-color: var(--c-primary); }
+    .persona-used-card.active { border-color: var(--c-primary); background: var(--c-primary-muted); }
+    .persona-used-portrait {
+      width: 40px; height: 40px; border-radius: 50%;
+      background-image: url('../assets/character.png');
+      background-repeat: no-repeat;
+      border: 2px solid var(--c-border);
+    }
+    .persona-used-portrait.char-leo { background-size: 120px 150px; background-position: -40px -6px; }
+    .persona-used-portrait.char-adel { background-size: 120px 150px; background-position: 0 -6px; }
+
+    /* Stats row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-4);
+    }
+    .stat-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s-4);
+    }
+    .stat-card__val {
+      font-family: var(--f-mono);
+      font-size: var(--t-2xl);
+      color: var(--c-text);
+      font-weight: 600;
+    }
+    .stat-card__label {
+      font-size: var(--t-xs);
+      color: var(--c-text-2);
+      margin-top: var(--s-1);
+    }
+  </style>
+</head>
+<body>
+<div class="screen">
+  <div class="my-nav">
+    <a href="08-main.html" class="control-btn">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <span class="my-nav__brand">Magic Academy</span>
+    <div style="margin-left:auto; display:flex; gap:var(--s-3);">
+      <a href="../index.html" class="btn btn-ghost btn-sm">Navigator</a>
+    </div>
+  </div>
+
+  <div class="my-body">
+
+    <!-- Sidebar -->
+    <div class="my-sidebar">
+      <div>
+        <div class="profile-avatar"></div>
+        <div class="profile-name">은혜</div>
+        <div class="profile-email">mgs10204@gmail.com</div>
+      </div>
+
+      <div class="my-menu">
+        <div class="my-menu-item active">
+          <svg class="my-menu-icon" viewBox="0 0 16 16" fill="none"><rect x="2" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="2" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="2" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="9" y="9" width="5" height="5" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+          저장된 시뮬레이션
+        </div>
+        <div class="my-menu-item">
+          <svg class="my-menu-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="6" r="3" stroke="currentColor" stroke-width="1.2"/><path d="M2 14c0-3.314 2.686-6 6-6s6 2.686 6 6" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          사용한 Persona
+        </div>
+        <div class="my-menu-item">
+          <svg class="my-menu-icon" viewBox="0 0 16 16" fill="none"><path d="M8 2v4M8 10v4M2 8h4M10 8h4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/><circle cx="8" cy="8" r="2" stroke="currentColor" stroke-width="1.2"/></svg>
+          관찰 기록
+        </div>
+        <div class="divider" style="margin:var(--s-2) 0;"></div>
+        <div class="my-menu-item">
+          <svg class="my-menu-icon" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="currentColor" stroke-width="1.2"/><path d="M8 5v3l2 1" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+          계정 설정
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="my-content">
+
+      <!-- Stats -->
+      <div>
+        <div class="my-section-title">관찰 통계</div>
+        <div class="stats-row">
+          <div class="stat-card">
+            <div class="stat-card__val" style="color:var(--c-primary);">2</div>
+            <div class="stat-card__label">총 시뮬레이션</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__val" style="color:var(--c-event);">52</div>
+            <div class="stat-card__label">총 관찰 Tick</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__val" style="color:var(--c-critical);">3</div>
+            <div class="stat-card__label">Magic Events</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-card__val" style="color:var(--c-inspector);">8</div>
+            <div class="stat-card__label">Inspector 조회</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Saved Simulations -->
+      <div>
+        <div class="my-section-title">저장된 시뮬레이션</div>
+        <div class="my-sim-grid">
+          <div class="my-sim-card" onclick="window.location.href='03-simulation.html'">
+            <div class="my-sim-card__thumb"></div>
+            <div class="my-sim-card__body">
+              <div style="display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-1);">
+                <span class="chip chip-critical">MISSING</span>
+              </div>
+              <div class="my-sim-card__name">첫 번째 시뮬레이션</div>
+              <div class="my-sim-card__meta">TICK 10 · LEO 시점 · 2026-08-18</div>
+            </div>
+          </div>
+          <div class="my-sim-card">
+            <div class="my-sim-card__thumb" style="filter: brightness(0.4) saturate(0.5);"></div>
+            <div class="my-sim-card__body">
+              <div style="display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-1);">
+                <span class="chip chip-active">SAVED</span>
+              </div>
+              <div class="my-sim-card__name">Leo의 마법 생물 사건</div>
+              <div class="my-sim-card__meta">TICK 42 · RIA 시점 · 2026-08-14</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Used Personas -->
+      <div>
+        <div class="my-section-title">사용한 Persona</div>
+        <div class="persona-used-row">
+          <div class="persona-used-card active">
+            <div class="persona-used-portrait char-leo"></div>
+            <div>
+              <div style="font-family:var(--f-serif-en); font-size:var(--t-base); font-weight:600; color:var(--c-text);">Leo</div>
+              <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-primary); letter-spacing:0.08em;">ESTP · 마법 생물</div>
+            </div>
+          </div>
+          <div class="persona-used-card">
+            <div class="persona-used-portrait char-adel"></div>
+            <div>
+              <div style="font-family:var(--f-serif-en); font-size:var(--t-base); font-weight:600; color:var(--c-text);">Adel</div>
+              <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-2); letter-spacing:0.08em;">ISTJ · 방어 마법</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+<script src="../js/magic-academy.js"></script>
+</body>
+</html>
