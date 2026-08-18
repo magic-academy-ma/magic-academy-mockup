@@ -8,60 +8,60 @@
 
 /* ── 1. Design Tokens ─────────────────────────────────────── */
 :root {
-  /* Color — Background & Surfaces (Distinct Vibrant Midnight Navy) */
-  --c-bg:               #071128;   /* Deep mystic midnight navy */
-  --c-surface:          #0e1f4a;   /* Rich navy surface for cards & panels */
-  --c-surface-hi:       #162f6e;   /* Elevated bright navy for hover/active */
-  --c-surface-card:     rgba(16, 33, 76, 0.80);  /* Translucent rich navy card */
-  --c-surface-glass:    rgba(12, 25, 60, 0.86);  /* Frosted luminous navy glass */
-  --c-surface-drawer:   rgba(9, 20, 48, 0.96);   /* Deep midnight drawer */
+  /* Color — Background & Surfaces (Clean, Deep Midnight Navy) */
+  --c-bg:               #060d20;   /* Deep mystic midnight navy */
+  --c-surface:          #0b1838;   /* Clean navy surface for cards & panels */
+  --c-surface-hi:       #122450;   /* Elevated navy for hover/active states */
+  --c-surface-card:     rgba(12, 24, 58, 0.82);  /* Translucent navy card */
+  --c-surface-glass:    rgba(10, 20, 50, 0.88);  /* Frosted luminous navy glass */
+  --c-surface-drawer:   rgba(8, 16, 40, 0.96);   /* Deep midnight drawer */
 
-  /* Color — Primary / Agent (Mystic Violet) */
-  --c-primary:          #6D5AE6;   /* Arcane Violet — Agent actions & selection */
-  --c-primary-hover:    #8270fa;
-  --c-primary-muted:    rgba(109, 90, 230, 0.20);
-  --c-primary-ring:     rgba(109, 90, 230, 0.45);
+  /* Color — Primary / Accent (Arcane Violet Blue & Elegant Gold) */
+  --c-primary:          #5e60e8;   /* Primary Violet-Blue for actions & selection */
+  --c-primary-hover:    #7375f5;
+  --c-primary-muted:    rgba(94, 96, 232, 0.16);
+  --c-primary-ring:     rgba(94, 96, 232, 0.38);
 
-  /* Color — Brand / Accent (Cream Ivory) */
-  --c-cream:            #d7c6a7;   /* Cream Ivory — brand titles & elegant accents */
-  --c-cream-hover:      #eadecb;
-  --c-cream-muted:      rgba(215, 198, 167, 0.16);
-  --c-cream-ring:       rgba(215, 198, 167, 0.38);
+  /* Color — Brand / Gold Accent (Restrained Warm Gold) */
+  --c-cream:            #d4b26f;   /* Warm Gold — brand titles & elegant accents */
+  --c-cream-hover:      #e5c88c;
+  --c-cream-muted:      rgba(212, 178, 111, 0.14);
+  --c-cream-ring:       rgba(212, 178, 111, 0.32);
 
-  /* Color — Inspector (Luminous Cyan) */
-  --c-inspector:        #38c8dc;   /* Luminous Cyan — causal trace & analysis */
-  --c-inspector-hover:  #58e2f4;
-  --c-inspector-muted:  rgba(56, 200, 220, 0.18);
-  --c-inspector-ring:   rgba(56, 200, 220, 0.40);
+  /* Color — Inspector / Analysis (Soft Cyan Tint) */
+  --c-inspector:        #34b3c7;   /* Cyan tint — causal trace & analysis */
+  --c-inspector-hover:  #4bcde0;
+  --c-inspector-muted:  rgba(52, 179, 199, 0.14);
+  --c-inspector-ring:   rgba(52, 179, 199, 0.32);
 
-  /* Color — Events (Warm Gold) */
-  --c-event:            #f4a442;   /* Warm Gold — magic events & narrative */
-  --c-event-muted:      rgba(244, 164, 66, 0.18);
-  --c-event-ring:       rgba(244, 164, 66, 0.40);
+  /* Color — Events (Gold Accent) */
+  --c-event:            #d4b26f;   /* Unified with gold accent */
+  --c-event-muted:      rgba(212, 178, 111, 0.14);
+  --c-event-ring:       rgba(212, 178, 111, 0.32);
 
-  /* Color — Critical / Error (Coral Red) */
-  --c-critical:         #e05252;   /* Vivid Coral Red — missing, alerts, strain */
-  --c-critical-muted:   rgba(224, 82, 82, 0.20);
-  --c-critical-ring:    rgba(224, 82, 82, 0.45);
+  /* Color — Critical / Missing (Crisp Crimson) */
+  --c-critical:         #db4c4c;   /* Crisp Crimson — missing & alerts */
+  --c-critical-muted:   rgba(219, 76, 76, 0.16);
+  --c-critical-ring:    rgba(219, 76, 76, 0.38);
 
-  /* Color — Gold (Dividers, Accents, Amber) */
-  --c-gold:             #D4AF37;   /* Golden Amber */
-  --c-gold-light:       #f4a442;
-  --c-gold-line:        rgba(212, 175, 55, 0.35);
+  /* Color — Gold (Dividers, Accents) */
+  --c-gold:             #d4b26f;
+  --c-gold-light:       #e5c88c;
+  --c-gold-line:        rgba(212, 178, 111, 0.28);
 
-  /* Color — Success / Active */
-  --c-success:          #3dba7e;
-  --c-success-muted:    rgba(61, 186, 126, 0.18);
+  /* Color — Success */
+  --c-success:          #38b277;
+  --c-success-muted:    rgba(56, 178, 119, 0.14);
 
-  /* Color — Text (High-contrast, eye-friendly) */
-  --c-text:             #f5f2fa;   /* Ivory White — primary text */
-  --c-text-2:           #b0bee0;   /* Bright Soft Blue-Slate — secondary text */
-  --c-text-3:           #6e80b0;   /* Muted Navy Blue — metadata & disabled */
+  /* Color — Text (Crisp & High-legibility) */
+  --c-text:             #f2f5fc;   /* Crisp White — primary text */
+  --c-text-2:           #a4b5d6;   /* Slate Blue — secondary text */
+  --c-text-3:           #62759e;   /* Muted Navy — metadata */
 
-  /* Color — Borders (Luminous Navy & Gold Traces) */
-  --c-border:           rgba(75, 115, 205, 0.28);  /* Luminous rich navy border */
-  --c-border-hi:        rgba(215, 198, 167, 0.35);  /* Cream/Gold highlight */
-  --c-border-gold:      rgba(212, 175, 55, 0.40);
+  /* Color — Borders (Subtle & Luminous) */
+  --c-border:           rgba(70, 100, 180, 0.24);  /* Clean navy border */
+  --c-border-hi:        rgba(212, 178, 111, 0.30);  /* Gold highlight */
+  --c-border-gold:      rgba(212, 178, 111, 0.35);
 
   /* Character tokens */
   --c-adel:             #0F4C5C;   /* Teal Green */
