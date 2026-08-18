@@ -2,525 +2,513 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Inspector — Magic Academy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <title>Causal Inspector — Magic Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
   <style>
-    body { margin: 0; overflow: hidden; }
-    .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
-    .sim-map {
+    * { box-sizing: border-box; }
+    body { margin: 0; overflow: hidden; background: var(--c-bg); font-family: var(--f-sans); }
+    .screen { width: 1440px; height: 900px; display: flex; flex-direction: column; position: relative; overflow: hidden; }
+
+    /* Background map with deep dark blur */
+    .bg-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/concept_v1.1.png');
       background-size: cover; background-position: center;
-      filter: brightness(0.65) saturate(0.8);
+      filter: brightness(0.22) saturate(0.5) blur(8px);
+      transform: scale(1.04);
+      pointer-events: none;
     }
-    .sim-vignette {
+    .bg-overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to right, rgba(11,14,35,0.2) 0%, transparent 30%,
-                  rgba(11,14,35,0.5) 70%, rgba(11,14,35,0.8) 100%);
+      background: radial-gradient(circle at 50% 25%, rgba(14, 31, 74, 0.65) 0%, rgba(7, 17, 40, 0.96) 85%);
+      pointer-events: none;
     }
-    .topbar { position: absolute; }
-    .inspector-drawer { position: absolute; }
 
-    /* Inspector open by default */
-    .inspector-drawer.open { transform: translateX(0); }
-
-    /* Section headers with step numbers */
-    .step-badge {
-      display: inline-flex;
+    /* ── Topbar (Seamless with Main Simulation Layout) ── */
+    .topbar {
+      height: 52px;
+      padding: 0 var(--s-6);
+      display: flex;
       align-items: center;
-      justify-content: center;
-      width: 18px; height: 18px;
-      border-radius: 50%;
-      background: var(--c-inspector);
-      color: var(--c-bg);
-      font-family: var(--f-mono);
-      font-size: 9px;
-      font-weight: 700;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--c-border);
+      background: rgba(7, 17, 40, 0.88);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 30;
       flex-shrink: 0;
     }
-
-    /* Condition block */
-    .condition-block {
-      background: var(--c-surface-hi);
-      border-radius: var(--r-md);
-      padding: var(--s-3);
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-    }
-    .condition-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: var(--s-1) 0;
-      gap: var(--s-4);
-    }
-    .condition-key { color: var(--c-text-3); }
-    .condition-val { color: var(--c-text); }
-    .condition-val.exceeded { color: var(--c-critical); font-weight: 600; }
-    .condition-val.met { color: #5CE67A; }
-    .condition-sep { height: 1px; background: var(--c-border); margin: var(--s-1) 0; }
-
-    /* LLM narrative block */
-    .llm-block {
-      background: var(--c-event-muted);
-      border: 1px solid var(--c-event-ring);
-      border-radius: var(--r-md);
-      padding: var(--s-3) var(--s-4);
-    }
-    .llm-label {
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-event);
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      margin-bottom: var(--s-2);
-    }
-    .llm-text {
-      font-family: var(--f-serif-ko);
-      font-size: var(--t-base);
+    .topbar__left { display: flex; align-items: center; gap: var(--s-4); }
+    .topbar__brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-md);
+      font-weight: 600;
       color: var(--c-text);
-      line-height: 1.6;
+      letter-spacing: 0.04em;
     }
-
-    /* Policy outcome */
-    .policy-block {
-      background: var(--c-surface-hi);
-      border-radius: var(--r-md);
-      padding: var(--s-3);
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-1);
-    }
-    .policy-row {
-      display: flex;
-      align-items: center;
-      gap: var(--s-2);
-      font-size: var(--t-xs);
-    }
-    .policy-key { color: var(--c-text-2); font-family: var(--f-mono); }
-    .policy-val { color: var(--c-text); font-family: var(--f-mono); }
-
-    /* Commit block */
-    .commit-block {
-      border: 1px solid var(--c-critical-ring);
-      border-radius: var(--r-md);
-      padding: var(--s-3) var(--s-4);
-      background: var(--c-critical-muted);
-    }
-    .commit-event {
-      font-family: var(--f-mono);
-      font-size: var(--t-sm);
-      color: var(--c-critical);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .commit-detail {
-      font-size: var(--t-xs);
-      color: var(--c-text-2);
-      margin-top: var(--s-1);
-      line-height: 1.5;
-    }
-
-    /* Runtime effect */
-    .effect-block {
-      background: var(--c-surface-hi);
-      border-radius: var(--r-md);
-      padding: var(--s-3);
-    }
-    .effect-row {
-      display: flex;
-      align-items: flex-start;
-      gap: var(--s-2);
-      padding: var(--s-1) 0;
-      font-size: var(--t-xs);
-    }
-    .effect-icon {
-      width: 14px; height: 14px;
-      border-radius: 50%;
-      border: 1.5px solid var(--c-inspector);
-      display: flex; align-items: center; justify-content: center;
-      flex-shrink: 0;
-      margin-top: 1px;
-    }
-    .effect-icon-dot {
-      width: 4px; height: 4px;
-      border-radius: 50%;
-      background: var(--c-inspector);
-    }
-    .effect-text { color: var(--c-text-2); line-height: 1.5; }
-    .effect-text strong { color: var(--c-text); font-weight: 500; }
-
-    /* Stress gauge */
-    .stress-gauge {
-      background: var(--c-surface-hi);
-      border-radius: var(--r-md);
-      padding: var(--s-3) var(--s-4);
-    }
-    .stress-gauge__header {
-      display: flex;
-      justify-content: space-between;
-      margin-bottom: var(--s-2);
-    }
-    .stress-gauge__label {
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-text-2);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-    .stress-gauge__val {
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-critical);
-    }
-    .stress-gauge__track {
-      height: 6px;
-      background: var(--c-border-hi);
+    .inspector-badge {
+      display: flex; align-items: center; gap: var(--s-2);
+      padding: 3px var(--s-3);
       border-radius: var(--r-full);
-      position: relative;
-      overflow: visible;
-    }
-    .stress-gauge__fill {
-      height: 100%;
-      background: linear-gradient(90deg, #8B5CF6, var(--c-critical));
-      border-radius: var(--r-full);
-      width: 92%;
-      position: relative;
-    }
-    .stress-gauge__threshold {
-      position: absolute;
-      right: 11.5%; /* 90/100 = 90%, so threshold at 10% from right = 90% from left */
-      top: -4px;
-      bottom: -4px;
-      width: 1.5px;
-      background: rgba(255,255,255,0.4);
-    }
-    .stress-gauge__threshold-label {
-      position: absolute;
-      right: 11%;
-      top: -20px;
+      background: var(--c-inspector-muted);
+      border: 1px solid var(--c-inspector-ring);
       font-family: var(--f-mono);
-      font-size: 9px;
-      color: var(--c-text-3);
-      letter-spacing: 0.06em;
-    }
-
-    /* Arrow between sections */
-    .inspector-flow-arrow {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 20px;
+      font-size: var(--t-xs);
       color: var(--c-inspector);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .inspector-badge-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c-inspector);
+      box-shadow: 0 0 8px var(--c-inspector);
+      animation: ring-pulse 2s ease infinite;
+    }
+    .topbar__right { display: flex; align-items: center; gap: var(--s-3); }
+
+    /* ── Inspector Main Body (Zero Scroll Horizontal Pipeline) ── */
+    .inspector-body {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 310px 1fr;
+      gap: var(--s-4);
+      padding: var(--s-4) var(--s-6);
+      z-index: 10;
+      height: calc(900px - 52px);
+      box-sizing: border-box;
+      overflow: hidden;
     }
 
-    /* Simulation left panel */
-    .sim-left-panel {
-      position: absolute;
-      left: var(--s-6);
-      top: calc(var(--topbar-h) + var(--s-4));
-      bottom: var(--s-6);
-      width: 200px;
+    /* ── Left Context Panel ── */
+    .context-panel {
+      background: rgba(14, 31, 74, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s-4);
       display: flex;
       flex-direction: column;
       gap: var(--s-3);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      height: 100%;
+    }
+    .event-header {
+      border-bottom: 1px solid var(--c-border);
+      padding-bottom: var(--s-2);
+    }
+    .event-tag {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--c-event);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+    .event-title {
+      font-family: var(--f-serif-ko);
+      font-size: var(--t-xl);
+      font-weight: 600;
+      color: var(--c-text);
+      margin-top: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .event-title__status {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      background: var(--c-critical-muted);
+      color: var(--c-critical);
+      border: 1px solid var(--c-critical-ring);
+    }
+    .event-time {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      color: var(--c-text-3);
+      margin-top: 4px;
     }
 
-    /* Adel MISSING state visible on map */
-    .paths-svg {
-      position: absolute; inset: 0;
-      pointer-events: none; z-index: 5;
+    /* Character Profile Card */
+    .char-profile {
+      display: flex;
+      gap: var(--s-3);
+      padding: var(--s-3);
+      background: rgba(7, 17, 40, 0.6);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
     }
-    .causal-line {
-      stroke: var(--c-inspector);
-      stroke-width: 1.5;
-      stroke-dasharray: 6 4;
-      fill: none;
-      opacity: 0.5;
-      animation: path-dash 2.5s linear infinite;
+    .char-profile__portrait {
+      width: 58px;
+      height: 74px;
+      border-radius: var(--r-sm);
+      background-image: url('../assets/character/Adel_ISTJ.png');
+      background-size: cover;
+      background-position: center top;
+      border: 1.5px solid var(--c-border-hi);
+      flex-shrink: 0;
+    }
+    .char-profile__info { flex: 1; min-width: 0; display: flex; flex-direction: column; justify-content: center; }
+    .char-profile__name { font-family: var(--f-serif-en); font-size: var(--t-md); font-weight: 600; color: var(--c-text); }
+    .char-profile__sub { font-family: var(--f-mono); font-size: 11px; color: var(--c-cream); margin-top: 1px; }
+    .char-profile__major { font-size: 11px; color: var(--c-text-2); margin-top: 2px; }
+
+    /* Stress Gauge */
+    .stress-card {
+      background: rgba(7, 17, 40, 0.6);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+    }
+    .stress-card__header {
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--f-mono); font-size: 11px;
+      margin-bottom: var(--s-2);
+    }
+    .stress-card__track {
+      height: 6px; background: rgba(255,255,255,0.1); border-radius: var(--r-full);
+      position: relative; overflow: visible;
+    }
+    .stress-card__fill {
+      height: 100%; width: 92%; border-radius: var(--r-full);
+      background: linear-gradient(90deg, #6D5AE6, var(--c-critical));
+      box-shadow: 0 0 10px rgba(224, 82, 82, 0.4);
+    }
+    .stress-card__line {
+      position: absolute; right: 10%; top: -4px; bottom: -4px; width: 1.5px;
+      background: rgba(255,255,255,0.5);
+    }
+
+    /* Return countdown box */
+    .return-box {
+      margin-top: auto;
+      padding: var(--s-3);
+      border-radius: var(--r-md);
+      background: rgba(109, 90, 230, 0.12);
+      border: 1px solid var(--c-primary-ring);
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+    .return-box__label {
+      font-family: var(--f-mono); font-size: 10px; color: var(--c-primary);
+      text-transform: uppercase; letter-spacing: 0.1em;
+    }
+    .return-box__val {
+      font-size: var(--t-xs); color: var(--c-text); font-weight: 500;
+    }
+
+    /* ── Right Pipeline Grid (4-Column Horizontal Causal Flow) ── */
+    .pipeline-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: var(--s-3);
+      height: 100%;
+      box-sizing: border-box;
+    }
+
+    .pipeline-col {
+      background: rgba(14, 31, 74, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
+      overflow: hidden;
+      position: relative;
+    }
+    .pipeline-col:hover {
+      border-color: rgba(75, 115, 205, 0.45);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.45), 0 0 20px rgba(56, 200, 220, 0.1);
+    }
+    .pipeline-col__header {
+      padding: var(--s-3) var(--s-4);
+      border-bottom: 1px solid var(--c-border);
+      background: rgba(7, 17, 40, 0.65);
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
+      flex-shrink: 0;
+    }
+    .step-badge {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--c-inspector); color: #071128;
+      font-family: var(--f-mono); font-size: 10px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .pipeline-col__title {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      color: var(--c-cream);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-weight: 600;
+    }
+
+    .pipeline-col__body {
+      flex: 1;
+      padding: var(--s-3) var(--s-4);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-3);
+      overflow: hidden;
+    }
+
+    /* Sub cards inside columns */
+    .pipe-card {
+      background: rgba(7, 17, 40, 0.55);
+      border: 1px solid rgba(80, 105, 165, 0.2);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+      font-size: var(--t-xs);
+    }
+    .pipe-card-title {
+      font-family: var(--f-mono);
+      font-size: 10px;
+      color: var(--c-text-3);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+      display: flex; justify-content: space-between;
+    }
+    .pipe-card-val {
+      color: var(--c-text);
+      line-height: 1.5;
     }
   </style>
 </head>
 <body>
 
-<div class="sim-screen">
+<div class="screen">
+  <div class="bg-map"></div>
+  <div class="bg-overlay"></div>
 
-  <div class="sim-map"></div>
-  <div class="sim-vignette"></div>
-
-  <!-- Inspector causal lines on map -->
-  <svg class="paths-svg" viewBox="0 0 1440 900">
-    <path class="causal-line" d="M 94 684 Q 600 400 1060 280"/>
-    <path class="footprint-trail" d="M 94 684 Q 80 720 65 760" style="animation-delay:0.5s;"/>
-    <circle cx="94" cy="684" r="20" stroke="var(--c-critical)" stroke-width="1.5" fill="none" opacity="0.5" style="animation: ring-pulse-critical 1.5s ease infinite;"/>
-  </svg>
-
-  <!-- Adel MISSING marker -->
-  <div class="agent-marker state-missing"
-       style="left: 6.5%; top: 76%; z-index:6;">
-    <div class="agent-marker__portrait char-adel"
-         style="background-image: url('../assets/character.png');"></div>
-    <div class="agent-marker__label" style="color:var(--c-critical);">Adel · MISSING</div>
-  </div>
-
-  <!-- ── Top Bar ── -->
+  <!-- Topbar -->
   <div class="topbar">
-    <a href="03-simulation.html" class="control-btn" title="시뮬레이션으로">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    <div class="topbar__brand">Magic Academy</div>
-    <div class="topbar__sep"></div>
-    <div class="topbar__tick">TICK <span>10</span></div>
-    <div style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-3);margin-left:var(--s-2);">DAY 01 · 09:20</div>
-    <div class="topbar__sep"></div>
-    <span class="chip chip-inspector" style="margin-left:var(--s-2);">Inspector Active</span>
-    <span class="chip chip-event" style="margin-left:var(--s-2);">STUDENT_MISSING</span>
-    <div style="margin-left:auto; display:flex; gap:var(--s-2);">
-      <button class="control-btn" onclick="window.location.href='05-relationship.html'" title="관계 그래프">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L9 4M5 7L9 10" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <a href="../index.html" class="control-btn" title="Navigator">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="3" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+    <div class="topbar__left">
+      <a href="03-simulation.html" class="btn btn-ghost btn-sm" style="padding: 6px 12px; gap:6px;">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        시뮬레이션으로 복귀
+      </a>
+      <div style="width:1px; height:18px; background:var(--c-border);"></div>
+      <div class="topbar__brand">Magic Academy</div>
+      <div class="inspector-badge">
+        <div class="inspector-badge-dot"></div>
+        Causal Trace Observatory
+      </div>
+    </div>
+
+    <div class="topbar__right">
+      <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-2);">Tick 10 &middot; 14:02:15</span>
+      <div style="width:1px; height:18px; background:var(--c-border);"></div>
+      <a href="05-relationship.html" class="btn btn-outline btn-sm" style="padding: 4px 10px;">
+        관계 그래프
+      </a>
+      <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding: 4px 14px;">
+        시뮬레이션 보기 &rarr;
       </a>
     </div>
   </div>
 
-  <!-- ── Inspector Drawer (OPEN) ── -->
-  <div class="inspector-drawer open" id="inspector"
-       style="height:900px; display:flex; flex-direction:column;">
+  <!-- Main Body: Zero-Scroll Horizontal Causal Pipeline -->
+  <div class="inspector-body">
 
-    <div class="inspector-drawer__header">
-      <span class="inspector-drawer__title">Inspector</span>
-      <button class="inspector-drawer__close" onclick="window.location.href='03-simulation.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
+    <!-- Left Context Panel (Summary & Agent) -->
+    <div class="context-panel">
+      <div class="event-header">
+        <div class="event-tag">MAGIC EVENT #04</div>
+        <div class="event-title">
+          학생 실종
+          <span class="event-title__status">CRITICAL</span>
+        </div>
+        <div class="event-time">발생 시점: TICK 10 &middot; 도서관 3층 결계 구역</div>
+      </div>
+
+      <!-- Target Agent Card -->
+      <div class="char-profile">
+        <div class="char-profile__portrait"></div>
+        <div class="char-profile__info">
+          <div class="char-profile__name">Adel</div>
+          <div class="char-profile__sub">ISTJ &middot; 2학년</div>
+          <div class="char-profile__major">방어 마법 전공</div>
+        </div>
+      </div>
+
+      <!-- Stress Condition Check -->
+      <div class="stress-card">
+        <div class="stress-card__header">
+          <span style="color:var(--c-text-2);">스트레스 상태</span>
+          <span style="color:var(--c-critical); font-weight:700;">92 / 90 (초과)</span>
+        </div>
+        <div class="stress-card__track">
+          <div class="stress-card__fill"></div>
+          <div class="stress-card__line" title="임계값 90"></div>
+        </div>
+        <div style="font-size:10px; color:var(--c-text-3); margin-top:6px; display:flex; justify-content:space-between;">
+          <span>정상 범위 0~89</span>
+          <span style="color:var(--c-critical);">임계치 90 돌파</span>
+        </div>
+      </div>
+
+      <!-- Event Cause & Return Prediction -->
+      <div class="return-box">
+        <div class="return-box__label">RUNTIME STATUS</div>
+        <div class="return-box__val">상태: MISSING (시뮬레이션 큐 일시 제외)</div>
+        <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">
+          예상 복귀: <strong>TICK 14</strong> (스트레스 &lt; 60 회복 시)
+        </div>
+      </div>
     </div>
 
-    <div class="inspector-drawer__event-label">
-      <div style="display:flex; align-items:center; gap:var(--s-2); margin-bottom:var(--s-2);">
-        <span class="chip chip-event">MAGIC EVENT</span>
-        <span class="chip chip-critical">TICK 10</span>
+    <!-- Right 4-Column Pipeline Grid (Horizontal Step Flow) -->
+    <div class="pipeline-grid">
+
+      <!-- Step 1: Condition & Trigger -->
+      <div class="pipeline-col">
+        <div class="pipeline-col__header">
+          <span class="step-badge">1</span>
+          <span class="pipeline-col__title">Condition Check</span>
+        </div>
+        <div class="pipeline-col__body">
+          <div class="pipe-card" style="border-color: rgba(224, 82, 82, 0.35); background:rgba(224, 82, 82, 0.08);">
+            <div class="pipe-card-title">
+              <span>임계 조건 검사</span>
+              <span style="color:var(--c-critical);">MET</span>
+            </div>
+            <div class="pipe-card-val">
+              • <code>stress &gt; 90</code>: <strong>92 (충족)</strong><br>
+              • <code>fatigue &gt; 80</code>: <strong>84 (충족)</strong><br>
+              • <code>recent_conflicts</code>: <strong>3건</strong>
+            </div>
+          </div>
+
+          <div class="pipe-card">
+            <div class="pipe-card-title">발생 조건 판정</div>
+            <div class="pipe-card-val" style="color:var(--c-text-2);">
+              스트레스 및 피로도 누적으로 인해 방어 마법 통제력 상실 가능성 감지됨.
+            </div>
+          </div>
+
+          <div class="pipe-card" style="margin-top:auto;">
+            <div class="pipe-card-title">Rule Evaluation</div>
+            <div class="pipe-card-val" style="font-family:var(--f-mono); font-size:11px; color:var(--c-inspector);">
+              RULE_STUDENT_MISSING<br>
+              Priority: HIGH (P1)
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="inspector-drawer__event-name">학생 실종</div>
-      <div class="inspector-drawer__event-meta" style="display:flex; align-items:center; gap:var(--s-2); margin-top:var(--s-2);">
-        <div style="
-          width:20px; height:20px; border-radius:50%;
-          background-image: url('../assets/character.png');
-          background-size: 60px 75px; background-position: 0 -4px;
-          border: 1.5px solid var(--c-critical); opacity:0.7;
-          flex-shrink:0;
-        "></div>
-        <span>Adel · stress 임계값 10 Tick 연속 초과</span>
+
+      <!-- Step 2: Memory Retrieval -->
+      <div class="pipeline-col">
+        <div class="pipeline-col__header">
+          <span class="step-badge">2</span>
+          <span class="pipeline-col__title">Memory Retrieval</span>
+        </div>
+        <div class="pipeline-col__body">
+          <div class="pipe-card">
+            <div class="pipe-card-title">
+              <span>인출 기억 1 (TICK 8)</span>
+              <span style="color:var(--c-inspector);">관찰</span>
+            </div>
+            <div class="pipe-card-val">
+              "도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."
+            </div>
+          </div>
+
+          <div class="pipe-card">
+            <div class="pipe-card-title">
+              <span>인출 기억 2 (TICK 9)</span>
+              <span style="color:var(--c-event);">대화</span>
+            </div>
+            <div class="pipe-card-val">
+              "Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."
+            </div>
+          </div>
+
+          <div class="pipe-card" style="margin-top:auto;">
+            <div class="pipe-card-title">Vector Cosine Similarity</div>
+            <div class="pipe-card-val" style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">
+              Similarity: 0.892 (High)<br>
+              Retrieved from pgvector
+            </div>
+          </div>
+        </div>
       </div>
+
+      <!-- Step 3: Decision & Narrative -->
+      <div class="pipeline-col">
+        <div class="pipeline-col__header">
+          <span class="step-badge">3</span>
+          <span class="pipeline-col__title">LLM Decision & Narrative</span>
+        </div>
+        <div class="pipeline-col__body">
+          <div class="pipe-card" style="background:rgba(244, 164, 66, 0.12); border-color:var(--c-event-ring);">
+            <div class="pipe-card-title" style="color:var(--c-event);">LLM 서사 생성</div>
+            <div class="pipe-card-val" style="font-family:var(--f-serif-ko); font-size:var(--t-sm); color:var(--c-text); line-height:1.5;">
+              "규율을 지키지 못했다는 자책감과 극도의 마력 피로가 몰려온다. 잠시 누구도 찾을 수 없는 곳으로 숨고 싶다."
+            </div>
+            <div style="margin-top:6px; font-family:var(--f-mono); font-size:10px; color:var(--c-event);">
+              &ldquo;너무 힘들면, 잠시 실종.&rdquo;
+            </div>
+          </div>
+
+          <div class="pipe-card" style="margin-top:auto;">
+            <div class="pipe-card-title">Policy Resolution</div>
+            <div class="pipe-card-val">
+              • 경합 이벤트: <strong>없음 (단독 처리)</strong><br>
+              • 승인 상태: <strong>APPROVED</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4: Commit & World Effect -->
+      <div class="pipeline-col">
+        <div class="pipeline-col__header">
+          <span class="step-badge">4</span>
+          <span class="pipeline-col__title">Commit & Runtime Effect</span>
+        </div>
+        <div class="pipeline-col__body">
+          <div class="pipe-card" style="border-color:var(--c-critical-ring); background:rgba(224, 82, 82, 0.1);">
+            <div class="pipe-card-title" style="color:var(--c-critical);">State Commit</div>
+            <div class="pipe-card-val" style="font-family:var(--f-mono); font-size:11px;">
+              Adel.status = <strong>MISSING</strong><br>
+              Adel.loc = <strong>UNKNOWN</strong><br>
+              duration = <strong>4 TICKS</strong>
+            </div>
+          </div>
+
+          <div class="pipe-card">
+            <div class="pipe-card-title">Runtime World Effect</div>
+            <div class="pipe-card-val" style="font-size:11px; color:var(--c-text-2);">
+              • Agent 런타임 루프에서 제외<br>
+              • 타 학생들의 상호작용 계획 취소<br>
+              • 맵 핀 실종 경고 이펙트 활성화
+            </div>
+          </div>
+
+          <div class="pipe-card" style="margin-top:auto; background:rgba(61, 186, 126, 0.1); border-color:rgba(61, 186, 126, 0.3);">
+            <div class="pipe-card-title" style="color:var(--c-success);">복귀 시퀀스</div>
+            <div class="pipe-card-val" style="font-size:11px; color:var(--c-text);">
+              TICK 14 도달 시 <code>STATUS_ENDED</code> 자동 발동 및 ACTIVE 복귀
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
-
-    <div class="inspector-drawer__body">
-
-      <!-- Step 1: Condition -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">1</span>
-          Condition
-        </div>
-        <div class="condition-block">
-          <div class="condition-row">
-            <span class="condition-key">agent</span>
-            <span class="condition-val">Adel</span>
-          </div>
-          <div class="condition-sep"></div>
-          <div class="condition-row">
-            <span class="condition-key">stress</span>
-            <span class="condition-val exceeded">92 <span style="color:var(--c-text-3);">/ 90 ✗</span></span>
-          </div>
-          <div class="condition-row">
-            <span class="condition-key">exceed_ticks</span>
-            <span class="condition-val met">10 / 10 ✓</span>
-          </div>
-          <div class="condition-sep"></div>
-          <div class="condition-row">
-            <span class="condition-key">event_type</span>
-            <span class="condition-val">STUDENT_MISSING</span>
-          </div>
-          <div class="condition-row">
-            <span class="condition-key">threshold</span>
-            <span class="condition-val">90</span>
-          </div>
-        </div>
-
-        <!-- Stress gauge -->
-        <div class="stress-gauge" style="margin-top:var(--s-3);">
-          <div class="stress-gauge__header">
-            <span class="stress-gauge__label">Stress</span>
-            <span class="stress-gauge__val">92 / 100</span>
-          </div>
-          <div class="stress-gauge__track">
-            <div class="stress-gauge__fill"></div>
-            <div class="stress-gauge__threshold"></div>
-            <div class="stress-gauge__threshold-label">90</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="inspector-flow-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Step 2: Candidate -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">2</span>
-          Candidate
-        </div>
-        <div class="policy-block">
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">event</span>
-            <span class="policy-val" style="margin-left:auto;">STUDENT_MISSING</span>
-          </div>
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">priority</span>
-            <span class="policy-val" style="margin-left:auto;">HIGH</span>
-          </div>
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">confidence</span>
-            <span class="policy-val met" style="margin-left:auto;">1.0</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="inspector-flow-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Step 3: Policy -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">3</span>
-          Policy
-        </div>
-        <div class="policy-block">
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">inactive_ticks</span>
-            <span class="policy-val" style="margin-left:auto;">4</span>
-          </div>
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">recovery_condition</span>
-            <span class="policy-val" style="margin-left:auto;">stress &lt; 60</span>
-          </div>
-          <div class="policy-row">
-            <div style="width:6px;height:6px;border-radius:50%;background:var(--c-inspector);flex-shrink:0;"></div>
-            <span class="policy-key">visible</span>
-            <span class="policy-val" style="margin-left:auto; color:var(--c-critical);">false</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="inspector-flow-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Step 4: Conflict Resolution -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">4</span>
-          Conflict Resolution
-        </div>
-        <div class="inspector-section__content">
-          <span style="color:var(--c-text-3);">충돌 없음 — 다른 이벤트와 경합 없이 단독 처리</span>
-        </div>
-      </div>
-
-      <div class="inspector-flow-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Step 5: Commit -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">5</span>
-          Commit
-        </div>
-        <div class="commit-block">
-          <div class="commit-event">STUDENT_MISSING COMMITTED</div>
-          <div class="commit-detail" style="margin-top:var(--s-2);">
-            Adel.status = MISSING<br>
-            Adel.inactive_until = TICK 14<br>
-            narrative: "너무 힘들면, 잠시 실종."
-          </div>
-        </div>
-
-        <!-- LLM Narrative -->
-        <div class="llm-block" style="margin-top:var(--s-3);">
-          <div class="llm-label">LLM 서술</div>
-          <div class="llm-text">너무 힘들면, 잠시 실종.</div>
-        </div>
-      </div>
-
-      <div class="inspector-flow-arrow">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M8 2v12M3 10l5 5 5-5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      </div>
-
-      <!-- Step 6: Runtime Effect -->
-      <div class="inspector-section">
-        <div class="inspector-section__label">
-          <span class="step-badge" style="margin-left:calc(var(--s-5) * -1 - 8px);">6</span>
-          Runtime Effect
-        </div>
-        <div class="effect-block">
-          <div class="effect-row">
-            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
-            <span class="effect-text">Agent Runtime 실행 대상에서 <strong>Adel 제외</strong> (TICK 10 ~ 14)</span>
-          </div>
-          <div class="effect-row">
-            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
-            <span class="effect-text">다른 Agent의 Adel 관련 행동 계획 <strong>중단</strong></span>
-          </div>
-          <div class="effect-row">
-            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
-            <span class="effect-text">TICK 14 또는 stress &lt; 60 달성 시 <strong>자동 복귀</strong></span>
-          </div>
-          <div class="effect-row">
-            <div class="effect-icon"><div class="effect-icon-dot"></div></div>
-            <span class="effect-text">복귀 시 STATUS_ENDED 이벤트 발생 후 ACTIVE 전환</span>
-          </div>
-        </div>
-
-        <!-- Return forecast -->
-        <div style="
-          margin-top: var(--s-3);
-          padding: var(--s-2) var(--s-3);
-          border-radius: var(--r-sm);
-          background: var(--c-primary-muted);
-          border: 1px solid var(--c-primary-ring);
-          font-family: var(--f-mono);
-          font-size: var(--t-xs);
-          color: var(--c-primary);
-          display: flex; align-items: center; gap: var(--s-2);
-        ">
-          <div style="width:5px;height:5px;border-radius:50%;background:var(--c-primary);flex-shrink:0;"></div>
-          예상 복귀: TICK 14 · STATUS_ENDED → ACTIVE
-        </div>
-      </div>
-
-      <!-- Close / Back -->
-      <div style="padding-top: var(--s-4); display:flex; gap:var(--s-2);">
-        <button class="btn btn-ghost btn-sm" onclick="window.location.href='03-simulation.html'" style="flex:1;">
-          ← 시뮬레이션으로
-        </button>
-      </div>
-
-    </div><!-- end body -->
-  </div><!-- end inspector-drawer -->
-
+  </div>
 </div>
 
 <script src="../js/magic-academy.js"></script>
