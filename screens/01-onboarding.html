@@ -138,6 +138,37 @@
       overflow: hidden;
       background: #060d20;
     }
+
+    /* ── Gold Streak Animation ── */
+    .bg-gold-streaks {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 3;
+    }
+    .bg-gold-streak {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(212, 178, 111, 0.55) 35%,
+        rgba(235, 205, 145, 0.9) 50%,
+        rgba(212, 178, 111, 0.55) 65%,
+        transparent 100%
+      );
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    @keyframes gold-streak-slide {
+      0%   { opacity: 0; transform: translateX(-460px); }
+      12%  { opacity: 0; }
+      28%  { opacity: 1; }
+      72%  { opacity: 0.75; }
+      88%  { opacity: 0; }
+      100% { opacity: 0; transform: translateX(1400px); }
+    }
     .ob-campus__img {
       position: absolute;
       inset: -10px;
@@ -386,6 +417,17 @@
     <div class="ob-campus__img" id="ob-campus-img"></div>
     <div class="ob-campus__vignette"></div>
 
+    <!-- ── Animated Gold Streaks ── -->
+    <div class="bg-gold-streaks">
+      <div class="bg-gold-streak" style="top:  7%; width: 360px; animation: gold-streak-slide 5.2s 0.4s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 19%; width: 220px; animation: gold-streak-slide 4.6s 1.5s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 33%; width: 310px; animation: gold-streak-slide 6.0s 0.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 48%; width: 190px; animation: gold-streak-slide 3.9s 2.3s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 61%; width: 400px; animation: gold-streak-slide 5.5s 0.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 75%; width: 270px; animation: gold-streak-slide 4.3s 1.9s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 88%; width: 230px; animation: gold-streak-slide 4.9s 0.6s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+    </div>
+
     <!-- ── STAGE 1: Alive Magic World (Pulsing Agents & Arcane Path) ── -->
     <div class="interactive-stage active" id="ob-stage-1">
       <!-- Agent Pins -->
@@ -491,10 +533,16 @@
     const campusImg = document.getElementById('ob-campus-img');
     if (n === 1) {
       campusImg.style.transform = 'scale(1.0) translate(0px, 0px)';
+      campusImg.style.backgroundImage = "url('../assets/concept/onboading_v1.1.png')";
+      campusImg.style.filter = 'brightness(0.7) saturate(0.85)';
     } else if (n === 2) {
       campusImg.style.transform = 'scale(1.08) translate(-20px, -15px)';
+      campusImg.style.backgroundImage = "url('../assets/concept/onboading_v1.1.png')";
+      campusImg.style.filter = 'brightness(0.55) saturate(0.7) hue-rotate(20deg)';
     } else if (n === 3) {
       campusImg.style.transform = 'scale(1.15) translate(-40px, -30px)';
+      campusImg.style.backgroundImage = "url('../assets/concept/concept_v1.1.png')";
+      campusImg.style.filter = 'brightness(0.35) saturate(0.5) hue-rotate(165deg)';
     }
 
     currentSlide = n;

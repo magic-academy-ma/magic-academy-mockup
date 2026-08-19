@@ -73,6 +73,23 @@
     }
     .nav-card.priority { border-color: var(--c-cream-ring); }
     .nav-card.priority:hover { border-color: var(--c-cream); box-shadow: 0 0 20px rgba(212, 178, 111, 0.3); }
+    .nav-card.archived { opacity: 0.5; border-color: rgba(100, 90, 70, 0.4); pointer-events: auto; }
+    .nav-card.archived:hover { opacity: 0.65; border-color: rgba(140, 120, 90, 0.5); transform: none; box-shadow: none; }
+    .archive-badge {
+      position: absolute;
+      top: var(--s-2);
+      left: var(--s-2);
+      font-family: var(--f-mono);
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(200, 180, 140, 0.85);
+      background: rgba(10, 15, 30, 0.9);
+      border: 1px solid rgba(150, 120, 80, 0.5);
+      padding: 2px 7px;
+      border-radius: var(--r-sm);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
 
     .nav-card__preview {
       width: 100%;
@@ -348,10 +365,11 @@
       </a>
 
       <!-- S11: What-If 분기 트리 -->
-      <a href="screens/12-branch-tree.html" class="nav-card priority">
+      <a href="screens/12-branch-tree.html" class="nav-card priority archived">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.2) saturate(0.3);"></div>
           <div class="nav-card__preview-overlay"></div>
+          <div class="archive-badge">ARCHIVED</div>
           <div class="nav-card__preview-badge"><span class="screen-tag">S11</span></div>
         </div>
         <div class="nav-card__body">
@@ -497,10 +515,11 @@
         </div>
       </a>
 
-      <a href="screens/12-branch-tree.html" class="nav-card priority">
+      <a href="screens/12-branch-tree.html" class="nav-card priority archived">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/character/Ria_INFP.png'); background-position:center 10%;"></div>
           <div class="nav-card__preview-overlay"></div>
+          <div class="archive-badge">ARCHIVED</div>
           <div class="nav-card__preview-badge"><span class="screen-tag">S12</span></div>
         </div>
         <div class="nav-card__body">

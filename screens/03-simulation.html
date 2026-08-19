@@ -12,12 +12,13 @@
 
     .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
 
-    /* ── Background map ─── */
+    /* ── Background (blurred atmospheric) ─── */
     .sim-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/concept_v1.1.png');
       background-size: cover; background-position: center;
-      transition: opacity 0.25s ease;
+      filter: blur(8px) brightness(0.22) saturate(0.5);
+      transform: scale(1.03);
     }
     .sim-vignette {
       position: absolute; inset: 0;
@@ -49,7 +50,7 @@
     /* ── Left Panel ─── */
     .sim-left {
       position: absolute;
-      left: 12px; top: 100px; bottom: 148px;
+      left: 12px; top: 58px; bottom: 148px;
       width: 230px;
       background: rgba(10, 17, 38, 0.82);
       backdrop-filter: blur(16px);
@@ -89,27 +90,6 @@
       box-shadow: 0 0 10px var(--c-primary-muted);
     }
     .sim-left__search input::placeholder { color: var(--c-text-3); }
-    .sim-left__filters {
-      display: flex; gap: var(--s-1);
-      padding: 0 var(--s-4) var(--s-3);
-      flex-shrink: 0;
-    }
-    .filter-tab {
-      flex: 1; padding: var(--s-1) 0;
-      background: rgba(16, 26, 56, 0.5);
-      border: 1px solid var(--c-border);
-      border-radius: var(--r-sm);
-      font-size: var(--t-xs); color: var(--c-text-2);
-      cursor: pointer; text-align: center;
-      transition: background var(--tr-fast), color var(--tr-fast), border-color var(--tr-fast);
-    }
-    .filter-tab.active {
-      background: var(--c-primary-muted);
-      border-color: var(--c-primary);
-      color: #ffffff;
-      font-weight: 500;
-      box-shadow: 0 0 10px var(--c-primary-muted);
-    }
     .sim-left__list {
       flex: 1; overflow-y: auto;
       border-top: 1px solid var(--c-border);
@@ -118,7 +98,7 @@
       display: flex; align-items: center; gap: var(--s-3);
       padding: var(--s-3) var(--s-4);
       cursor: pointer; border-bottom: 1px solid rgba(80, 105, 165, 0.12);
-      transition: background var(--tr-fast);
+      transition: background var(--tr-fast), opacity var(--tr-fast);
     }
     .agent-list-item:hover { background: rgba(22, 35, 71, 0.6); }
     .agent-list-item.selected {
@@ -131,8 +111,7 @@
       background-repeat: no-repeat; flex-shrink: 0;
       border: 1.5px solid var(--c-border);
       box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-      background-size: cover;
-      background-position: center top;
+      background-size: cover; background-position: center top;
     }
     .char-adel-sm { background-image: url('../assets/character/Adel_ISTJ.png'); }
     .char-leo-sm  { background-image: url('../assets/character/Leo_ESTP.png'); }
@@ -168,7 +147,7 @@
     /* ── Right Panel ─── */
     .sim-right {
       position: absolute;
-      right: 12px; top: 100px; bottom: 148px;
+      right: 12px; top: 58px; bottom: 148px;
       width: 290px;
       background: rgba(11, 24, 56, 0.88);
       backdrop-filter: blur(16px);
@@ -184,26 +163,18 @@
       border-bottom: 1px solid var(--c-border);
       flex-shrink: 0;
       background: rgba(6, 13, 32, 0.7);
-      display: flex;
-      gap: var(--s-3);
-      align-items: center;
+      display: flex; gap: var(--s-3); align-items: center;
     }
     .sim-right__portrait {
-      width: 50px;
-      height: 64px;
+      width: 50px; height: 64px;
       border-radius: var(--r-sm);
       border: 1.5px solid var(--c-border-hi);
-      background-size: cover;
-      background-position: center top;
-      flex-shrink: 0;
-      background-color: var(--c-surface-hi);
+      background-size: cover; background-position: center top;
+      flex-shrink: 0; background-color: var(--c-surface-hi);
     }
     .sim-right__header-info {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      flex: 1; min-width: 0;
+      display: flex; flex-direction: column; justify-content: center;
     }
     .sim-right__name {
       display: flex; align-items: center; gap: var(--s-2);
@@ -217,7 +188,11 @@
       font-size: 11px; color: var(--c-text-2); margin-top: 2px;
       display: flex; align-items: center;
     }
-    .sim-right__body { flex: 1; overflow-y: auto; padding: var(--s-3) var(--s-4); display: flex; flex-direction: column; gap: var(--s-3); }
+    .sim-right__body {
+      flex: 1; overflow-y: auto;
+      padding: var(--s-3) var(--s-4);
+      display: flex; flex-direction: column; gap: var(--s-3);
+    }
     .sim-right__section-title {
       font-family: var(--f-mono); font-size: 10px;
       color: var(--c-cream); letter-spacing: 0.1em;
@@ -233,96 +208,125 @@
     .memory-item {
       font-size: 11px; color: var(--c-text-2); padding: 3px 0;
       border-bottom: 1px solid rgba(70, 100, 180, 0.15);
-      display: flex; gap: var(--s-2); align-items: flex-start;
-      line-height: 1.4;
+      display: flex; gap: var(--s-2); align-items: flex-start; line-height: 1.4;
     }
     .memory-item:last-child { border-bottom: none; }
     .memory-item::before { content: '◆'; font-size: 7px; color: var(--c-primary); flex-shrink: 0; margin-top: 3px; }
 
-    /* ── Speech Bubble Overlays on Map ─── */
-    .speech-bubble {
+    /* ── Campus Zone Map (Always-Visible Center) ── */
+    .zone-map-panel {
       position: absolute;
-      background: rgba(9, 18, 44, 0.92);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      left: 254px; right: 314px;
+      top: 58px; bottom: 148px;
+      z-index: 15;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: 1fr 1fr;
+      gap: 10px;
+      padding: 10px;
+    }
+    .zone-card {
+      background: rgba(10, 17, 40, 0.78);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border: 1px solid var(--c-border);
-      border-radius: var(--r-md);
-      padding: 6px 10px;
-      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.5), 0 0 12px rgba(94, 96, 232, 0.2);
-      z-index: 25;
-      max-width: 220px;
+      border-radius: var(--r-lg);
       cursor: pointer;
-      transition: transform var(--tr-fast), border-color var(--tr-fast), box-shadow var(--tr-fast);
-      animation: bubble-float 3s ease-in-out infinite;
+      transition: border-color var(--tr-fast), background var(--tr-fast), box-shadow var(--tr-fast);
+      display: flex; flex-direction: column;
+      position: relative; overflow: hidden;
     }
-    .speech-bubble:hover {
-      transform: translateY(-3px) scale(1.03);
+    .zone-card:hover {
+      border-color: var(--c-border-hi);
+      background: rgba(18, 28, 62, 0.85);
+    }
+    .zone-card.active {
       border-color: var(--c-primary);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6), 0 0 16px rgba(94, 96, 232, 0.35);
+      background: rgba(94, 96, 232, 0.12);
+      box-shadow: 0 0 28px rgba(94, 96, 232, 0.18), inset 0 0 30px rgba(94, 96, 232, 0.05);
     }
-    .speech-bubble::after {
-      content: '';
-      position: absolute;
-      bottom: -6px;
-      left: 20px;
-      width: 0; height: 0;
-      border-left: 6px solid transparent;
-      border-right: 6px solid transparent;
-      border-top: 6px solid rgba(9, 18, 44, 0.92);
+    .zone-card__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      opacity: 0.09; transition: opacity var(--tr-fast);
     }
-    .speech-bubble--right::after {
-      left: auto;
-      right: 20px;
+    .zone-card:hover .zone-card__bg { opacity: 0.17; }
+    .zone-card.active .zone-card__bg { opacity: 0.20; }
+    .zone-card__content {
+      position: relative; z-index: 1;
+      padding: var(--s-4);
+      display: flex; flex-direction: column;
+      height: 100%; box-sizing: border-box;
     }
-    .speech-bubble__header {
-      display: flex;
-      align-items: center;
-      gap: 6px;
+    .zone-card__tag {
+      font-family: var(--f-mono); font-size: 9px;
+      color: var(--c-text-3); letter-spacing: 0.12em; text-transform: uppercase;
       margin-bottom: 2px;
     }
-    .speech-bubble__speaker {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      font-weight: 700;
-      letter-spacing: 0.05em;
+    .zone-card.active .zone-card__tag { color: rgba(140, 144, 255, 0.8); }
+    .zone-card__name {
+      font-family: var(--f-serif-ko); font-size: var(--t-lg);
+      font-weight: 600; color: var(--c-text);
     }
-    .speech-bubble__target {
-      font-size: 9px;
-      color: var(--c-text-3);
+    .zone-card.active .zone-card__name { color: #a0a4ff; }
+    .zone-card__count {
+      font-family: var(--f-mono); font-size: 9px;
+      color: var(--c-primary);
+      background: rgba(94, 96, 232, 0.15);
+      border: 1px solid rgba(94, 96, 232, 0.28);
+      border-radius: 99px; padding: 1px 7px;
+      align-self: flex-start; margin-top: 4px;
     }
-    .speech-bubble__text {
-      font-size: 11px;
-      color: var(--c-text);
-      line-height: 1.35;
-      word-break: keep-all;
+    .zone-card__agents {
+      display: flex; gap: var(--s-2); align-items: center;
+      flex-wrap: wrap; margin-top: auto; padding-top: var(--s-3);
     }
-    .speech-bubble__delta {
-      font-family: var(--f-mono);
-      font-size: 9px;
-      color: var(--c-success);
-      margin-top: 3px;
-      display: inline-block;
-      background: var(--c-success-muted);
-      padding: 1px 4px;
-      border-radius: 3px;
+    .zone-agent-dot {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid var(--c-border-hi);
+      background-size: cover; background-position: center top;
+      cursor: pointer; flex-shrink: 0;
+      transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
+    }
+    .zone-agent-dot:hover {
+      transform: scale(1.14);
+      border-color: var(--c-primary);
+      box-shadow: 0 0 14px rgba(94, 96, 232, 0.55);
+    }
+    .zone-agent-dot.selected {
+      border-color: var(--c-primary);
+      box-shadow: 0 0 18px rgba(94, 96, 232, 0.65);
+    }
+    .zone-agent-dot.missing {
+      border-color: var(--c-critical);
+      box-shadow: 0 0 12px rgba(219, 76, 76, 0.55);
+      animation: ring-pulse-critical 1.5s ease infinite;
+    }
+    .zone-agent-prof {
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 2px solid rgba(215, 198, 167, 0.4);
+      background: rgba(26, 40, 80, 0.9);
+      display: flex; align-items: center; justify-content: center;
+      font-family: var(--f-serif-en); font-size: 9px; font-weight: 700;
+      color: var(--c-cream); flex-shrink: 0; cursor: pointer;
+      transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
+    }
+    .zone-agent-prof:hover {
+      transform: scale(1.14);
+      border-color: var(--c-cream);
+      box-shadow: 0 0 14px rgba(215, 198, 167, 0.4);
+    }
+    .zone-agent-prof.selected {
+      border-color: var(--c-cream);
+      box-shadow: 0 0 16px rgba(215, 198, 167, 0.5);
+    }
+    .zone-card__empty {
+      font-family: var(--f-mono); font-size: 9px;
+      color: var(--c-text-3); letter-spacing: 0.08em;
+      margin-top: auto; padding-top: var(--s-3);
     }
 
-    /* Accent color per character */
-    .bubble-ria  { border-left: 3px solid var(--c-char-ria-light); }
-    .bubble-ria .speech-bubble__speaker { color: var(--c-char-ria-light); }
-    .bubble-kai  { border-left: 3px solid var(--c-char-kai-light); }
-    .bubble-kai .speech-bubble__speaker { color: var(--c-char-kai-light); }
-    .bubble-leo  { border-left: 3px solid var(--c-char-leo-light); }
-    .bubble-leo .speech-bubble__speaker { color: var(--c-char-leo-light); }
-    .bubble-sera { border-left: 3px solid var(--c-char-sera-light); }
-    .bubble-sera .speech-bubble__speaker { color: var(--c-char-sera-light); }
-
-    @keyframes bubble-float {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-4px); }
-    }
-
-    /* ── Event & Dialogue Log (Bottom Panel with 3 Tabs) ─── */
+    /* ── Event Log Bottom ─── */
     .sim-eventlog {
       position: absolute;
       left: 12px; right: 12px; bottom: 10px;
@@ -343,612 +347,345 @@
       flex-shrink: 0;
       background: rgba(6, 13, 32, 0.75);
     }
-    .log-tab-group {
-      display: flex;
-      align-items: center;
-      gap: var(--s-1);
-    }
+    .log-tab-group { display: flex; align-items: center; gap: var(--s-1); }
     .log-tab-btn {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      padding: 3px 10px;
-      border-radius: var(--r-sm);
-      color: var(--c-text-2);
-      background: transparent;
-      border: 1px solid transparent;
-      cursor: pointer;
-      letter-spacing: 0.06em;
-      transition: all var(--tr-fast);
+      font-family: var(--f-mono); font-size: 10px;
+      padding: 3px 10px; border-radius: var(--r-sm);
+      color: var(--c-text-2); background: transparent;
+      border: 1px solid transparent; cursor: pointer;
+      letter-spacing: 0.06em; transition: all var(--tr-fast);
     }
-    .log-tab-btn:hover {
-      color: var(--c-text);
-      background: rgba(255, 255, 255, 0.05);
-    }
+    .log-tab-btn:hover { color: var(--c-text); background: rgba(255,255,255,0.05); }
     .log-tab-btn.active {
-      color: var(--c-cream);
-      background: var(--c-cream-muted);
-      border-color: var(--c-cream-ring);
-      font-weight: 600;
+      color: var(--c-cream); background: var(--c-cream-muted);
+      border-color: var(--c-cream-ring); font-weight: 600;
     }
     .sim-eventlog__list {
-      flex: 1; overflow-y: auto;
-      display: flex; flex-direction: column;
+      flex: 1; overflow-y: auto; display: flex; flex-direction: column;
     }
     .log-item {
       display: flex; gap: var(--s-3); align-items: center;
       padding: 4px var(--s-4); font-size: 11px; height: 24px;
-      border-bottom: 1px solid rgba(70, 100, 180, 0.12); cursor: pointer;
-      transition: background var(--tr-fast);
-      box-sizing: border-box;
-      flex-shrink: 0;
+      border-bottom: 1px solid rgba(70,100,180,0.12); cursor: pointer;
+      transition: background var(--tr-fast); box-sizing: border-box; flex-shrink: 0;
     }
     .log-item:last-child { border-bottom: none; }
-    .log-item:hover { background: rgba(18, 36, 80, 0.6); }
+    .log-item:hover { background: rgba(18,36,80,0.6); }
     .log-item__tick {
       font-family: var(--f-mono); color: var(--c-primary);
       flex-shrink: 0; width: 34px; font-weight: 600; font-size: 10px;
     }
     .log-item__tag {
-      font-family: var(--f-mono);
-      font-size: 9px;
-      padding: 1px 5px;
-      border-radius: 3px;
-      flex-shrink: 0;
-      letter-spacing: 0.04em;
+      font-family: var(--f-mono); font-size: 9px;
+      padding: 1px 5px; border-radius: 3px; flex-shrink: 0; letter-spacing: 0.04em;
     }
-    .tag-dialogue {
-      background: rgba(0, 180, 216, 0.16);
-      color: var(--c-inspector);
-      border: 1px solid var(--c-inspector-ring);
-    }
-    .tag-system {
-      background: rgba(212, 178, 111, 0.16);
-      color: var(--c-cream);
-      border: 1px solid var(--c-cream-ring);
-    }
-    .tag-critical {
-      background: var(--c-critical-muted);
-      color: var(--c-critical);
-      border: 1px solid var(--c-critical-ring);
-    }
-    .log-item__text { color: var(--c-text-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; flex: 1; }
-    .log-item--critical .log-item__text { color: var(--c-critical); font-weight: 500; }
-    .log-item--event .log-item__text { color: var(--c-cream); }
-    .log-item__meta {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      color: var(--c-success);
-      flex-shrink: 0;
-    }
+    .tag-dialogue { background:rgba(0,180,216,0.16); color:var(--c-inspector); border:1px solid var(--c-inspector-ring); }
+    .tag-system   { background:rgba(212,178,111,0.16); color:var(--c-cream); border:1px solid var(--c-cream-ring); }
+    .tag-critical { background:var(--c-critical-muted); color:var(--c-critical); border:1px solid var(--c-critical-ring); }
+    .log-item__text { color:var(--c-text-2); white-space:nowrap; overflow:hidden; text-overflow:ellipsis; flex:1; }
+    .log-item--critical .log-item__text { color:var(--c-critical); font-weight:500; }
+    .log-item--event .log-item__text { color:var(--c-cream); }
+    .log-item__meta { font-family:var(--f-mono); font-size:10px; color:var(--c-success); flex-shrink:0; }
 
-    /* ── Compact Slim Event Banner (Non-blocking) ─── */
+    /* ── Compact Slim Event Banner ─── */
     .event-slim-banner {
       position: absolute;
-      top: 100px;
-      left: 254px;
-      right: 304px;
+      top: 58px; left: 254px; right: 314px;
       z-index: 22;
       background: rgba(14, 31, 74, 0.92);
       border: 1px solid var(--c-critical-ring);
       border-radius: var(--r-md);
       padding: 8px var(--s-4);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: var(--s-3);
-      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 14px rgba(224, 82, 82, 0.25);
+      display: flex; align-items: center; justify-content: space-between; gap: var(--s-3);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.5), 0 0 14px rgba(224,82,82,0.25);
       animation: float-up 300ms ease both;
       backdrop-filter: blur(12px);
     }
-    .event-slim-banner__left {
-      display: flex; align-items: center; gap: var(--s-3);
-    }
+    .event-slim-banner__left { display:flex; align-items:center; gap:var(--s-3); }
     .event-slim-banner__badge {
-      font-family: var(--f-mono); font-size: 10px; font-weight: 700;
-      background: var(--c-critical-muted); color: var(--c-critical);
-      border: 1px solid var(--c-critical-ring);
-      padding: 2px 6px; border-radius: var(--r-sm); letter-spacing: 0.08em;
+      font-family:var(--f-mono); font-size:10px; font-weight:700;
+      background:var(--c-critical-muted); color:var(--c-critical);
+      border:1px solid var(--c-critical-ring);
+      padding:2px 6px; border-radius:var(--r-sm); letter-spacing:0.08em;
     }
     .event-slim-banner__title {
-      font-family: var(--f-serif-ko); font-size: var(--t-sm); font-weight: 600; color: var(--c-text);
+      font-family:var(--f-serif-ko); font-size:var(--t-sm); font-weight:600; color:var(--c-text);
     }
-    .event-slim-banner__desc {
-      font-size: 11px; color: var(--c-text-2);
-    }
+    .event-slim-banner__desc { font-size:11px; color:var(--c-text-2); }
 
-    /* ── Dialogue Viewer Modal Popup ─── */
+    /* ── Dialogue Viewer Modal ─── */
     .dialogue-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(2, 8, 22, 0.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 50;
-      display: none;
-      align-items: center;
-      justify-content: center;
+      position:fixed; inset:0;
+      background:rgba(2,8,22,0.78);
+      backdrop-filter:blur(14px); -webkit-backdrop-filter:blur(14px);
+      z-index:50; display:none; align-items:center; justify-content:center;
     }
-    .dialogue-modal.open {
-      display: flex;
-    }
+    .dialogue-modal.open { display:flex; }
     .dialogue-modal__content {
-      width: 620px;
-      max-height: 80vh;
-      background: rgba(11, 24, 56, 0.95);
-      border: 1px solid var(--c-border-hi);
-      border-radius: var(--r-xl);
-      box-shadow: var(--sh-lg), 0 0 40px rgba(94, 96, 232, 0.25);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      animation: float-up 240ms ease both;
+      width:620px; max-height:80vh;
+      background:rgba(11,24,56,0.95);
+      border:1px solid var(--c-border-hi); border-radius:var(--r-xl);
+      box-shadow:var(--sh-lg), 0 0 40px rgba(94,96,232,0.25);
+      display:flex; flex-direction:column; overflow:hidden;
+      animation:float-up 240ms ease both;
     }
     .dialogue-modal__header {
-      padding: var(--s-4) var(--s-6);
-      background: rgba(6, 13, 32, 0.8);
-      border-bottom: 1px solid var(--c-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding:var(--s-4) var(--s-6); background:rgba(6,13,32,0.8);
+      border-bottom:1px solid var(--c-border);
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .dialogue-modal__title-group {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-    }
-    .dialogue-modal__title {
-      font-family: var(--f-serif-ko);
-      font-size: var(--t-base);
-      font-weight: 600;
-      color: var(--c-text);
-    }
+    .dialogue-modal__title-group { display:flex; align-items:center; gap:var(--s-3); }
+    .dialogue-modal__title { font-family:var(--f-serif-ko); font-size:var(--t-base); font-weight:600; color:var(--c-text); }
     .dialogue-modal__tick {
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-cream);
-      background: var(--c-cream-muted);
-      border: 1px solid var(--c-cream-ring);
-      padding: 1px 6px;
-      border-radius: 3px;
+      font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-cream);
+      background:var(--c-cream-muted); border:1px solid var(--c-cream-ring);
+      padding:1px 6px; border-radius:3px;
     }
     .dialogue-modal__close {
-      width: 28px; height: 28px;
-      display: flex; align-items: center; justify-content: center;
-      border-radius: var(--r-sm);
-      color: var(--c-text-2);
-      cursor: pointer;
-      transition: background var(--tr-fast), color var(--tr-fast);
+      width:28px; height:28px; display:flex; align-items:center; justify-content:center;
+      border-radius:var(--r-sm); color:var(--c-text-2); cursor:pointer;
+      transition:background var(--tr-fast), color var(--tr-fast);
     }
-    .dialogue-modal__close:hover { background: var(--c-surface-hi); color: #fff; }
+    .dialogue-modal__close:hover { background:var(--c-surface-hi); color:#fff; }
     .dialogue-modal__participants {
-      display: flex;
-      align-items: center;
-      justify-content: space-around;
-      padding: var(--s-3) var(--s-6);
-      background: rgba(14, 28, 64, 0.5);
-      border-bottom: 1px solid var(--c-border);
+      display:flex; align-items:center; justify-content:space-around;
+      padding:var(--s-3) var(--s-6); background:rgba(14,28,64,0.5);
+      border-bottom:1px solid var(--c-border);
     }
-    .participant-card {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-    }
+    .participant-card { display:flex; align-items:center; gap:var(--s-3); }
     .participant-avatar {
-      width: 36px; height: 36px;
-      border-radius: 50%;
-      border: 2px solid var(--c-border);
-      background-size: cover;
-      background-position: center top;
+      width:36px; height:36px; border-radius:50%; border:2px solid var(--c-border);
+      background-size:cover; background-position:center top;
     }
-    .participant-info {
-      display: flex;
-      flex-direction: column;
-    }
-    .participant-name {
-      font-size: var(--t-sm);
-      font-weight: 600;
-      color: var(--c-text);
-    }
-    .participant-status {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      color: var(--c-text-2);
-    }
+    .participant-info { display:flex; flex-direction:column; }
+    .participant-name { font-size:var(--t-sm); font-weight:600; color:var(--c-text); }
+    .participant-status { font-family:var(--f-mono); font-size:10px; color:var(--c-text-2); }
     .dialogue-modal__body {
-      flex: 1;
-      overflow-y: auto;
-      padding: var(--s-5) var(--s-6);
-      display: flex;
-      flex-direction: column;
-      gap: var(--s-4);
+      flex:1; overflow-y:auto; padding:var(--s-5) var(--s-6);
+      display:flex; flex-direction:column; gap:var(--s-4);
     }
-    .chat-bubble-row {
-      display: flex;
-      gap: var(--s-3);
-      max-width: 85%;
-    }
-    .chat-bubble-row.left { align-self: flex-start; }
-    .chat-bubble-row.right {
-      align-self: flex-end;
-      flex-direction: row-reverse;
-    }
+    .chat-bubble-row { display:flex; gap:var(--s-3); max-width:85%; }
+    .chat-bubble-row.left { align-self:flex-start; }
+    .chat-bubble-row.right { align-self:flex-end; flex-direction:row-reverse; }
     .chat-avatar {
-      width: 32px; height: 32px;
-      border-radius: 50%;
-      border: 1.5px solid var(--c-border);
-      background-size: cover;
-      background-position: center top;
-      flex-shrink: 0;
+      width:32px; height:32px; border-radius:50%; border:1.5px solid var(--c-border);
+      background-size:cover; background-position:center top; flex-shrink:0;
     }
-    .chat-bubble-content {
-      display: flex;
-      flex-direction: column;
-      gap: 3px;
-    }
-    .chat-bubble-sender {
-      font-family: var(--f-mono);
-      font-size: 10px;
-      color: var(--c-text-3);
-    }
-    .chat-bubble-row.right .chat-bubble-sender { text-align: right; }
+    .chat-bubble-content { display:flex; flex-direction:column; gap:3px; }
+    .chat-bubble-sender { font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); }
+    .chat-bubble-row.right .chat-bubble-sender { text-align:right; }
     .chat-bubble-box {
-      background: rgba(18, 36, 82, 0.85);
-      border: 1px solid var(--c-border);
-      padding: var(--s-3) var(--s-4);
-      border-radius: var(--r-md);
-      font-size: 12px;
-      color: var(--c-text);
-      line-height: 1.45;
+      background:rgba(18,36,82,0.85); border:1px solid var(--c-border);
+      padding:var(--s-3) var(--s-4); border-radius:var(--r-md);
+      font-size:12px; color:var(--c-text); line-height:1.45;
     }
     .chat-bubble-row.right .chat-bubble-box {
-      background: rgba(94, 96, 232, 0.22);
-      border-color: var(--c-primary-ring);
+      background:rgba(94,96,232,0.22); border-color:var(--c-primary-ring);
     }
     .dialogue-modal__footer {
-      padding: var(--s-3) var(--s-6);
-      background: rgba(6, 13, 32, 0.8);
-      border-top: 1px solid var(--c-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      padding:var(--s-3) var(--s-6); background:rgba(6,13,32,0.8);
+      border-top:1px solid var(--c-border);
+      display:flex; align-items:center; justify-content:space-between;
     }
-    .delta-badge-group {
-      display: flex;
-      align-items: center;
-      gap: var(--s-2);
-    }
+    .delta-badge-group { display:flex; align-items:center; gap:var(--s-2); }
     .delta-badge {
-      font-family: var(--f-mono);
-      font-size: 11px;
-      padding: 2px 8px;
+      font-family:var(--f-mono); font-size:11px; padding:2px 8px; border-radius:var(--r-sm);
+      display:flex; align-items:center; gap:4px;
+    }
+    .delta-badge--pos { background:rgba(56,178,119,0.15); color:#5ce67a; border:1px solid rgba(56,178,119,0.3); }
+    .delta-badge--neg { background:var(--c-critical-muted); color:var(--c-critical); border:1px solid var(--c-critical-ring); }
+
+    /* ── View Toggle ─── */
+    .view-toggle-group {
+      display: flex; align-items: center; gap: 2px;
+      background: rgba(16, 26, 56, 0.6);
+      border: 1px solid var(--c-border);
       border-radius: var(--r-sm);
-      display: flex;
-      align-items: center;
-      gap: 4px;
+      padding: 2px;
     }
-    .delta-badge--pos {
-      background: rgba(56, 178, 119, 0.15);
-      color: #5ce67a;
-      border: 1px solid rgba(56, 178, 119, 0.3);
-    }
-    .delta-badge--neg {
-      background: var(--c-critical-muted);
-      color: var(--c-critical);
-      border: 1px solid var(--c-critical-ring);
-    }
-
-    /* ── Topbar night-skip button ─── */
-    .night-skip-btn {
-      display: flex; align-items: center; gap: var(--s-2);
-      padding: var(--s-1) var(--s-3);
-      background: none; border: 1px solid var(--c-border);
-      border-radius: var(--r-sm);
-      font-family: var(--f-mono); font-size: var(--t-xs);
-      color: var(--c-text-2); cursor: pointer;
-      transition: border-color var(--tr-fast), color var(--tr-fast);
-    }
-    .night-skip-btn:hover { border-color: var(--c-border-hi); color: var(--c-text); }
-
-    /* ── Location Tabs Row ── */
-    .topbar-locs {
-      display: flex; align-items: stretch;
-      height: 46px; flex-shrink: 0;
-      border-top: 1px solid var(--c-border);
-    }
-    .loc-tab {
-      flex: 1; display: flex; align-items: center; gap: var(--s-2);
-      padding: var(--s-2) var(--s-3); cursor: pointer;
-      border-right: 1px solid rgba(80,105,165,0.18);
-      transition: background var(--tr-fast); min-width: 0;
-    }
-    .loc-tab:last-child { border-right: none; }
-    .loc-tab:hover { background: rgba(22,35,71,0.5); }
-    .loc-tab.active {
-      background: rgba(94,96,232,0.12);
-      box-shadow: inset 0 -2px 0 var(--c-primary);
-    }
-    .loc-tab__thumb {
-      width: 44px; height: 32px; border-radius: var(--r-sm);
-      background-size: cover; background-position: center;
-      flex-shrink: 0; border: 1px solid rgba(80,105,165,0.25);
-      filter: brightness(0.7) saturate(0.8);
-    }
-    .loc-tab.active .loc-tab__thumb { filter: brightness(0.9) saturate(1); }
-    .loc-tab__name {
-      font-size: 10px; color: var(--c-text-2); font-weight: 500;
-      white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
-    }
-    .loc-tab.active .loc-tab__name { color: var(--c-text); }
-    .loc-tab__count {
-      font-family: var(--f-mono); font-size: 9px;
-      padding: 1px 5px; border-radius: 999px;
-      background: rgba(94,96,232,0.18); color: var(--c-primary);
-      border: 1px solid rgba(94,96,232,0.3); flex-shrink: 0;
-    }
-    .loc-tab__count.empty { visibility: hidden; }
-
-    /* ── Location Center Panel ── */
-    .loc-center-panel {
-      position: absolute;
-      left: 254px; right: 314px; top: 140px; bottom: 150px;
-      z-index: 15; display: none; flex-direction: column;
-      align-items: center; justify-content: center;
-      gap: var(--s-5); pointer-events: none;
-    }
-    .loc-center-panel__label {
-      font-family: var(--f-mono); font-size: var(--t-xs);
-      color: rgba(169,174,199,0.6); letter-spacing: 0.12em; text-transform: uppercase;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-    }
-    .loc-center-panel__title {
-      font-family: var(--f-serif-ko); font-size: var(--t-3xl); font-weight: 600;
-      color: var(--c-text); text-shadow: 0 2px 16px rgba(0,0,0,0.7);
-    }
-    .loc-center-agents { display: flex; gap: var(--s-8); flex-wrap: wrap; justify-content: center; }
-    .loc-agent-chip {
-      display: flex; flex-direction: column; align-items: center;
-      gap: var(--s-2); pointer-events: auto; cursor: pointer;
-    }
-    .loc-agent-chip__portrait {
-      width: 64px; height: 64px; border-radius: 50%;
-      background-size: cover; background-position: center top;
-      border: 2px solid var(--c-border-hi);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-    }
-    .loc-agent-chip.missing-chip .loc-agent-chip__portrait {
-      border-color: var(--c-critical);
-      box-shadow: 0 0 16px rgba(219,76,76,0.5);
-    }
-    .loc-agent-chip__name {
-      font-size: 11px; color: var(--c-text); font-weight: 500;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.9); text-align: center;
-    }
-    .loc-agent-chip.missing-chip .loc-agent-chip__name { color: var(--c-critical); }
-    .loc-agent-chip__sub {
-      font-size: 9px; color: var(--c-text-3);
-      text-shadow: 0 1px 4px rgba(0,0,0,0.8); text-align: center;
-    }
-    .loc-empty-msg {
-      font-family: var(--f-mono); font-size: var(--t-xs);
-      color: var(--c-text-3); letter-spacing: 0.1em;
-      text-shadow: 0 1px 6px rgba(0,0,0,0.8);
-    }
-
-    /* ── Campus Map Overlay ── */
-    .campus-map-overlay {
-      position: absolute; inset: 0; z-index: 60;
-      background: rgba(4, 8, 22, 0.82);
-      backdrop-filter: blur(8px);
-      display: none; align-items: center; justify-content: center;
-    }
-    .campus-map {
-      width: 700px;
-      background: rgba(10, 17, 40, 0.97);
-      border: 1px solid var(--c-border-hi);
-      border-radius: var(--r-xl);
-      box-shadow: 0 12px 60px rgba(0,0,0,0.8), 0 0 80px rgba(94,96,232,0.07);
-      overflow: hidden;
-    }
-    .campus-map__header {
-      padding: var(--s-4) var(--s-6);
-      border-bottom: 1px solid var(--c-border);
-      display: flex; align-items: center; justify-content: space-between;
-      background: rgba(14,23,48,0.5);
-    }
-    .campus-map__eyebrow {
+    .view-toggle-btn {
       font-family: var(--f-mono); font-size: 10px;
-      color: var(--c-text-3); letter-spacing: 0.12em; text-transform: uppercase;
-      margin-bottom: 2px;
+      padding: 3px 10px; border-radius: 3px;
+      color: var(--c-text-2); background: transparent;
+      border: none; cursor: pointer;
+      letter-spacing: 0.06em; transition: all var(--tr-fast);
     }
-    .campus-map__title {
-      font-family: var(--f-serif-en); font-size: var(--t-lg);
-      font-weight: 600; color: var(--c-text); letter-spacing: 0.03em;
+    .view-toggle-btn:hover { color: var(--c-text); }
+    .view-toggle-btn.active {
+      color: var(--c-cream); background: var(--c-cream-muted);
+      border: 1px solid var(--c-cream-ring); font-weight: 600;
     }
-    .campus-map__close {
-      background: none; border: 1px solid var(--c-border); border-radius: var(--r-sm);
-      cursor: pointer; color: var(--c-text-2);
-      width: 28px; height: 28px; display: flex; align-items: center; justify-content: center;
-      transition: all var(--tr-fast);
-    }
-    .campus-map__close:hover { border-color: var(--c-border-hi); color: var(--c-text); }
-    .campus-map__body {
-      padding: var(--s-5);
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: var(--s-3);
-    }
-    .campus-map__zone {
-      position: relative; border: 1px solid var(--c-border);
-      border-radius: var(--r-lg); padding: var(--s-4);
-      cursor: pointer; transition: all var(--tr-fast);
-      background: rgba(14, 23, 48, 0.5);
-      overflow: hidden; min-height: 110px;
-    }
-    .campus-map__zone:hover { border-color: var(--c-border-hi); background: rgba(22,35,71,0.55); }
-    .campus-map__zone.active {
-      border-color: var(--c-primary);
-      background: rgba(94,96,232,0.1);
-      box-shadow: 0 0 24px rgba(94,96,232,0.18);
-    }
-    .campus-map__zone--wide { grid-column: 1 / -1; min-height: 80px; }
-    .campus-map__zone-bg {
-      position: absolute; inset: 0;
-      background-size: cover; background-position: center;
-      opacity: 0.12; transition: opacity var(--tr-fast);
-    }
-    .campus-map__zone:hover .campus-map__zone-bg { opacity: 0.2; }
-    .campus-map__zone.active .campus-map__zone-bg { opacity: 0.22; }
-    .campus-map__zone-indicator {
-      position: absolute; top: var(--s-3); right: var(--s-3);
-      width: 7px; height: 7px; border-radius: 50%;
-      background: var(--c-primary); box-shadow: 0 0 10px var(--c-primary);
+
+    /* ── Map View Panel ─── */
+    .map-view-panel {
+      position: absolute;
+      left: 254px; right: 314px;
+      top: 58px; bottom: 148px;
+      z-index: 15;
       display: none;
     }
-    .campus-map__zone.active .campus-map__zone-indicator { display: block; }
-    .campus-map__zone-content { position: relative; z-index: 1; }
-    .campus-map__zone-tag {
+    .map-bg {
+      position: absolute; inset: 0;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.48) saturate(0.72);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+    }
+    .map-vignette {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at center, transparent 30%, rgba(6,13,32,0.5) 100%);
+      border-radius: var(--r-lg);
+      pointer-events: none;
+    }
+
+    /* Zone Pins on Map */
+    .map-zone-pin {
+      position: absolute;
+      transform: translate(-50%, -50%);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+      cursor: pointer;
+      transition: transform var(--tr-fast);
+    }
+    .map-zone-pin:hover { transform: translate(-50%, -50%) scale(1.06); }
+    .map-zone-pin.active .map-zone-pin__ring { border-color: var(--c-primary); box-shadow: 0 0 20px rgba(94,96,232,0.5); }
+    .map-zone-pin.active .map-zone-pin__label-box { border-color: var(--c-primary); color: #a0a4ff; }
+
+    .map-zone-pin__ring {
+      width: 64px; height: 64px; border-radius: 50%;
+      border: 2px solid rgba(212,178,111,0.35);
+      background: rgba(10,17,40,0.72);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color var(--tr-fast), box-shadow var(--tr-fast);
+    }
+    .map-zone-pin__icon {
+      font-size: 22px;
+    }
+    .map-zone-pin__label-box {
+      background: rgba(8,14,32,0.88);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-sm);
+      padding: 3px 10px;
+      backdrop-filter: blur(8px);
+      white-space: nowrap;
+      transition: border-color var(--tr-fast);
+    }
+    .map-zone-pin__name {
+      font-family: var(--f-serif-ko); font-size: 13px;
+      font-weight: 600; color: var(--c-text);
+    }
+    .map-zone-pin__count {
       font-family: var(--f-mono); font-size: 9px;
-      color: var(--c-text-3); letter-spacing: 0.1em; text-transform: uppercase;
-      margin-bottom: 2px;
+      color: var(--c-primary); text-align: center;
     }
-    .campus-map__zone-name {
-      font-family: var(--f-serif-ko); font-size: var(--t-lg);
-      font-weight: 600; color: var(--c-text); margin-bottom: var(--s-3);
+
+    /* Agent avatars on map */
+    .map-agent-cluster {
+      display: flex; gap: 4px; justify-content: center; flex-wrap: wrap;
+      max-width: 120px;
     }
-    .campus-map__zone.active .campus-map__zone-name { color: #a0a4ff; }
-    .campus-map__zone-agents { display: flex; gap: var(--s-2); align-items: center; flex-wrap: wrap; }
-    .campus-map__agent-dot {
-      width: 30px; height: 30px; border-radius: 50%;
+    .map-agent-dot-sm {
+      width: 26px; height: 26px; border-radius: 50%;
       border: 1.5px solid var(--c-border-hi);
       background-size: cover; background-position: center top;
-      overflow: hidden; flex-shrink: 0;
+      cursor: pointer; flex-shrink: 0;
+      transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
     }
-    .campus-map__agent-dot.missing {
+    .map-agent-dot-sm:hover {
+      transform: scale(1.2); border-color: var(--c-primary);
+      box-shadow: 0 0 10px rgba(94,96,232,0.5);
+    }
+    .map-agent-dot-sm.missing {
       border-color: var(--c-critical);
       box-shadow: 0 0 8px rgba(219,76,76,0.5);
+      animation: ring-pulse-critical 1.5s ease infinite;
     }
-    .campus-map__prof-dot {
-      width: 30px; height: 30px; border-radius: 50%;
-      border: 1.5px solid rgba(215,198,167,0.4);
-      background: rgba(26,40,80,0.9);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--f-serif-en); font-size: 9px; font-weight: 700;
-      color: var(--c-cream, #d7c6a7); flex-shrink: 0;
+    .map-agent-dot-sm.selected { border-color: var(--c-primary); box-shadow: 0 0 12px rgba(94,96,232,0.65); }
+
+    /* ── Misc ─── */
+    .night-skip-btn {
+      display:flex; align-items:center; gap:var(--s-2);
+      padding:var(--s-1) var(--s-3); background:none; border:1px solid var(--c-border);
+      border-radius:var(--r-sm); font-family:var(--f-mono); font-size:var(--t-xs);
+      color:var(--c-text-2); cursor:pointer;
+      transition:border-color var(--tr-fast), color var(--tr-fast);
     }
-    .campus-map__zone-empty {
-      font-family: var(--f-mono); font-size: 9px;
-      color: var(--c-text-3); letter-spacing: 0.08em;
-    }
+    .night-skip-btn:hover { border-color:var(--c-border-hi); color:var(--c-text); }
   </style>
 </head>
 <body>
 
 <div class="sim-screen" id="sim-screen">
 
-  <!-- ── Campus Background ── -->
+  <!-- ── Background ── -->
   <div class="sim-map"></div>
   <div class="sim-vignette"></div>
 
   <!-- ── Top Bar ── -->
   <div class="topbar">
     <div class="topbar-main">
-    <a href="../index.html" class="control-btn" title="Navigator" style="margin-right:var(--s-2);">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-        <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </a>
-    <div class="topbar__brand">Magic Academy</div>
-    <div class="topbar__sep"></div>
-    <div class="topbar__tick">TICK <span>10</span></div>
-    <div style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-3);margin-left:var(--s-2);">DAY 01 · 09:20</div>
-    <div class="topbar__sep"></div>
-    <div class="topbar__controls">
-      <button class="control-btn" title="이전 Tick">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-      </button>
-      <button class="control-btn active" title="일시정지">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="3" y="2" width="2.5" height="8" rx="1" fill="currentColor"/><rect x="6.5" y="2" width="2.5" height="8" rx="1" fill="currentColor"/></svg>
-      </button>
-      <button class="control-btn" title="재생">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2L10 6L3 10V2Z" fill="currentColor"/></svg>
-      </button>
-      <button class="control-btn" title="빠르게">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 3L6 6L2 9V3Z" fill="currentColor"/><path d="M6 3L10 6L6 9V3Z" fill="currentColor"/></svg>
-      </button>
-    </div>
-    <div class="topbar__sep"></div>
-    <!-- Replay 바로가기 -->
-    <a href="11-replay.html" class="night-skip-btn" title="타임라인 리플레이">
-      <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      타임라인 리플레이
-    </a>
-    <div class="topbar__sep"></div>
-    <!-- Magic Layer & Params (Read-only) -->
-    <div style="display:flex; align-items:center; gap:var(--s-2);">
-      <span class="chip chip-event" style="font-size:10px; padding:2px 6px;">MAGIC ON</span>
-      <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);" title="GenFreq:50 Impact:50 | MagicFreq:60 Impact:70">
-        PARAM · G(50/50) M(60/70)
-      </span>
-    </div>
-    <div style="margin-left:auto; display:flex; gap:var(--s-2);">
-      <button class="control-btn" title="캠퍼스 지도" onclick="openCampusMap()">
+      <a href="../index.html" class="control-btn" title="Navigator" style="margin-right:var(--s-2);">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
-          <path d="M1 3l4 1.5L9 3l4 1.5V11L9 9.5 5 11 1 9.5V3Z" stroke="currentColor" stroke-width="1.2" stroke-linejoin="round"/>
-          <path d="M5 4.5V11M9 3v6.5" stroke="currentColor" stroke-width="1.2"/>
+          <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
-      </button>
-      <button class="control-btn" title="비교 뷰 (Magic ON vs OFF)" onclick="window.location.href='13-magic-comparison.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <button class="control-btn" title="분기 트리 (What-If)" onclick="window.location.href='12-branch-tree.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7h3a2 2 0 002-2V3M7.5 7a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <button class="control-btn" title="관계 그래프" onclick="window.location.href='05-relationship.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L9 4M5 7L9 10" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <button class="control-btn" title="저장" onclick="window.location.href='09-save-modal.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 2v4h4V2" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="8" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
-      </button>
-      <button class="control-btn" title="마이페이지" onclick="window.location.href='10-mypage.html'">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-      </button>
-    </div>
-    </div>
-    <div class="topbar-locs" id="loc-tabs">
-      <div class="loc-tab active" data-loc="campus">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/concept/concept_v1.1.png');"></div>
-        <div class="loc-tab__name">캠퍼스 전체</div>
-        <span class="loc-tab__count">6</span>
+      </a>
+      <div class="topbar__brand">Magic Academy</div>
+      <div class="topbar__sep"></div>
+      <div class="topbar__tick">TICK <span>10</span></div>
+      <div style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-3);margin-left:var(--s-2);">DAY 01 · 09:20</div>
+      <div class="topbar__sep"></div>
+      <div class="topbar__controls">
+        <button class="control-btn" title="이전 Tick">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+        <button class="control-btn active" title="일시정지">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><rect x="3" y="2" width="2.5" height="8" rx="1" fill="currentColor"/><rect x="6.5" y="2" width="2.5" height="8" rx="1" fill="currentColor"/></svg>
+        </button>
+        <button class="control-btn" title="재생">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2L10 6L3 10V2Z" fill="currentColor"/></svg>
+        </button>
+        <button class="control-btn" title="빠르게">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 3L6 6L2 9V3Z" fill="currentColor"/><path d="M6 3L10 6L6 9V3Z" fill="currentColor"/></svg>
+        </button>
       </div>
-      <div class="loc-tab" data-loc="classroom">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/classroom.png');"></div>
-        <div class="loc-tab__name">강의실</div>
-        <span class="loc-tab__count">2</span>
+      <div class="topbar__sep"></div>
+      <a href="11-replay.html" class="night-skip-btn" title="타임라인 리플레이">
+        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        타임라인 리플레이
+      </a>
+      <div class="topbar__sep"></div>
+      <div style="display:flex; align-items:center; gap:var(--s-2);">
+        <span class="chip chip-event" style="font-size:10px; padding:2px 6px;">MAGIC ON</span>
+        <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);" title="GenFreq:50 Impact:50 | MagicFreq:60 Impact:70">
+          PARAM · G(50/50) M(60/70)
+        </span>
       </div>
-      <div class="loc-tab" data-loc="dormitory">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/dormitory.png');"></div>
-        <div class="loc-tab__name">기숙사</div>
-        <span class="loc-tab__count empty">0</span>
-      </div>
-      <div class="loc-tab" data-loc="lab">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/lab.png');"></div>
-        <div class="loc-tab__name">연구실</div>
-        <span class="loc-tab__count empty">0</span>
-      </div>
-      <div class="loc-tab" data-loc="library">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/library.png');"></div>
-        <div class="loc-tab__name">도서관</div>
-        <span class="loc-tab__count">2</span>
-      </div>
-      <div class="loc-tab" data-loc="restaurant">
-        <div class="loc-tab__thumb" style="background-image:url('../assets/restaurant.png');"></div>
-        <div class="loc-tab__name">식당</div>
-        <span class="loc-tab__count empty">0</span>
+      <div style="margin-left:auto; display:flex; gap:var(--s-3); align-items:center;">
+        <div class="view-toggle-group">
+          <button class="view-toggle-btn" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
+          <button class="view-toggle-btn active" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
+        </div>
+        <button class="control-btn" title="비교 뷰 (Magic ON vs OFF)" onclick="window.location.href='13-magic-comparison.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="control-btn" title="분기 트리 (What-If)" onclick="window.location.href='12-branch-tree.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7h3a2 2 0 002-2V3M7.5 7a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="control-btn" title="관계 그래프" onclick="window.location.href='05-relationship.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L9 4M5 7L9 10" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="control-btn" title="저장" onclick="window.location.href='09-save-modal.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 2v4h4V2" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="8" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
+        </button>
+        <button class="control-btn" title="마이페이지" onclick="window.location.href='10-mypage.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
+        </button>
       </div>
     </div>
   </div>
 
-  <!-- ── Left Panel: Agent 목록 (Students 5 + Professor 1) ── -->
+  <!-- ── Left Panel: Agent 목록 ── -->
   <div class="sim-left">
     <div class="sim-left__header">
       <div class="sim-left__count">AGENTS (6)</div>
@@ -958,7 +695,7 @@
     </div>
     <div class="sim-left__list">
       <div class="agent-list-item selected" data-agent="leo">
-        <div class="agent-list-portrait char-leo-sm agent-badge--leo"></div>
+        <div class="agent-list-portrait char-leo-sm"></div>
         <div class="agent-list-info">
           <div class="agent-list-name">Leo <span class="persona-tag">PERSONA</span></div>
           <div class="agent-list-loc">강의동 B · 수업중</div>
@@ -966,7 +703,7 @@
         <div class="agent-list-status"></div>
       </div>
       <div class="agent-list-item missing" data-agent="adel">
-        <div class="agent-list-portrait char-adel-sm agent-badge--adel" style="border-color:var(--c-critical);"></div>
+        <div class="agent-list-portrait char-adel-sm" style="border-color:var(--c-critical);"></div>
         <div class="agent-list-info">
           <div class="agent-list-name" style="color:var(--c-critical);">Adel</div>
           <div class="agent-list-loc" style="color:var(--c-critical);">MISSING · TICK 10</div>
@@ -974,7 +711,7 @@
         <div class="agent-list-status missing"></div>
       </div>
       <div class="agent-list-item" data-agent="ria">
-        <div class="agent-list-portrait char-ria-sm agent-badge--ria"></div>
+        <div class="agent-list-portrait char-ria-sm"></div>
         <div class="agent-list-info">
           <div class="agent-list-name">Ria</div>
           <div class="agent-list-loc">중앙 광장 · 휴식</div>
@@ -982,7 +719,7 @@
         <div class="agent-list-status"></div>
       </div>
       <div class="agent-list-item" data-agent="kai">
-        <div class="agent-list-portrait char-kai-sm agent-badge--kai"></div>
+        <div class="agent-list-portrait char-kai-sm"></div>
         <div class="agent-list-info">
           <div class="agent-list-name">Kai</div>
           <div class="agent-list-loc">중앙 광장 이동 중</div>
@@ -990,7 +727,7 @@
         <div class="agent-list-status"></div>
       </div>
       <div class="agent-list-item" data-agent="sera">
-        <div class="agent-list-portrait char-sera-sm agent-badge--sera"></div>
+        <div class="agent-list-portrait char-sera-sm"></div>
         <div class="agent-list-info">
           <div class="agent-list-name">Sera</div>
           <div class="agent-list-loc">도서관 · 자습</div>
@@ -1008,7 +745,160 @@
     </div>
   </div>
 
-  <!-- ── Compact Top Event Banner (Never blocks campus center) ── -->
+  <!-- ── Map View (전체 뷰) ── -->
+  <div class="map-view-panel" id="map-view-panel">
+    <div class="map-bg"></div>
+    <div class="map-vignette"></div>
+
+    <!-- 강의동 A & B — upper left -->
+    <div class="map-zone-pin active" id="map-pin-classroom"
+         style="left: 28%; top: 36%;"
+         data-zone="classroom" onclick="selectZone('classroom'); selectMapPin('classroom')">
+      <div class="map-agent-cluster">
+        <div class="map-agent-dot-sm selected" data-agent="leo"
+             style="background-image:url('../assets/character/Leo_ESTP.png');"
+             onclick="event.stopPropagation(); selectAgent('leo')" title="Leo · 강의동 B · 수업중"></div>
+      </div>
+      <div class="map-zone-pin__ring">
+        <span class="map-zone-pin__icon">🏛️</span>
+      </div>
+      <div class="map-zone-pin__label-box">
+        <div class="map-zone-pin__name">강의동 A &amp; B</div>
+        <div class="map-zone-pin__count">2명 재실</div>
+      </div>
+    </div>
+
+    <!-- 도서관 — upper right -->
+    <div class="map-zone-pin" id="map-pin-library"
+         style="left: 66%; top: 32%;"
+         data-zone="library" onclick="selectZone('library'); selectMapPin('library')">
+      <div class="map-agent-cluster">
+        <div class="map-agent-dot-sm" data-agent="sera"
+             style="background-image:url('../assets/character/Sera_ESFJ.png');"
+             onclick="event.stopPropagation(); selectAgent('sera')" title="Sera · 도서관 2층 · 자습"></div>
+        <div class="map-agent-dot-sm missing" data-agent="adel"
+             style="background-image:url('../assets/character/Adel_ISTJ.png');"
+             onclick="event.stopPropagation(); window.location.href='04-inspector.html'" title="Adel · MISSING"></div>
+      </div>
+      <div class="map-zone-pin__ring" style="border-color:rgba(219,76,76,0.45);">
+        <span class="map-zone-pin__icon">📚</span>
+      </div>
+      <div class="map-zone-pin__label-box" style="border-color:rgba(219,76,76,0.35);">
+        <div class="map-zone-pin__name">도서관</div>
+        <div class="map-zone-pin__count" style="color:var(--c-critical);">2명 · ⚠️ INCIDENT</div>
+      </div>
+    </div>
+
+    <!-- 중앙 광장 — center -->
+    <div class="map-zone-pin" id="map-pin-central"
+         style="left: 47%; top: 62%;"
+         data-zone="central" onclick="selectZone('central'); selectMapPin('central')">
+      <div class="map-agent-cluster">
+        <div class="map-agent-dot-sm" data-agent="ria"
+             style="background-image:url('../assets/character/Ria_INFP.png');"
+             onclick="event.stopPropagation(); selectAgent('ria')" title="Ria · 중앙 광장 · 휴식"></div>
+        <div class="map-agent-dot-sm" data-agent="kai"
+             style="background-image:url('../assets/character/Kai_ENTJ.png');"
+             onclick="event.stopPropagation(); selectAgent('kai')" title="Kai · 중앙 광장 이동 중"></div>
+      </div>
+      <div class="map-zone-pin__ring">
+        <span class="map-zone-pin__icon">🌿</span>
+      </div>
+      <div class="map-zone-pin__label-box">
+        <div class="map-zone-pin__name">중앙 광장</div>
+        <div class="map-zone-pin__count">2명 재실</div>
+      </div>
+    </div>
+
+    <!-- 기숙사 / 연구실 — lower right -->
+    <div class="map-zone-pin" id="map-pin-dormlab"
+         style="left: 74%; top: 68%;"
+         data-zone="dormlab" onclick="selectZone('dormlab'); selectMapPin('dormlab')">
+      <div class="map-zone-pin__ring" style="opacity:0.55;">
+        <span class="map-zone-pin__icon">🏠</span>
+      </div>
+      <div class="map-zone-pin__label-box" style="opacity:0.6;">
+        <div class="map-zone-pin__name">기숙사 / 연구실</div>
+        <div class="map-zone-pin__count" style="color:var(--c-text-3);">에이전트 없음</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Campus Zone Map (4분할 뷰) ── -->
+  <div class="zone-map-panel" id="zone-map-panel">
+
+    <!-- 강의동 A & B — Top Left -->
+    <div class="zone-card" data-zone="classroom" onclick="selectZone('classroom')">
+      <div class="zone-card__bg" style="background-image:url('../assets/classroom.png');"></div>
+      <div class="zone-card__content">
+        <div class="zone-card__tag">Classroom</div>
+        <div class="zone-card__name">강의동 A &amp; B</div>
+        <span class="zone-card__count">2명</span>
+        <div class="zone-card__agents">
+          <div class="zone-agent-prof" data-agent="aldric"
+               onclick="event.stopPropagation(); selectAgent('aldric')"
+               title="Prof. Aldric · 강의동 A · 강의 진행">PA</div>
+          <div class="zone-agent-dot selected" data-agent="leo"
+               style="background-image:url('../assets/character/Leo_ESTP.png');"
+               onclick="event.stopPropagation(); selectAgent('leo')"
+               title="Leo · 강의동 B · 수업중"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 도서관 — Top Right -->
+    <div class="zone-card" data-zone="library" onclick="selectZone('library')">
+      <div class="zone-card__bg" style="background-image:url('../assets/library.png');"></div>
+      <div class="zone-card__content">
+        <div class="zone-card__tag">Library</div>
+        <div class="zone-card__name">도서관</div>
+        <span class="zone-card__count">2명</span>
+        <div class="zone-card__agents">
+          <div class="zone-agent-dot" data-agent="sera"
+               style="background-image:url('../assets/character/Sera_ESFJ.png');"
+               onclick="event.stopPropagation(); selectAgent('sera')"
+               title="Sera · 도서관 2층 · 자습"></div>
+          <div class="zone-agent-dot missing" data-agent="adel"
+               style="background-image:url('../assets/character/Adel_ISTJ.png');"
+               onclick="event.stopPropagation(); window.location.href='04-inspector.html'"
+               title="Adel · MISSING — Inspector 열기"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 중앙 광장 — Bottom Left -->
+    <div class="zone-card" data-zone="central" onclick="selectZone('central')">
+      <div class="zone-card__bg" style="background-image:url('../assets/concept/concept_v1.1.png');"></div>
+      <div class="zone-card__content">
+        <div class="zone-card__tag">Central Square</div>
+        <div class="zone-card__name">중앙 광장</div>
+        <span class="zone-card__count">2명</span>
+        <div class="zone-card__agents">
+          <div class="zone-agent-dot" data-agent="ria"
+               style="background-image:url('../assets/character/Ria_INFP.png');"
+               onclick="event.stopPropagation(); selectAgent('ria')"
+               title="Ria · 중앙 광장 · 휴식"></div>
+          <div class="zone-agent-dot" data-agent="kai"
+               style="background-image:url('../assets/character/Kai_ENTJ.png');"
+               onclick="event.stopPropagation(); selectAgent('kai')"
+               title="Kai · 중앙 광장 이동 중"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 기숙사 / 연구실 — Bottom Right -->
+    <div class="zone-card" data-zone="dormlab" onclick="selectZone('dormlab')">
+      <div class="zone-card__bg" style="background-image:url('../assets/dormitory.png');"></div>
+      <div class="zone-card__content">
+        <div class="zone-card__tag">Dormitory · Lab</div>
+        <div class="zone-card__name">기숙사 / 연구실</div>
+        <div class="zone-card__empty">에이전트 없음</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Compact Event Banner ── -->
   <div class="event-slim-banner" id="event-banner">
     <div class="event-slim-banner__left">
       <span class="event-slim-banner__badge">MAGIC EVENT #04</span>
@@ -1016,10 +906,10 @@
       <span class="event-slim-banner__desc">Adel (ISTJ) 스트레스 92/90 초과 &middot; 도서관 3층 결계 구역에서 이탈</span>
     </div>
     <div style="display:flex; align-items:center; gap:var(--s-3);">
-      <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="padding: 4px 12px;">
+      <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="padding:4px 12px;">
         Inspector 인과 역추적 &rarr;
       </button>
-      <button class="btn btn-outline btn-sm" onclick="window.location.href='14-ending-summary.html'" style="padding: 4px 12px; border-color:var(--c-cream-ring); color:var(--c-cream);">
+      <button class="btn btn-outline btn-sm" onclick="window.location.href='14-ending-summary.html'" style="padding:4px 12px; border-color:var(--c-cream-ring); color:var(--c-cream);">
         결말 리포트 &rarr;
       </button>
     </div>
@@ -1031,8 +921,7 @@
       <div class="sim-right__portrait" id="selected-portrait" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
       <div class="sim-right__header-info">
         <div class="sim-right__name" id="selected-name">
-          Leo
-          <span class="persona-tag" style="font-size:var(--t-xs);">PERSONA</span>
+          Leo <span class="persona-tag" style="font-size:var(--t-xs);">PERSONA</span>
         </div>
         <div class="sim-right__mbti" id="selected-mbti">ESTP &middot; 마법공학과 2학년</div>
         <div class="sim-right__loc" id="selected-loc">
@@ -1042,7 +931,6 @@
       </div>
     </div>
     <div class="sim-right__body">
-
       <div>
         <div class="sim-right__section-title">상태</div>
         <div class="stat-bar">
@@ -1062,9 +950,7 @@
           <div class="stat-bar__track"><div class="stat-bar__fill stress" id="selected-stress-bar" style="width:55%;"></div></div>
         </div>
       </div>
-
       <div class="divider"></div>
-
       <div>
         <div class="sim-right__section-title">소속</div>
         <div class="sim-right__affil-row">
@@ -1076,9 +962,7 @@
           <span class="sim-right__affil-val" id="selected-year">2학년</span>
         </div>
       </div>
-
       <div class="divider"></div>
-
       <div>
         <div class="sim-right__section-title">최근 Memory</div>
         <div id="selected-memories">
@@ -1088,108 +972,14 @@
           <div class="memory-item">도서관에서 자료를 찾았다</div>
         </div>
       </div>
-
       <div class="divider"></div>
-
       <button class="btn btn-outline btn-sm" onclick="window.location.href='04-inspector.html'" style="width:100%; padding:5px 0;">
         사건 Inspector &rarr;
       </button>
-
     </div>
   </div>
 
-  <!-- ── World Map Speech Bubbles Over Agents ── -->
-  <!-- Speech Bubble 1: Ria ↔ Kai in Central Square -->
-  <div class="speech-bubble bubble-ria" style="left: 46%; top: 48%;" onclick="openDialogueViewer('ria-kai')">
-    <div class="speech-bubble__header">
-      <span class="speech-bubble__speaker">Ria</span>
-      <span class="speech-bubble__target">&rarr; Kai</span>
-    </div>
-    <div class="speech-bubble__text">"고대 룬의 결계 파동이 평소보다 불안정해 보여..."</div>
-    <span class="speech-bubble__delta">+3 친밀도 &middot; 정보 공유</span>
-  </div>
-
-  <!-- Speech Bubble 2: Leo in Building B -->
-  <div class="speech-bubble bubble-leo speech-bubble--right" style="left: 55%; top: 24%;" onclick="openDialogueViewer('leo-adel')">
-    <div class="speech-bubble__header">
-      <span class="speech-bubble__speaker">Leo</span>
-      <span class="speech-bubble__target">&rarr; Adel</span>
-    </div>
-    <div class="speech-bubble__text">"오늘 실습 규칙, 너무 빡빡하게 안 굴어도 되잖아?"</div>
-    <span class="speech-bubble__delta" style="color:var(--c-critical); background:var(--c-critical-muted);">+5 긴장도 &middot; 의견 대립</span>
-  </div>
-
-  <!-- ── 6 Agent Markers (5 Students + 1 Professor) ── -->
-
-  <!-- Professor Aldric -->
-  <div class="agent-marker"
-       style="left: 36%; top: 38%;"
-       data-agent="aldric"
-       data-loc="강의동 A"
-       data-stress="15" data-fatigue="35" data-sat="90">
-    <div class="agent-marker__portrait"
-         style="background:#1a2850; display:flex; align-items:center; justify-content:center; font-family:var(--f-serif-en); font-weight:700; font-size:12px; color:var(--c-cream); border:1.5px solid var(--c-cream-ring);">PA</div>
-    <div class="agent-marker__label" style="color:var(--c-cream);">Prof. Aldric</div>
-  </div>
-
-  <!-- Adel (Missing) -->
-  <div class="agent-marker state-missing"
-       style="left: 19%; top: 74%;"
-       data-agent="adel"
-       data-loc="실종 (TICK 10)"
-       data-stress="92" data-fatigue="85" data-sat="22"
-       onclick="window.location.href='04-inspector.html'">
-    <div class="agent-marker__portrait"
-         style="background-image: url('../assets/character/Adel_ISTJ.png'); background-size:cover; background-position:center top;"></div>
-    <div class="agent-marker__label" style="color: var(--c-critical);">Adel · MISSING</div>
-  </div>
-
-  <!-- Kai -->
-  <div class="agent-marker"
-       style="left: 44%; top: 56%;"
-       data-agent="kai"
-       data-loc="중앙 광장 이동 중"
-       data-stress="45" data-fatigue="60" data-sat="58">
-    <div class="agent-marker__portrait"
-         style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size:cover; background-position:center top;"></div>
-    <div class="agent-marker__dir"></div>
-    <div class="agent-marker__label">Kai</div>
-  </div>
-
-  <!-- Ria -->
-  <div class="agent-marker"
-       style="left: 49%; top: 63%;"
-       data-agent="ria"
-       data-loc="중앙 광장"
-       data-stress="38" data-fatigue="42" data-sat="71">
-    <div class="agent-marker__portrait"
-         style="background-image: url('../assets/character/Ria_INFP.png'); background-size:cover; background-position:center top;"></div>
-    <div class="agent-marker__label">Ria</div>
-  </div>
-
-  <!-- Leo (Selected) -->
-  <div class="agent-marker state-selected"
-       style="left: 54%; top: 35%;"
-       data-agent="leo"
-       data-loc="강의동 B"
-       data-stress="55" data-fatigue="30" data-sat="82">
-    <div class="agent-marker__portrait"
-         style="background-image: url('../assets/character/Leo_ESTP.png'); background-size:cover; background-position:center top;"></div>
-    <div class="agent-marker__label" style="color:var(--c-primary);">Leo <span style="font-size:9px; border:1px solid var(--c-primary); border-radius:2px; padding:0 2px;">P</span></div>
-  </div>
-
-  <!-- Sera -->
-  <div class="agent-marker"
-       style="left: 68%; top: 32%;"
-       data-agent="sera"
-       data-loc="도서관"
-       data-stress="28" data-fatigue="55" data-sat="88">
-    <div class="agent-marker__portrait"
-         style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size:cover; background-position:center top;"></div>
-    <div class="agent-marker__label">Sera</div>
-  </div>
-
-  <!-- ── Bottom Panel: Event & Dialogue Log with 3 Tabs ── -->
+  <!-- ── Bottom Panel: Event Log ── -->
   <div class="sim-eventlog">
     <div class="sim-eventlog__header">
       <div class="log-tab-group">
@@ -1200,26 +990,22 @@
       <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); margin-left:auto;">LIVE TICK 10 · 4 LOG ENTRIES</span>
     </div>
     <div class="sim-eventlog__list" id="log-container">
-      <!-- Item 1: System / Critical -->
       <div class="log-item log-item--critical" data-type="system" onclick="window.location.href='04-inspector.html'">
         <span class="log-item__tick">T10</span>
         <span class="log-item__tag tag-critical">CRITICAL</span>
         <span class="log-item__text">⚠️ <strong>[학생 실종]</strong> Adel 스트레스 임계값 초과(92/90) &middot; MAGIC EVENT #04 발생 (Inspector 역추적 →)</span>
       </div>
-      <!-- Item 2: Dialogue -->
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('ria-kai')">
         <span class="log-item__tick">T09</span>
         <span class="log-item__tag tag-dialogue">DIALOGUE</span>
         <span class="log-item__text">Ria ↔ Kai: "고대 룬의 결계 파동이 평소보다 불안정해 보여..."</span>
         <span class="log-item__meta">+3 친밀도</span>
       </div>
-      <!-- Item 3: System -->
       <div class="log-item log-item--event" data-type="system">
         <span class="log-item__tick">T09</span>
         <span class="log-item__tag tag-system">SYSTEM</span>
         <span class="log-item__text">Leo가 강의동 B 마법생물학 수업에 정상 출석하여 마력 집중을 시도했다</span>
       </div>
-      <!-- Item 4: Dialogue -->
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('leo-adel')">
         <span class="log-item__tick">T08</span>
         <span class="log-item__tag tag-dialogue">DIALOGUE</span>
@@ -1229,97 +1015,9 @@
     </div>
   </div>
 
-  <!-- ── Location Center Panel ── -->
-  <div class="loc-center-panel" id="loc-center-panel">
-    <div class="loc-center-panel__label">현재 장소</div>
-    <div class="loc-center-panel__title" id="loc-center-title"></div>
-    <div class="loc-center-agents" id="loc-center-agents"></div>
-  </div>
-
-  <!-- ── Campus Map Overlay ── -->
-  <div class="campus-map-overlay" id="campus-map-overlay" onclick="handleMapOverlayClick(event)">
-    <div class="campus-map">
-      <div class="campus-map__header">
-        <div>
-          <div class="campus-map__eyebrow">Magic Academy</div>
-          <div class="campus-map__title">캠퍼스 지도</div>
-        </div>
-        <button class="campus-map__close" onclick="closeCampusMap()">
-          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-            <path d="M10 2L2 10M2 2l8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
-      </div>
-      <div class="campus-map__body">
-        <!-- 도서관 -->
-        <div class="campus-map__zone" data-loc="library" onclick="selectLocFromMap('library')">
-          <div class="campus-map__zone-bg" style="background-image:url('../assets/library.png');"></div>
-          <div class="campus-map__zone-indicator"></div>
-          <div class="campus-map__zone-content">
-            <div class="campus-map__zone-tag">Library</div>
-            <div class="campus-map__zone-name">도서관</div>
-            <div class="campus-map__zone-agents">
-              <div class="campus-map__agent-dot" style="background-image:url('../assets/character/Sera_ESFJ.png');" title="Sera"></div>
-              <div class="campus-map__agent-dot missing" style="background-image:url('../assets/character/Adel_ISTJ.png');" title="Adel (MISSING)"></div>
-            </div>
-          </div>
-        </div>
-        <!-- 강의실 -->
-        <div class="campus-map__zone" data-loc="classroom" onclick="selectLocFromMap('classroom')">
-          <div class="campus-map__zone-bg" style="background-image:url('../assets/classroom.png');"></div>
-          <div class="campus-map__zone-indicator"></div>
-          <div class="campus-map__zone-content">
-            <div class="campus-map__zone-tag">Classroom</div>
-            <div class="campus-map__zone-name">강의실</div>
-            <div class="campus-map__zone-agents">
-              <div class="campus-map__agent-dot" style="background-image:url('../assets/character/Leo_ESTP.png');" title="Leo"></div>
-              <div class="campus-map__prof-dot" title="Prof. Aldric">PA</div>
-            </div>
-          </div>
-        </div>
-        <!-- 연구실 -->
-        <div class="campus-map__zone" data-loc="lab" onclick="selectLocFromMap('lab')">
-          <div class="campus-map__zone-bg" style="background-image:url('../assets/lab.png');"></div>
-          <div class="campus-map__zone-indicator"></div>
-          <div class="campus-map__zone-content">
-            <div class="campus-map__zone-tag">Laboratory</div>
-            <div class="campus-map__zone-name">연구실</div>
-            <div class="campus-map__zone-agents">
-              <span class="campus-map__zone-empty">에이전트 없음</span>
-            </div>
-          </div>
-        </div>
-        <!-- 기숙사 -->
-        <div class="campus-map__zone" data-loc="dormitory" onclick="selectLocFromMap('dormitory')">
-          <div class="campus-map__zone-bg" style="background-image:url('../assets/dormitory.png');"></div>
-          <div class="campus-map__zone-indicator"></div>
-          <div class="campus-map__zone-content">
-            <div class="campus-map__zone-tag">Dormitory</div>
-            <div class="campus-map__zone-name">기숙사</div>
-            <div class="campus-map__zone-agents">
-              <span class="campus-map__zone-empty">에이전트 없음</span>
-            </div>
-          </div>
-        </div>
-        <!-- 식당 -->
-        <div class="campus-map__zone campus-map__zone--wide" data-loc="restaurant" onclick="selectLocFromMap('restaurant')">
-          <div class="campus-map__zone-bg" style="background-image:url('../assets/restaurant.png');"></div>
-          <div class="campus-map__zone-indicator"></div>
-          <div class="campus-map__zone-content">
-            <div class="campus-map__zone-tag">Restaurant · Cafeteria</div>
-            <div class="campus-map__zone-name">식당</div>
-            <div class="campus-map__zone-agents">
-              <span class="campus-map__zone-empty">에이전트 없음</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
 </div><!-- /sim-screen -->
 
-<!-- ── Dialogue Viewer Modal Popup ── -->
+<!-- ── Dialogue Viewer Modal ── -->
 <div class="dialogue-modal" id="dialogue-modal" onclick="closeDialogueOnBackdrop(event)">
   <div class="dialogue-modal__content">
     <div class="dialogue-modal__header">
@@ -1329,17 +1027,11 @@
       </div>
       <div class="dialogue-modal__close" onclick="closeDialogueViewer()">&times;</div>
     </div>
-    <div class="dialogue-modal__participants" id="modal-participants">
-      <!-- Filled via JS -->
-    </div>
-    <div class="dialogue-modal__body" id="modal-chats">
-      <!-- Filled via JS -->
-    </div>
+    <div class="dialogue-modal__participants" id="modal-participants"></div>
+    <div class="dialogue-modal__body" id="modal-chats"></div>
     <div class="dialogue-modal__footer" id="modal-footer">
       <span style="font-size:11px; color:var(--c-text-2);">발생한 관계 및 심리 변화:</span>
-      <div class="delta-badge-group" id="modal-deltas">
-        <!-- Filled via JS -->
-      </div>
+      <div class="delta-badge-group" id="modal-deltas"></div>
     </div>
   </div>
 </div>
@@ -1387,8 +1079,7 @@
 
   const dialogueLogs = {
     'ria-kai': {
-      tick: 'TICK 09',
-      location: '중앙 광장 분수대 앞',
+      tick: 'TICK 09', location: '중앙 광장 분수대 앞',
       p1: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       p2: { name: 'Kai', mbti: 'ENTJ', portrait: '../assets/character/Kai_ENTJ.png', color: 'var(--c-kai)' },
       turns: [
@@ -1404,8 +1095,7 @@
       ]
     },
     'leo-adel': {
-      tick: 'TICK 08',
-      location: '강의동 B 복도',
+      tick: 'TICK 08', location: '강의동 B 복도',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Adel', mbti: 'ISTJ', portrait: '../assets/character/Adel_ISTJ.png', color: 'var(--c-adel)' },
       turns: [
@@ -1421,8 +1111,7 @@
       ]
     },
     'leo-ria': {
-      tick: 'TICK 08',
-      location: '강의동 B 앞 정원',
+      tick: 'TICK 08', location: '강의동 B 앞 정원',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       turns: [
@@ -1437,34 +1126,65 @@
     }
   };
 
+  /* Agent → zone */
+  const agentZone = {
+    aldric: 'classroom', leo: 'classroom',
+    sera: 'library',    adel: 'library',
+    ria: 'central',     kai: 'central'
+  };
+
+  /* ── View Toggle ── */
+  function setView(v) {
+    const isMap = v === 'map';
+    document.getElementById('map-view-panel').style.display = isMap ? 'block' : 'none';
+    document.getElementById('zone-map-panel').style.display = isMap ? 'none' : 'grid';
+    document.getElementById('btn-map-view').classList.toggle('active', isMap);
+    document.getElementById('btn-grid-view').classList.toggle('active', !isMap);
+    const bg = document.querySelector('.sim-map');
+    bg.style.filter = isMap
+      ? 'brightness(0) saturate(0)'
+      : 'blur(8px) brightness(0.22) saturate(0.5)';
+  }
+
+  /* ── Map Pin Select ── */
+  function selectMapPin(zoneId) {
+    document.querySelectorAll('.map-zone-pin').forEach(p =>
+      p.classList.toggle('active', p.dataset.zone === zoneId)
+    );
+  }
+
+  /* ── Select Agent ── */
   function selectAgent(agentId) {
     const data = charData[agentId];
     if (!data) return;
 
-    document.querySelectorAll('.agent-list-item').forEach(i => {
-      i.classList.toggle('selected', i.dataset.agent === agentId);
-    });
+    document.querySelectorAll('.agent-list-item').forEach(i =>
+      i.classList.toggle('selected', i.dataset.agent === agentId)
+    );
 
-    document.querySelectorAll('.agent-marker').forEach(m => {
-      m.classList.toggle('state-selected', m.dataset.agent === agentId);
-    });
+    document.querySelectorAll('.zone-agent-dot, .zone-agent-prof, .map-agent-dot-sm').forEach(dot =>
+      dot.classList.toggle('selected', dot.dataset.agent === agentId)
+    );
 
     const portraitEl = document.getElementById('selected-portrait');
     if (data.isProf) {
       portraitEl.style.backgroundImage = 'none';
       portraitEl.style.background = '#1a2850';
-      portraitEl.innerHTML = '<div style="font-family:var(--f-serif-en); font-weight:700; font-size:14px; color:var(--c-cream); display:flex; height:100%; align-items:center; justify-content:center;">PA</div>';
+      portraitEl.innerHTML = '<div style="font-family:var(--f-serif-en);font-weight:700;font-size:14px;color:var(--c-cream);display:flex;height:100%;align-items:center;justify-content:center;">PA</div>';
     } else {
       portraitEl.innerHTML = '';
+      portraitEl.style.background = '';
       portraitEl.style.backgroundImage = `url('${data.portrait}')`;
     }
 
-    document.getElementById('selected-name').innerHTML = `${data.name} ${data.isPersona ? '<span class="persona-tag" style="font-size:var(--t-xs);">PERSONA</span>' : ''}`;
+    document.getElementById('selected-name').innerHTML =
+      `${data.name} ${data.isPersona ? '<span class="persona-tag" style="font-size:var(--t-xs);">PERSONA</span>' : ''}`;
     document.getElementById('selected-mbti').textContent = data.mbti;
     document.getElementById('selected-loc').innerHTML = `
-      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:3px;"><circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 10c-2 0-4-2-4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/></svg>
-      ${data.loc}
-    `;
+      <svg width="10" height="10" viewBox="0 0 10 10" fill="none" style="margin-right:3px;">
+        <circle cx="5" cy="4" r="2" stroke="currentColor" stroke-width="1.2"/>
+        <path d="M5 10c-2 0-4-2-4-4" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" opacity="0.4"/>
+      </svg>${data.loc}`;
 
     document.getElementById('selected-mood').textContent = data.mood;
     document.getElementById('selected-mood-bar').style.width = `${data.mood}%`;
@@ -1474,77 +1194,85 @@
     document.getElementById('selected-stress-bar').style.width = `${data.stress}%`;
     document.getElementById('selected-major').textContent = data.major;
     document.getElementById('selected-year').textContent = data.year;
-
-    const memContainer = document.getElementById('selected-memories');
-    memContainer.innerHTML = data.memories.map(m => `<div class="memory-item">${m}</div>`).join('');
+    document.getElementById('selected-memories').innerHTML =
+      data.memories.map(m => `<div class="memory-item">${m}</div>`).join('');
   }
 
-  /* Log Filtering Tabs */
-  function filterLogs(category) {
-    document.querySelectorAll('.log-tab-btn').forEach(btn => btn.classList.remove('active'));
-    if (category === 'all') document.getElementById('tab-all').classList.add('active');
-    if (category === 'dialogue') document.getElementById('tab-dialogue').classList.add('active');
-    if (category === 'system') document.getElementById('tab-system').classList.add('active');
+  /* ── Select Zone (toggle; filters agent list) ── */
+  let activeZone = null;
 
-    const items = document.querySelectorAll('#log-container .log-item');
-    items.forEach(item => {
-      const itemType = item.dataset.type;
-      if (category === 'all') {
-        item.style.display = 'flex';
-      } else if (category === itemType) {
-        item.style.display = 'flex';
-      } else {
-        item.style.display = 'none';
-      }
+  function selectZone(zoneId) {
+    if (activeZone === zoneId) {
+      activeZone = null;
+      document.querySelectorAll('.zone-card').forEach(c => c.classList.remove('active'));
+      document.querySelectorAll('.agent-list-item').forEach(i => {
+        i.style.opacity = '1';
+        i.style.pointerEvents = '';
+      });
+      return;
+    }
+    activeZone = zoneId;
+    document.querySelectorAll('.zone-card').forEach(c =>
+      c.classList.toggle('active', c.dataset.zone === zoneId)
+    );
+    document.querySelectorAll('.agent-list-item').forEach(item => {
+      const inZone = agentZone[item.dataset.agent] === zoneId;
+      item.style.opacity = inZone ? '1' : '0.28';
+      item.style.pointerEvents = inZone ? '' : 'none';
     });
   }
 
-  /* Dialogue Viewer Modal Functions */
+  /* ── Log Filter ── */
+  function filterLogs(category) {
+    ['all','dialogue','system'].forEach(c =>
+      document.getElementById(`tab-${c}`).classList.toggle('active', c === category)
+    );
+    document.querySelectorAll('#log-container .log-item').forEach(item => {
+      item.style.display = (category === 'all' || item.dataset.type === category) ? 'flex' : 'none';
+    });
+  }
+
+  /* ── Dialogue Viewer ── */
   function openDialogueViewer(key) {
     const data = dialogueLogs[key] || dialogueLogs['ria-kai'];
     document.getElementById('modal-tick').textContent = data.tick;
-    document.getElementById('modal-title').textContent = `${data.p1.name} ↔ ${data.p2.name} 대화 상세 (${data.location})`;
+    document.getElementById('modal-title').textContent =
+      `${data.p1.name} ↔ ${data.p2.name} 대화 상세 (${data.location})`;
 
-    const pEl = document.getElementById('modal-participants');
-    pEl.innerHTML = `
+    document.getElementById('modal-participants').innerHTML = `
       <div class="participant-card">
-        <div class="participant-avatar" style="background-image:url('${data.p1.portrait}'); border-color:${data.p1.color};"></div>
+        <div class="participant-avatar" style="background-image:url('${data.p1.portrait}');border-color:${data.p1.color};"></div>
         <div class="participant-info">
           <span class="participant-name">${data.p1.name}</span>
           <span class="participant-status">${data.p1.mbti}</span>
         </div>
       </div>
-      <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3);">⇄</div>
+      <div style="font-family:var(--f-mono);font-size:12px;color:var(--c-text-3);">⇄</div>
       <div class="participant-card">
-        <div class="participant-avatar" style="background-image:url('${data.p2.portrait}'); border-color:${data.p2.color};"></div>
+        <div class="participant-avatar" style="background-image:url('${data.p2.portrait}');border-color:${data.p2.color};"></div>
         <div class="participant-info">
           <span class="participant-name">${data.p2.name}</span>
           <span class="participant-status">${data.p2.mbti}</span>
         </div>
-      </div>
-    `;
+      </div>`;
 
-    const chatEl = document.getElementById('modal-chats');
-    chatEl.innerHTML = data.turns.map(t => {
+    document.getElementById('modal-chats').innerHTML = data.turns.map(t => {
       const isRight = t.sender === data.p2.name;
       const avatar = isRight ? data.p2.portrait : data.p1.portrait;
-      return `
-        <div class="chat-bubble-row ${isRight ? 'right' : 'left'}">
-          <div class="chat-avatar" style="background-image:url('${avatar}');"></div>
-          <div class="chat-bubble-content">
-            <span class="chat-bubble-sender">${t.sender}</span>
-            <div class="chat-bubble-box">${t.text}</div>
-          </div>
+      return `<div class="chat-bubble-row ${isRight ? 'right' : 'left'}">
+        <div class="chat-avatar" style="background-image:url('${avatar}');"></div>
+        <div class="chat-bubble-content">
+          <span class="chat-bubble-sender">${t.sender}</span>
+          <div class="chat-bubble-box">${t.text}</div>
         </div>
-      `;
+      </div>`;
     }).join('');
 
-    const deltaEl = document.getElementById('modal-deltas');
-    deltaEl.innerHTML = data.deltas.map(d => `
-      <span class="delta-badge ${d.type === 'pos' ? 'delta-badge--pos' : 'delta-badge--neg'}">
+    document.getElementById('modal-deltas').innerHTML = data.deltas.map(d =>
+      `<span class="delta-badge ${d.type === 'pos' ? 'delta-badge--pos' : 'delta-badge--neg'}">
         ${d.type === 'pos' ? '▲' : '▼'} ${d.label}
-      </span>
-    `).join('');
+      </span>`
+    ).join('');
 
     document.getElementById('dialogue-modal').classList.add('open');
   }
@@ -1554,137 +1282,20 @@
   }
 
   function closeDialogueOnBackdrop(e) {
-    if (e.target.id === 'dialogue-modal') {
-      closeDialogueViewer();
-    }
+    if (e.target.id === 'dialogue-modal') closeDialogueViewer();
   }
 
-  /* Event Listeners */
-  document.querySelectorAll('.agent-list-item').forEach(item => {
-    item.addEventListener('click', () => {
-      const agentId = item.dataset.agent;
-      if (agentId) selectAgent(agentId);
-    });
-  });
-
-  document.querySelectorAll('.agent-marker').forEach(marker => {
-    marker.addEventListener('click', (e) => {
-      if (marker.dataset.agent === 'adel') {
-        window.location.href = '04-inspector.html';
-        return;
-      }
-      const agentId = marker.dataset.agent;
-      if (agentId) selectAgent(agentId);
-    });
-  });
-
-  /* ── Location Switcher ── */
-  const locationConfig = {
-    campus:     { label: '캠퍼스 전체', bg: '../assets/concept/concept_v1.1.png', agents: null },
-    classroom:  { label: '강의실',      bg: '../assets/classroom.png',             agents: ['leo', 'aldric'] },
-    dormitory:  { label: '기숙사',      bg: '../assets/dormitory.png',             agents: [] },
-    lab:        { label: '연구실',      bg: '../assets/lab.png',                   agents: [] },
-    library:    { label: '도서관',      bg: '../assets/library.png',               agents: ['sera', 'adel'] },
-    restaurant: { label: '식당',        bg: '../assets/restaurant.png',            agents: [] },
-  };
-
-  const agentLocMeta = {
-    leo:    { sub: '강의실 · 수업중',       portrait: '../assets/character/Leo_ESTP.png',  missing: false },
-    adel:   { sub: 'MISSING · TICK 10',    portrait: '../assets/character/Adel_ISTJ.png', missing: true  },
-    sera:   { sub: '도서관 2층 · 자습',    portrait: '../assets/character/Sera_ESFJ.png', missing: false },
-    aldric: { sub: '강의실 A · 강의 진행', portrait: null, missing: false, isProf: true   },
-  };
-
-  let activeLocId = 'campus';
-
-  function switchLocation(locId) {
-    if (locId === activeLocId) return;
-    activeLocId = locId;
-    const loc = locationConfig[locId];
-    const isCampus = loc.agents === null;
-
-    const simMap = document.querySelector('.sim-map');
-    simMap.style.opacity = '0';
-    setTimeout(() => {
-      simMap.style.backgroundImage = `url('${loc.bg}')`;
-      simMap.style.opacity = '1';
-    }, 250);
-
-    document.querySelectorAll('.loc-tab').forEach(t =>
-      t.classList.toggle('active', t.dataset.loc === locId)
-    );
-
-    document.querySelectorAll('.agent-marker').forEach(m =>
-      (m.style.display = isCampus ? '' : 'none')
-    );
-
-    document.querySelectorAll('.agent-list-item').forEach(item => {
-      const inLoc = isCampus || loc.agents.includes(item.dataset.agent);
-      item.style.opacity = inLoc ? '1' : '0.3';
-      item.style.pointerEvents = inLoc ? '' : 'none';
-    });
-
-    const panel = document.getElementById('loc-center-panel');
-    const titleEl = document.getElementById('loc-center-title');
-    const agentsEl = document.getElementById('loc-center-agents');
-
-    if (isCampus) {
-      panel.style.display = 'none';
-    } else {
-      panel.style.display = 'flex';
-      titleEl.textContent = loc.label;
-
-      if (!loc.agents.length) {
-        agentsEl.innerHTML = '<div class="loc-empty-msg">현재 이 장소에 있는 에이전트 없음</div>';
-      } else {
-        agentsEl.innerHTML = loc.agents.map(id => {
-          const meta = agentLocMeta[id];
-          const name = charData[id].name;
-          const portraitStyle = meta.isProf
-            ? 'background:#1a2850;'
-            : `background-image:url('${meta.portrait}');`;
-          const inner = meta.isProf
-            ? '<div style="display:flex;height:100%;align-items:center;justify-content:center;font-family:var(--f-serif-en);font-weight:700;font-size:14px;color:var(--c-cream);">PA</div>'
-            : '';
-          return `<div class="loc-agent-chip${meta.missing ? ' missing-chip' : ''}" onclick="selectAgent('${id}')">
-            <div class="loc-agent-chip__portrait" style="${portraitStyle}">${inner}</div>
-            <div class="loc-agent-chip__name">${name}</div>
-            <div class="loc-agent-chip__sub">${meta.sub}</div>
-          </div>`;
-        }).join('');
-      }
-    }
-  }
-
-  document.querySelectorAll('.loc-tab').forEach(tab =>
-    tab.addEventListener('click', () => switchLocation(tab.dataset.loc))
+  /* ── Event Listeners ── */
+  document.querySelectorAll('.agent-list-item').forEach(item =>
+    item.addEventListener('click', () => { if (item.dataset.agent) selectAgent(item.dataset.agent); })
   );
 
-  /* ── Campus Map ── */
-  function openCampusMap() {
-    const overlay = document.getElementById('campus-map-overlay');
-    overlay.style.display = 'flex';
-    document.querySelectorAll('.campus-map__zone').forEach(z =>
-      z.classList.toggle('active', z.dataset.loc === activeLocId)
-    );
-  }
-
-  function closeCampusMap() {
-    document.getElementById('campus-map-overlay').style.display = 'none';
-  }
-
-  function handleMapOverlayClick(e) {
-    if (e.target === document.getElementById('campus-map-overlay')) closeCampusMap();
-  }
-
-  function selectLocFromMap(locId) {
-    switchLocation(locId);
-    closeCampusMap();
-  }
-
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeCampusMap();
+    if (e.key === 'Escape') closeDialogueViewer();
   });
+
+  /* Initial state */
+  selectAgent('leo');
 </script>
 </body>
 </html>
