@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>공유 &amp; 프리셋 가져오기 — Magic Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--c-bg); font-family: var(--f-sans); min-height: 100vh; }
+    .screen { width: 1440px; min-height: 900px; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
+    .bg-map { position: fixed; inset: 0; background-image: url('../assets/concept/concept_v1.1.png'); background-size: cover; filter: brightness(0.12) saturate(0.3) blur(8px); transform: scale(1.04); pointer-events: none; z-index: 0; }
+    .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(11,24,56,0.7) 0%, rgba(6,13,32,0.97) 80%); pointer-events: none; z-index: 0; }
+    .topbar { height: 52px; padding: 0 var(--s-6); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--c-border); background: rgba(6,13,32,0.94); backdrop-filter: blur(16px); z-index: 30; flex-shrink: 0; position: sticky; top: 0; }
+    .topbar__left { display: flex; align-items: center; gap: var(--s-4); }
+    .topbar__brand { font-family: var(--f-serif-en); font-size: var(--t-md); font-weight: 600; color: var(--c-text); letter-spacing: 0.04em; }
+    .content { flex: 1; z-index: 10; padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-6); max-width: 1440px; }
+    .section-title { font-family: var(--f-mono); font-size: 10px; font-weight: 600; color: var(--c-text-3); letter-spacing: 0.14em; text-transform: uppercase; margin-bottom: var(--s-4); padding-bottom: var(--s-2); border-bottom: 1px solid var(--c-border); display: flex; justify-content: space-between; }
+    .card { background: rgba(11,24,56,0.85); backdrop-filter: blur(16px); border: 1px solid var(--c-border); border-radius: var(--r-md); overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.35); }
+    .card__header { padding: var(--s-3) var(--s-4); background: rgba(6,13,32,0.7); border-bottom: 1px solid rgba(70,100,180,0.2); font-family: var(--f-mono); font-size: 11px; font-weight: 600; color: var(--c-cream); letter-spacing: 0.08em; text-transform: uppercase; display: flex; justify-content: space-between; align-items: center; }
+    .card__body { padding: var(--s-4); }
+    .preset-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--s-4); }
+    .preset-card { background: rgba(6,13,32,0.7); border: 1px solid var(--c-border); border-radius: var(--r-md); padding: var(--s-4); cursor: pointer; transition: all var(--tr-normal); display: flex; flex-direction: column; gap: var(--s-3); }
+    .preset-card:hover { border-color: var(--c-primary); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.4), 0 0 20px rgba(94,96,232,0.2); }
+    .preset-card.featured { border-color: var(--c-cream-ring); }
+    .preset-card.featured:hover { border-color: var(--c-cream); box-shadow: 0 0 20px rgba(212,178,111,0.25); }
+    .preset-tag { display: inline-block; font-family: var(--f-mono); font-size: 9px; padding: 2px 7px; border-radius: 10px; font-weight: 600; }
+    .share-input { width: 100%; background: rgba(6,13,32,0.8); border: 1px solid var(--c-border); border-radius: var(--r-sm); padding: 10px 14px; font-family: var(--f-mono); font-size: 12px; color: var(--c-text); outline: none; transition: border-color var(--tr-fast); }
+    .share-input:focus { border-color: var(--c-primary); box-shadow: 0 0 8px rgba(94,96,232,0.2); }
+    .toggle-pill { display: flex; background: rgba(6,13,32,0.8); border: 1px solid var(--c-border); border-radius: 20px; padding: 3px; gap: 2px; }
+    .toggle-pill button { padding: 4px 14px; border-radius: 16px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; background: transparent; border: none; cursor: pointer; color: var(--c-text-2); transition: all var(--tr-fast); }
+    .toggle-pill button.active { background: rgba(94,96,232,0.25); color: var(--c-primary); }
+  </style>
+</head>
+<body>
+<div class="screen">
+  <div class="bg-map"></div>
+  <div class="bg-overlay"></div>
+
+  <div class="topbar">
+    <div class="topbar__left">
+      <a href="08-main.html" class="btn btn-ghost btn-sm" style="padding:4px 10px;font-size:11px;">
+        <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        메인 허브
+      </a>
+      <div style="width:1px;height:16px;background:var(--c-border);"></div>
+      <div class="topbar__brand">Magic Academy</div>
+      <div style="font-family:var(--f-mono);font-size:11px;color:var(--c-text-3);">§ FR-14, FR-15 설정 공유 &amp; 프리셋 가져오기</div>
+    </div>
+    <div style="display:flex;align-items:center;gap:var(--s-3);">
+      <a href="06-persona-setup.html" class="btn btn-outline btn-sm" style="font-size:11px;">페르소나 설정 →</a>
+      <a href="../index.html" class="btn btn-ghost btn-sm" style="font-size:11px;">Navigator</a>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- Section 1: 현재 시뮬레이션 공유 -->
+    <div>
+      <div class="section-title">
+        <span>공유 설정</span>
+        <span style="color:var(--c-success);">Seed #SEED-8842</span>
+      </div>
+      <div class="card">
+        <div class="card__header">
+          <span>시뮬레이션 공유 카드 — Seed #SEED-8842</span>
+          <span style="color:var(--c-inspector);">SHARE</span>
+        </div>
+        <div class="card__body">
+          <div style="display:grid;grid-template-columns:1fr 280px;gap:var(--s-6);align-items:start;">
+            <!-- Share config -->
+            <div style="display:flex;flex-direction:column;gap:var(--s-4);">
+              <div style="background:rgba(6,13,32,0.6);border:1px solid var(--c-border);border-radius:var(--r-sm);padding:var(--s-4);">
+                <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em;">[ 공유 구성 ]</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);">
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">시뮬레이션 시드</div><div style="font-family:var(--f-mono);font-size:13px;color:var(--c-cream);font-weight:700;">#SEED-8842</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">캠페인</div><div style="font-size:12px;color:#fff;">첫 학기, 다섯 명의 마법사</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">User Persona</div><div style="font-size:12px;color:var(--c-char-ria-light);">Ria (INFP)</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">Magic Layer</div><div style="font-family:var(--f-mono);font-size:12px;color:var(--c-success);">ON</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">완료 Tick</div><div style="font-family:var(--f-mono);font-size:12px;color:#fff;">10 / 10</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">최종 판정</div><div style="font-family:var(--f-mono);font-size:12px;color:var(--c-inspector);">COMPLETED</div></div>
+                </div>
+              </div>
+
+              <!-- 공개/비공개 토글 -->
+              <div style="display:flex;align-items:center;gap:var(--s-4);">
+                <span style="font-family:var(--f-mono);font-size:11px;color:var(--c-text-2);">공개 범위</span>
+                <div class="toggle-pill">
+                  <button class="active" id="toggle-public" onclick="setScope('public',this)">공개</button>
+                  <button id="toggle-private" onclick="setScope('private',this)">비공개</button>
+                  <button id="toggle-link" onclick="setScope('link',this)">링크 공유</button>
+                </div>
+              </div>
+
+              <!-- 공유 링크 -->
+              <div>
+                <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:6px;text-transform:uppercase;">공유 링크</div>
+                <div style="display:flex;gap:var(--s-2);">
+                  <input class="share-input" id="share-link" value="https://magic-academy.app/sim/SEED-8842" readonly style="flex:1;">
+                  <button onclick="copyLink()" class="btn btn-outline" style="padding:8px 16px;font-size:11px;white-space:nowrap;">링크 복사</button>
+                </div>
+              </div>
+
+              <!-- JSON 내보내기 -->
+              <div>
+                <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:6px;text-transform:uppercase;">JSON 내보내기 (페르소나 + 시드)</div>
+                <div style="background:rgba(3,6,18,0.8);border:1px solid rgba(70,100,180,0.25);border-radius:var(--r-sm);padding:var(--s-3);font-family:var(--f-mono);font-size:10px;color:#b8c7e6;position:relative;">
+                  <pre style="margin:0;overflow-x:auto;">{
+  <span style="color:#5e60e8;">"seed"</span>: <span style="color:#d4b26f;">"SEED-8842"</span>,
+  <span style="color:#5e60e8;">"campaign"</span>: <span style="color:#d4b26f;">"마법사의 첫 학기"</span>,
+  <span style="color:#5e60e8;">"persona"</span>: <span style="color:#d4b26f;">"Ria_INFP"</span>,
+  <span style="color:#5e60e8;">"magic_layer"</span>: <span style="color:#38b277;">true</span>,
+  <span style="color:#5e60e8;">"big_five"</span>: { <span style="color:#5e60e8;">"O"</span>:<span style="color:#38b277;">82</span>, <span style="color:#5e60e8;">"C"</span>:<span style="color:#38b277;">45</span>, <span style="color:#5e60e8;">"E"</span>:<span style="color:#38b277;">38</span>, <span style="color:#5e60e8;">"A"</span>:<span style="color:#38b277;">75</span>, <span style="color:#5e60e8;">"N"</span>:<span style="color:#38b277;">62</span> }
+}</pre>
+                  <button onclick="copyJSON()" style="position:absolute;top:8px;right:8px;font-family:var(--f-mono);font-size:9px;color:var(--c-inspector);background:rgba(52,179,199,0.1);border:1px solid rgba(52,179,199,0.3);border-radius:var(--r-sm);padding:2px 8px;cursor:pointer;">JSON 복사</button>
+                </div>
+              </div>
+            </div>
+
+            <!-- QR + actions -->
+            <div style="display:flex;flex-direction:column;gap:var(--s-4);align-items:center;">
+              <!-- QR placeholder -->
+              <div style="width:200px;height:200px;background:rgba(6,13,32,0.8);border:1px solid var(--c-border-hi);border-radius:var(--r-md);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;">
+                <svg width="120" height="120" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+                  <!-- QR mock pattern -->
+                  <rect width="120" height="120" fill="rgba(6,13,32,0.9)" rx="4"/>
+                  <rect x="10" y="10" width="40" height="40" rx="3" fill="none" stroke="rgba(212,178,111,0.7)" stroke-width="3"/>
+                  <rect x="16" y="16" width="28" height="28" rx="2" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="70" y="10" width="40" height="40" rx="3" fill="none" stroke="rgba(212,178,111,0.7)" stroke-width="3"/>
+                  <rect x="76" y="16" width="28" height="28" rx="2" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="10" y="70" width="40" height="40" rx="3" fill="none" stroke="rgba(212,178,111,0.7)" stroke-width="3"/>
+                  <rect x="16" y="76" width="28" height="28" rx="2" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="58" y="58" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="66" y="58" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="74" y="58" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="82" y="58" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="90" y="58" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="98" y="58" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="58" y="66" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="74" y="66" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="90" y="66" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="58" y="74" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="66" y="74" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="82" y="74" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="98" y="74" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="58" y="82" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="74" y="82" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="90" y="82" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="58" y="90" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="66" y="90" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="82" y="90" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="98" y="90" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="58" y="98" width="6" height="6" fill="rgba(212,178,111,0.4)"/>
+                  <rect x="74" y="98" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                  <rect x="90" y="98" width="6" height="6" fill="rgba(212,178,111,0.6)"/>
+                </svg>
+                <div style="font-family:var(--f-mono);font-size:9px;color:var(--c-text-3);">QR 코드</div>
+              </div>
+
+              <button class="btn btn-primary" style="width:100%;padding:10px 0;font-size:12px;" onclick="alert('공유 완료!')">공유 링크 생성</button>
+              <button class="btn btn-outline" style="width:100%;padding:10px 0;font-size:12px;">JSON 다운로드</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Section 2: 커뮤니티 프리셋 갤러리 -->
+    <div>
+      <div class="section-title">
+        <span>커뮤니티 프리셋 갤러리</span>
+        <span style="color:var(--c-text-3);">추천 시나리오</span>
+      </div>
+      <div class="preset-grid">
+
+        <!-- 프리셋 1: 천재 라이벌 시나리오 (Featured) -->
+        <div class="preset-card featured">
+          <div style="display:flex;align-items:center;gap:var(--s-3);">
+            <div style="width:48px;height:60px;border-radius:4px;background-image:url('../assets/character/Kai_ENTJ.png');background-size:cover;border:1px solid var(--c-char-kai-ring);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <span class="preset-tag" style="background:rgba(212,178,111,0.2);color:var(--c-cream);border:1px solid rgba(212,178,111,0.35);">추천</span>
+                <span class="preset-tag" style="background:rgba(219,76,76,0.15);color:var(--c-critical);border:1px solid rgba(219,76,76,0.3);">고강도</span>
+              </div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">천재 라이벌 시나리오</div>
+              <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-2241</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">Adel(ISTJ)과 Kai(ENTJ)가 학점 1위를 두고 10 Tick 내내 치열하게 경쟁. Magic Layer ON 상태에서 마법 대결까지 발생하는 고긴장 시나리오.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="preset-tag" style="background:rgba(94,96,232,0.15);color:#7375f5;border:1px solid rgba(94,96,232,0.3);">Adel ISTJ</span>
+            <span class="preset-tag" style="background:rgba(154,28,28,0.15);color:var(--c-char-kai-light);border:1px solid rgba(154,28,28,0.3);">Kai ENTJ</span>
+            <span class="preset-tag" style="background:rgba(52,179,199,0.1);color:var(--c-inspector);border:1px solid rgba(52,179,199,0.3);">Magic ON</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">사용자 347명 · ⭐ 4.8</div>
+            <button onclick="importPreset('rival')" class="btn btn-primary btn-sm" style="font-size:11px;">이 프리셋으로 시작</button>
+          </div>
+        </div>
+
+        <!-- 프리셋 2: 평화로운 일상 시나리오 -->
+        <div class="preset-card">
+          <div style="display:flex;align-items:center;gap:var(--s-3);">
+            <div style="width:48px;height:60px;border-radius:4px;background-image:url('../assets/character/Sera_ESFJ.png');background-size:cover;border:1px solid var(--c-char-sera-ring);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <span class="preset-tag" style="background:rgba(56,178,119,0.15);color:var(--c-success);border:1px solid rgba(56,178,119,0.3);">입문</span>
+              </div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">평화로운 일상 시나리오</div>
+              <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-0100</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">Magic Layer OFF 상태의 일반 대학 캠퍼스. 갈등 없이 친밀도 중심으로 5인의 우정이 성장하는 힐링 시나리오.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="preset-tag" style="background:rgba(90,24,154,0.15);color:var(--c-char-sera-light);border:1px solid rgba(90,24,154,0.3);">Sera ESFJ</span>
+            <span class="preset-tag" style="background:rgba(56,178,119,0.1);color:var(--c-success);border:1px solid rgba(56,178,119,0.3);">Magic OFF</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">사용자 521명 · ⭐ 4.6</div>
+            <button onclick="importPreset('peaceful')" class="btn btn-outline btn-sm" style="font-size:11px;">이 프리셋으로 시작</button>
+          </div>
+        </div>
+
+        <!-- 프리셋 3: 파멸의 마법 폭주 -->
+        <div class="preset-card">
+          <div style="display:flex;align-items:center;gap:var(--s-3);">
+            <div style="width:48px;height:60px;border-radius:4px;background-image:url('../assets/character/Leo_ESTP.png');background-size:cover;border:1px solid var(--c-char-leo-ring);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <span class="preset-tag" style="background:rgba(219,76,76,0.2);color:var(--c-critical);border:1px solid rgba(219,76,76,0.4);">HARD</span>
+                <span class="preset-tag" style="background:rgba(219,76,76,0.1);color:var(--c-critical);border:1px solid rgba(219,76,76,0.2);">카오스</span>
+              </div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">파멸의 마법 폭주</div>
+              <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-6666</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">Leo(ESTP)의 무모한 실험이 연쇄 마법 폭발로 이어지는 최고 난이도 시나리오. 모든 에이전트의 스트레스가 급등하며 다수 MISSING 발생.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="preset-tag" style="background:rgba(212,175,55,0.15);color:var(--c-char-leo-light);border:1px solid rgba(212,175,55,0.3);">Leo ESTP</span>
+            <span class="preset-tag" style="background:rgba(52,179,199,0.1);color:var(--c-inspector);border:1px solid rgba(52,179,199,0.3);">Magic ON</span>
+            <span class="preset-tag" style="background:rgba(219,76,76,0.1);color:var(--c-critical);border:1px solid rgba(219,76,76,0.3);">고위험</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">사용자 189명 · ⭐ 4.9</div>
+            <button onclick="importPreset('chaos')" class="btn btn-outline btn-sm" style="font-size:11px;color:var(--c-critical);border-color:rgba(219,76,76,0.4);">이 프리셋으로 시작</button>
+          </div>
+        </div>
+
+        <!-- 프리셋 4: Ria의 성장 이야기 -->
+        <div class="preset-card">
+          <div style="display:flex;align-items:center;gap:var(--s-3);">
+            <div style="width:48px;height:60px;border-radius:4px;background-image:url('../assets/character/Ria_INFP.png');background-size:cover;border:1px solid var(--c-char-ria-ring);flex-shrink:0;"></div>
+            <div style="flex:1;">
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <span class="preset-tag" style="background:rgba(56,178,119,0.15);color:var(--c-success);border:1px solid rgba(56,178,119,0.3);">스토리</span>
+              </div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">Ria의 성장 이야기</div>
+              <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-5577</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">User Persona Ria(INFP)의 내면 갈등과 동료들과의 신뢰 구축에 집중. 스트레스 관리와 감정 표현이 핵심인 서사 중심 시나리오.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="preset-tag" style="background:rgba(181,101,118,0.15);color:var(--c-char-ria-light);border:1px solid rgba(181,101,118,0.3);">Ria INFP</span>
+            <span class="preset-tag" style="background:rgba(94,96,232,0.1);color:var(--c-primary);border:1px solid rgba(94,96,232,0.3);">서사 중심</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">사용자 412명 · ⭐ 4.7</div>
+            <button onclick="importPreset('ria')" class="btn btn-outline btn-sm" style="font-size:11px;">이 프리셋으로 시작</button>
+          </div>
+        </div>
+
+        <!-- 프리셋 5: 교수와의 갈등 -->
+        <div class="preset-card">
+          <div style="display:flex;align-items:center;gap:var(--s-3);">
+            <div style="width:48px;height:60px;border-radius:4px;background:rgba(6,13,32,0.8);border:1px solid var(--c-border);display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;">🧙</div>
+            <div style="flex:1;">
+              <div style="display:flex;gap:6px;margin-bottom:4px;">
+                <span class="preset-tag" style="background:rgba(212,178,111,0.1);color:var(--c-cream);border:1px solid rgba(212,178,111,0.3);">신규</span>
+              </div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">교수와의 금지된 실험</div>
+              <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-9001</div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">Prof. Aldric이 학생들 몰래 금지된 고대 마법 실험을 진행. 5인 학생의 발견과 갈등, 협력 여부에 따라 결말이 달라지는 멀티 엔딩.</div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;">
+            <span class="preset-tag" style="background:rgba(212,178,111,0.12);color:var(--c-cream);border:1px solid rgba(212,178,111,0.3);">Prof. Aldric</span>
+            <span class="preset-tag" style="background:rgba(52,179,199,0.1);color:var(--c-inspector);border:1px solid rgba(52,179,199,0.3);">Magic ON</span>
+          </div>
+          <div style="display:flex;align-items:center;justify-content:space-between;">
+            <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">사용자 78명 · ⭐ 4.5</div>
+            <button onclick="importPreset('professor')" class="btn btn-outline btn-sm" style="font-size:11px;">이 프리셋으로 시작</button>
+          </div>
+        </div>
+
+        <!-- JSON Import card -->
+        <div class="card" style="border-style:dashed;background:rgba(6,13,32,0.5);display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:200px;gap:var(--s-3);cursor:pointer;" onclick="document.getElementById('json-import-area').focus()">
+          <div style="font-size:28px;opacity:0.4;">📥</div>
+          <div style="font-family:var(--f-mono);font-size:12px;color:var(--c-text-2);font-weight:600;">JSON 직접 가져오기</div>
+          <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);text-align:center;line-height:1.5;">공유받은 JSON을 붙여넣어<br>바로 시뮬레이션을 시작합니다.</div>
+          <textarea id="json-import-area" class="share-input" placeholder='{ "seed": "...", "persona": "...", "magic_layer": true }' style="width:100%;height:80px;resize:none;font-size:10px;margin-top:8px;" onclick="e => e.stopPropagation()"></textarea>
+          <button onclick="parseImport()" class="btn btn-primary" style="font-size:12px;padding:8px 20px;">JSON 파싱 및 시작</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Import confirm toast -->
+    <div id="import-toast" style="display:none;position:fixed;bottom:32px;right:32px;background:rgba(56,178,119,0.15);border:1px solid rgba(56,178,119,0.4);border-radius:var(--r-md);padding:var(--s-3) var(--s-4);font-family:var(--f-mono);font-size:12px;color:var(--c-success);z-index:1000;backdrop-filter:blur(12px);">
+      ✓ 프리셋을 가져왔습니다. 페르소나 설정으로 이동합니다...
+    </div>
+
+  </div>
+</div>
+
+<script>
+  function setScope(scope, btn) {
+    document.querySelectorAll('.toggle-pill button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const link = document.getElementById('share-link');
+    if (scope === 'private') link.value = '(비공개 — 링크 생성 안 됨)';
+    else if (scope === 'link') link.value = 'https://magic-academy.app/sim/SEED-8842?token=abc123';
+    else link.value = 'https://magic-academy.app/sim/SEED-8842';
+  }
+  function copyLink() {
+    const v = document.getElementById('share-link').value;
+    navigator.clipboard && navigator.clipboard.writeText(v);
+    showToast('링크가 복사되었습니다!');
+  }
+  function copyJSON() { showToast('JSON이 복사되었습니다!'); }
+  function importPreset(name) {
+    const t = document.getElementById('import-toast');
+    t.style.display = 'block';
+    setTimeout(() => { t.style.display = 'none'; window.location.href = '06-persona-setup.html'; }, 2000);
+  }
+  function parseImport() {
+    const v = document.getElementById('json-import-area').value.trim();
+    if (!v) return alert('JSON을 입력해주세요.');
+    try { JSON.parse(v); importPreset('json'); } catch(e) { alert('유효하지 않은 JSON 형식입니다.'); }
+  }
+  function showToast(msg) {
+    const t = document.getElementById('import-toast');
+    t.textContent = '✓ ' + msg;
+    t.style.display = 'block';
+    setTimeout(() => t.style.display = 'none', 2000);
+  }
+</script>
+</body>
+</html>

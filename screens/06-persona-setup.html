@@ -163,6 +163,44 @@
       background: rgba(8, 14, 32, 0.75);
       backdrop-filter: blur(12px);
     }
+
+    /* ── Preset Import Modal ──────────────────────────────── */
+    .import-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0, 0, 0, 0.65);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      align-items: center; justify-content: center;
+    }
+    .import-overlay.open { display: flex; }
+    .import-modal-box {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border-hi);
+      border-radius: var(--r-xl);
+      width: 500px;
+      padding: var(--s-6);
+      display: flex; flex-direction: column; gap: var(--s-4);
+      box-shadow: var(--sh-lg);
+      animation: float-up 240ms ease both;
+    }
+    .import-modal-box textarea {
+      background: rgba(8, 14, 32, 0.7);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      color: var(--c-text);
+      font-family: var(--f-mono); font-size: 11px; line-height: 1.6;
+      padding: var(--s-3);
+      resize: vertical; height: 180px;
+      width: 100%; box-sizing: border-box;
+    }
+    .import-modal-box textarea:focus { outline: none; border-color: var(--c-primary); }
+    .import-error {
+      display: none;
+      font-size: var(--t-xs); color: var(--c-critical);
+      padding: var(--s-2) var(--s-3);
+      background: rgba(224, 82, 82, 0.1);
+      border-radius: var(--r-sm);
+    }
   </style>
 </head>
 <body>
@@ -190,7 +228,11 @@
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <span class="setup-nav__brand">Persona 초기 설정</span>
-      <span style="font-size:var(--t-sm); color:var(--c-text-2); margin-left:var(--s-2);">— Leo</span>
+      <span id="nav-char-name" style="font-size:var(--t-sm); color:var(--c-text-2); margin-left:var(--s-2);">— Leo</span>
+      <div style="margin-left:auto; display:flex; gap:var(--s-2);">
+        <button class="btn btn-ghost btn-sm" onclick="openImportModal()">↑ 가져오기</button>
+        <button class="btn btn-outline btn-sm" onclick="exportPreset()">↓ 내보내기</button>
+      </div>
     </div>
 
     <div class="setup-form-body">
@@ -331,6 +373,28 @@
     </div>
   </div>
 
+  <!-- ── Preset Import Overlay ─────────────────────────────── -->
+  <div class="import-overlay" id="import-overlay">
+    <div class="import-modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <span style="font-size:var(--t-lg); font-weight:500; color:var(--c-text);">JSON 프리셋 가져오기</span>
+        <button class="btn btn-ghost btn-sm" onclick="closeImportModal()" style="padding:var(--s-2);">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 2L10 10M10 2L2 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+      <div style="font-size:var(--t-xs); color:var(--c-text-2); line-height:1.6;">
+        이전에 내보낸 <code style="background:var(--c-surface-hi); padding:1px 5px; border-radius:3px; font-size:10px;">ma-preset-*.json</code> 파일 내용을 붙여넣으세요.<br>
+        MBTI · Big Five · 시뮬레이션 파라미터가 일괄 적용됩니다.
+      </div>
+      <textarea id="import-textarea" placeholder='{"version":1,"mbti":"ESTP","bigfive":{"openness":15,...},"params":{...}}'></textarea>
+      <div class="import-error" id="import-error"></div>
+      <div style="display:flex; gap:var(--s-3); justify-content:flex-end;">
+        <button class="btn btn-ghost" onclick="closeImportModal()">취소</button>
+        <button class="btn btn-primary" onclick="applyImport()">적용</button>
+      </div>
+    </div>
+  </div>
+
 </div>
 <script src="../js/magic-academy.js"></script>
 <script>
@@ -350,11 +414,13 @@
   document.querySelector('.setup-portrait-panel__name').textContent = charInfo.name;
   document.querySelector('.setup-portrait-panel__sub').textContent = `${charInfo.mbti} · ${charInfo.major} · 2학년`;
   document.querySelector('.setup-portrait-panel__desc').textContent = charInfo.desc;
-  document.getElementById('field-mbti').textContent = charInfo.mbti;
-  document.getElementById('field-interest').textContent = charInfo.interest;
   document.getElementById('nav-char-name').textContent = '— ' + charInfo.name;
-  document.getElementById('field-major').textContent = charInfo.major;
-  document.getElementById('field-interest-val').textContent = charInfo.interest;
+  // 기존 JS가 참조하던 field-mbti 등 ID 요소가 HTML에 없어 null-safe 처리
+  const _el = (id) => document.getElementById(id);
+  if (_el('field-mbti')) _el('field-mbti').textContent = charInfo.mbti;
+  if (_el('field-interest')) _el('field-interest').textContent = charInfo.interest;
+  if (_el('field-major')) _el('field-major').textContent = charInfo.major;
+  if (_el('field-interest-val')) _el('field-interest-val').textContent = charInfo.interest;
 
   /* MBTI → Big Five 기본값 */
   const MBTI_DEFAULTS = {
@@ -466,6 +532,97 @@
   }
 
   checkMagicThreshold();
+
+  /* ─── Preset Import / Export ────────────────────────────── */
+  function gatherPreset() {
+    const mbti = document.querySelector('.mbti-btn.selected')?.dataset.mbti || 'ESTP';
+    const bigfive = {};
+    BF_FIELDS.forEach(f => {
+      const s = document.getElementById('bf-' + f);
+      bigfive[f] = s ? parseInt(s.value) : 0;
+    });
+    return {
+      version: 1,
+      char: charParam,
+      mbti,
+      bigfive,
+      params: {
+        genFreq:     parseInt(pGenFreq?.value     || 50),
+        genImpact:   parseInt(pGenImpact?.value   || 50),
+        magicFreq:   parseInt(pMagicFreq?.value   || 60),
+        magicImpact: parseInt(pMagicImpact?.value || 70),
+        magicOff:    magicOffToggle?.checked || false
+      }
+    };
+  }
+
+  function exportPreset() {
+    const data = gatherPreset();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `ma-preset-${data.char}-${data.mbti}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function openImportModal() {
+    document.getElementById('import-overlay').classList.add('open');
+    document.getElementById('import-textarea').value = '';
+    document.getElementById('import-error').style.display = 'none';
+  }
+
+  function closeImportModal() {
+    document.getElementById('import-overlay').classList.remove('open');
+  }
+
+  function applyImport() {
+    const errEl = document.getElementById('import-error');
+    errEl.style.display = 'none';
+    let data;
+    try {
+      data = JSON.parse(document.getElementById('import-textarea').value);
+    } catch(e) {
+      errEl.textContent = '올바른 JSON 형식이 아닙니다: ' + e.message;
+      errEl.style.display = 'block';
+      return;
+    }
+    if (data.mbti && MBTI_DEFAULTS[data.mbti]) {
+      document.querySelectorAll('.mbti-btn').forEach(b => {
+        b.classList.toggle('selected', b.dataset.mbti === data.mbti);
+      });
+      applyDefaults(data.mbti);
+    }
+    if (data.bigfive) {
+      BF_FIELDS.forEach(f => {
+        const val = data.bigfive[f];
+        if (val === undefined) return;
+        const clamped = Math.max(-50, Math.min(50, parseInt(val)));
+        const s = document.getElementById('bf-' + f);
+        const v = document.getElementById('bf-' + f + '-val');
+        if (s) s.value = clamped;
+        if (v) v.textContent = fmt(clamped);
+      });
+    }
+    if (data.params) {
+      const paramMap = {
+        genFreq: 'param-gen-freq', genImpact: 'param-gen-impact',
+        magicFreq: 'param-magic-freq', magicImpact: 'param-magic-impact'
+      };
+      Object.entries(paramMap).forEach(([key, id]) => {
+        const val = data.params[key];
+        if (val === undefined) return;
+        const el = document.getElementById(id);
+        const valEl = document.getElementById(id + '-val');
+        const clamped = Math.max(10, Math.min(100, parseInt(val)));
+        if (el) el.value = clamped;
+        if (valEl) valEl.textContent = clamped;
+      });
+      checkMagicThreshold();
+    }
+    closeImportModal();
+  }
 </script>
 </body>
 </html>

@@ -26,6 +26,7 @@
 | **12** | **Branch Tree** | [`screens/12-branch-tree.html`](screens/12-branch-tree.html) | [FR-17] What-If 시나리오 분기 트리, Git Graph 형태 인터랙티브 노드, 분기 생성 모달 |
 | **13** | **Magic Comparison** | [`screens/13-magic-comparison.html`](screens/13-magic-comparison.html) | [FR-12, FR-20, FR-21] Magic ON vs OFF 2열 Side-by-Side 비교, 관계 변화 델타 그래프 |
 | **14** | **Ending Summary** | [`screens/14-ending-summary.html`](screens/14-ending-summary.html) | [FR-18, FR-21] 캠페인 결말 리포트, 캐릭터별 후일담 카드 6종, Radar 차트, 하단 액션 바 |
+| **15** | **Share & Import** | [`screens/15-share-import.html`](screens/15-share-import.html) | [FR-14, FR-15] 시드 공유 링크·QR·JSON 내보내기, 공개/비공개 토글, 추천 프리셋 갤러리 5종, JSON 직접 가져오기 |
 
 ---
 

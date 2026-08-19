@@ -157,7 +157,23 @@
       border-top: 1px solid var(--c-border);
       display: flex;
       gap: var(--s-3);
-      justify-content: flex-end;
+      align-items: center;
+    }
+    .save-modal__footer-spacer { flex: 1; }
+
+    /* JSON preview block */
+    .json-preview-block {
+      display: none;
+      background: rgba(8, 14, 32, 0.7);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s-3);
+      font-family: var(--f-mono);
+      font-size: 10px; line-height: 1.6;
+      color: var(--c-text-2);
+      max-height: 130px; overflow-y: auto;
+      white-space: pre;
+      margin-top: var(--s-2);
     }
   </style>
 </head>
@@ -234,18 +250,70 @@
           </div>
         </div>
 
+        <!-- JSON 내보내기 / 미리보기 -->
+        <div>
+          <div style="display:flex; justify-content:space-between; align-items:center;">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); letter-spacing:0.1em; text-transform:uppercase;">프리셋 JSON 내보내기</span>
+            <button id="json-preview-btn" class="btn btn-ghost btn-sm" onclick="toggleJsonPreview()" style="font-size:11px; padding:2px 8px;">JSON 미리보기</button>
+          </div>
+          <pre id="json-preview" class="json-preview-block"></pre>
+        </div>
+
       </div><!-- end body -->
 
       <div class="save-modal__footer">
+        <button class="btn btn-outline btn-sm" onclick="exportSaveJSON()">↓ JSON 내보내기</button>
+        <div class="save-modal__footer-spacer"></div>
         <button class="btn btn-ghost" onclick="window.location.href='03-simulation.html'">취소</button>
-        <button class="btn btn-primary" onclick="window.location.href='10-mypage.html'">
-          저장
-        </button>
+        <button class="btn btn-primary" onclick="window.location.href='10-mypage.html'">저장</button>
       </div>
     </div>
 
   </div>
 </div>
 <script src="../js/magic-academy.js"></script>
+<script>
+  const SAVE_DATA = {
+    version: 1,
+    name: '첫 번째 시뮬레이션',
+    tick: 10,
+    seed: '7f3a9c21',
+    persona: { name: 'Leo', mbti: 'ESTP' },
+    bigfive: { openness: 15, conscientiousness: -20, extraversion: 30, agreeableness: -10, stability: 20 },
+    params: { genFreq: 50, genImpact: 50, magicFreq: 60, magicImpact: 70, magicOff: false },
+    events: [
+      { tick: 2, name: 'Adel — stress 상승 시작', type: 'stress' },
+      { tick: 7, name: 'Leo & Adel 갈등 발생', type: 'relation' },
+      { tick: 10, name: '학생 실종 — STUDENT_MISSING', type: 'missing' }
+    ]
+  };
+
+  function exportSaveJSON() {
+    const nameInput = document.querySelector('.field-input');
+    if (nameInput) SAVE_DATA.name = nameInput.value;
+    const blob = new Blob([JSON.stringify(SAVE_DATA, null, 2)], { type: 'application/json' });
+    const url  = URL.createObjectURL(blob);
+    const a    = document.createElement('a');
+    a.href = url;
+    a.download = `ma-save-tick${SAVE_DATA.tick}-${SAVE_DATA.persona.mbti.toLowerCase()}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+
+  function toggleJsonPreview() {
+    const el  = document.getElementById('json-preview');
+    const btn = document.getElementById('json-preview-btn');
+    if (el.style.display === 'block') {
+      el.style.display = 'none';
+      btn.textContent = 'JSON 미리보기';
+    } else {
+      const nameInput = document.querySelector('.field-input');
+      if (nameInput) SAVE_DATA.name = nameInput.value;
+      el.textContent = JSON.stringify(SAVE_DATA, null, 2);
+      el.style.display = 'block';
+      btn.textContent = 'JSON 숨기기';
+    }
+  }
+</script>
 </body>
 </html>
