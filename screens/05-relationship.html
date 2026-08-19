@@ -3,212 +3,104 @@
 <head>
   <meta charset="UTF-8">
   <title>관계 그래프 — Magic Academy</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
   <style>
-    body { margin: 0; overflow: hidden; }
+    * { box-sizing: border-box; }
+    body { margin: 0; overflow: hidden; background: var(--c-bg); }
     .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
-
     .sim-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/concept_v1.1.png');
       background-size: cover; background-position: center;
-      filter: brightness(0.35) saturate(0.5);
+      filter: brightness(0.3) saturate(0.4);
     }
-
     .topbar { position: absolute; }
 
-    /* Modal */
-    .rel-modal {
-      position: absolute;
-      inset: 0;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 30;
+    .rel-filter-chips { display: flex; gap: var(--s-2); margin-left: auto; }
+    .chip {
+      padding: 4px 12px; border-radius: 20px;
+      font-family: var(--f-mono); font-size: 10px; font-weight: 600; letter-spacing: 0.06em;
+      color: var(--c-text-2); background: rgba(11,24,56,0.7);
+      border: 1px solid var(--c-border); cursor: pointer; transition: all var(--tr-fast); white-space: nowrap;
     }
+    .chip:hover { color: var(--c-text); border-color: var(--c-border-hi); }
+    .chip.active { color: var(--c-inspector); background: rgba(52,179,199,0.15); border-color: rgba(52,179,199,0.45); }
+    .chip.chip-favor.active { color: #5CE67A; background: rgba(92,230,122,0.12); border-color: rgba(92,230,122,0.4); }
+    .chip.chip-trust.active { color: var(--c-inspector); background: rgba(52,179,199,0.12); border-color: rgba(52,179,199,0.4); }
+    .chip.chip-tension.active { color: var(--c-critical); background: rgba(219,76,76,0.12); border-color: rgba(219,76,76,0.4); }
+    .chip.chip-dep.active { color: var(--c-cream); background: rgba(212,178,111,0.12); border-color: rgba(212,178,111,0.4); }
 
+    .rel-modal { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; z-index: 30; }
     .rel-modal__inner {
-      background: var(--c-surface);
-      border: 1px solid var(--c-border-hi);
-      border-radius: var(--r-xl);
-      width: 980px;
-      height: 660px;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-      box-shadow: var(--sh-lg);
+      background: rgba(8,16,42,0.97);
+      border: 1px solid var(--c-border-hi); border-radius: var(--r-xl);
+      width: 1060px; height: 720px;
+      display: flex; flex-direction: column; overflow: hidden;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.7);
       animation: float-up 300ms ease both;
     }
-
     .rel-modal__header {
-      padding: var(--s-5) var(--s-6);
-      border-bottom: 1px solid var(--c-border);
-      display: flex;
-      align-items: center;
-      gap: var(--s-4);
-      flex-shrink: 0;
+      padding: var(--s-4) var(--s-6); border-bottom: 1px solid var(--c-border);
+      display: flex; align-items: center; gap: var(--s-4); flex-shrink: 0;
+      background: rgba(6,13,32,0.8);
     }
+    .rel-modal__title { font-family: var(--f-serif-en); font-size: var(--t-base); font-weight: 600; color: var(--c-text); }
+    .rel-modal__body { flex: 1; position: relative; overflow: hidden; background: var(--c-bg); }
+    .graph-svg { position: absolute; inset: 0; width: 100%; height: 100%; }
 
-    .rel-modal__title {
-      font-size: var(--t-base);
-      font-weight: 500;
-      color: var(--c-text);
-    }
+    .edge-base { fill: none; stroke-linecap: round; transition: opacity 0.2s; cursor: pointer; }
+    .edge-favor  { stroke: rgba(92,230,122,0.55); stroke-width: 2; }
+    .edge-trust  { stroke: rgba(52,179,199,0.55); stroke-width: 2; stroke-dasharray: 5 2; }
+    .edge-tension { stroke: rgba(219,76,76,0.55); stroke-width: 2; stroke-dasharray: 3 3; }
+    .edge-dep    { stroke: rgba(212,178,111,0.5); stroke-width: 1.5; }
+    .edge-neutral { stroke: rgba(169,174,199,0.25); stroke-width: 1; }
 
-    .rel-modal__filters {
-      display: flex;
-      gap: var(--s-2);
-      margin-left: auto;
-    }
-
-    .filter-btn {
-      padding: var(--s-1) var(--s-3);
-      border-radius: var(--r-sm);
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-text-2);
-      background: var(--c-surface-hi);
-      border: 1px solid var(--c-border);
-      cursor: pointer;
-      transition: all var(--tr-fast);
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-    }
-    .filter-btn.active {
-      color: var(--c-inspector);
-      background: var(--c-inspector-muted);
-      border-color: var(--c-inspector-ring);
-    }
-    .filter-btn:hover:not(.active) { border-color: var(--c-border-hi); color: var(--c-text); }
-
-    /* Graph canvas */
-    .rel-modal__body {
-      flex: 1;
-      position: relative;
-      overflow: hidden;
-      background: var(--c-bg);
-    }
-
-    .graph-svg {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    /* Edge styles */
-    .edge-positive {
-      stroke: rgba(92, 230, 122, 0.5);
-      stroke-width: 1.5;
-      fill: none;
-    }
-    .edge-negative {
-      stroke: rgba(217, 93, 117, 0.5);
-      stroke-width: 1.5;
-      fill: none;
-      stroke-dasharray: 4 3;
-    }
-    .edge-neutral {
-      stroke: rgba(169, 174, 199, 0.25);
-      stroke-width: 1;
-      fill: none;
-    }
-    .edge-selected {
-      stroke: var(--c-primary);
-      stroke-width: 2;
-      opacity: 1 !important;
-    }
-
-    /* Edge labels */
-    .edge-label {
-      fill: var(--c-text-2);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 10px;
-    }
-
-    /* Bottom info panel */
     .rel-modal__footer {
-      padding: var(--s-4) var(--s-6);
-      border-top: 1px solid var(--c-border);
-      display: flex;
-      align-items: center;
-      gap: var(--s-4);
-      flex-shrink: 0;
+      padding: var(--s-3) var(--s-6); border-top: 1px solid var(--c-border);
+      display: flex; align-items: center; gap: var(--s-4); flex-shrink: 0;
+      background: rgba(6,13,32,0.7);
     }
-
-    .rel-legend {
-      display: flex;
-      align-items: center;
-      gap: var(--s-4);
-    }
-    .rel-legend-item {
-      display: flex;
-      align-items: center;
-      gap: var(--s-2);
-      font-size: var(--t-xs);
-      color: var(--c-text-2);
-    }
-    .rel-legend-line {
-      width: 20px; height: 2px;
-      border-radius: 1px;
-    }
-
-    /* Relationship detail panel */
-    .rel-detail {
-      margin-left: auto;
-      display: flex;
-      align-items: center;
-      gap: var(--s-4);
-      min-width: 300px;
-    }
-    .rel-detail-pair {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-    }
-    .rel-detail-portrait {
-      width: 28px; height: 28px;
-      border-radius: 50%;
-      background-repeat: no-repeat;
-      border: 1.5px solid var(--c-border);
-      background-size: cover;
-      background-position: center top;
-    }
-    .rel-detail-portrait.char-adel { background-image: url('../assets/character/Adel_ISTJ.png'); }
-    .rel-detail-portrait.char-leo  { background-image: url('../assets/character/Leo_ESTP.png'); }
-    .rel-detail-portrait.char-ria  { background-image: url('../assets/character/Ria_INFP.png'); }
-    .rel-detail-portrait.char-kai  { background-image: url('../assets/character/Kai_ENTJ.png'); }
-    .rel-detail-portrait.char-sera { background-image: url('../assets/character/Sera_ESFJ.png'); }
-    .rel-arrow {
-      font-family: var(--f-mono);
-      font-size: var(--t-sm);
-      color: var(--c-primary);
-    }
-    .rel-stats {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .rel-stat-row {
-      display: flex;
-      gap: var(--s-3);
-      font-family: var(--f-mono);
-      font-size: var(--t-xs);
-      color: var(--c-text-2);
-    }
+    .rel-legend { display: flex; align-items: center; gap: var(--s-4); }
+    .rel-legend-item { display: flex; align-items: center; gap: var(--s-2); font-size: var(--t-xs); color: var(--c-text-2); }
+    .rel-legend-line { width: 18px; height: 2px; border-radius: 1px; }
+    .rel-detail { margin-left: auto; display: flex; align-items: center; gap: var(--s-4); min-width: 360px; }
+    .rel-detail-pair { display: flex; align-items: center; gap: var(--s-3); }
+    .rel-detail-portrait { width: 28px; height: 28px; border-radius: 50%; background-size: cover; background-position: center top; border: 1.5px solid var(--c-border); }
+    .rel-arrow { font-family: var(--f-mono); font-size: var(--t-sm); color: var(--c-primary); }
+    .rel-stats { display: flex; flex-direction: column; gap: 2px; }
+    .rel-stat-row { display: flex; gap: var(--s-2); font-family: var(--f-mono); font-size: var(--t-xs); }
     .rel-stat-key { color: var(--c-text-3); }
     .rel-stat-val { color: var(--c-text); }
+
+    /* History slide panel */
+    .history-panel {
+      position: absolute; right: 0; top: 0; bottom: 0; width: 300px;
+      background: rgba(6,13,32,0.98); border-left: 1px solid var(--c-border-hi);
+      z-index: 50; transform: translateX(100%); transition: transform 0.3s ease;
+      display: flex; flex-direction: column; overflow: hidden;
+    }
+    .history-panel.open { transform: translateX(0); }
+    .history-panel__header {
+      padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--c-border);
+      display: flex; align-items: center; justify-content: space-between; flex-shrink: 0;
+    }
+    .history-panel__body { flex: 1; overflow-y: auto; padding: var(--s-3); }
+    .history-event {
+      display: flex; gap: 10px; padding-bottom: 12px;
+      border-bottom: 1px solid rgba(70,100,180,0.15); margin-bottom: 10px;
+    }
+    .history-event__tick { font-family: var(--f-mono); font-size: 10px; font-weight: 700; width: 28px; flex-shrink: 0; padding-top: 1px; }
+    .history-event__type { font-family: var(--f-mono); font-size: 9px; color: var(--c-text-3); margin-bottom: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
+    .history-event__text { font-size: 11px; color: var(--c-text); line-height: 1.5; }
+    .history-event__delta { font-family: var(--f-mono); font-size: 10px; margin-top: 3px; }
   </style>
 </head>
 <body>
-
 <div class="sim-screen">
   <div class="sim-map"></div>
-
-  <!-- Top Bar -->
   <div class="topbar">
     <a href="03-simulation.html" class="control-btn">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -223,254 +115,296 @@
     </div>
   </div>
 
-  <!-- Relationship Graph Modal -->
   <div class="rel-modal">
-    <div class="rel-modal__inner" id="graph-canvas">
-
+    <div class="rel-modal__inner">
       <div class="rel-modal__header">
         <span class="rel-modal__title">관계 그래프</span>
-        <span style="font-size:var(--t-sm); color:var(--c-text-2);">Adel 선택 중</span>
-        <div class="rel-modal__filters">
-          <button class="filter-btn active">전체</button>
-          <button class="filter-btn">우호</button>
-          <button class="filter-btn">적대</button>
-          <button class="filter-btn">중립</button>
+        <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2);" id="selected-label">Adel 선택 중</span>
+        <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);">선 클릭 → 상호작용 히스토리</span>
+        <div class="rel-filter-chips">
+          <button class="chip active" onclick="filterEdges('all',this)">전체</button>
+          <button class="chip chip-favor" onclick="filterEdges('favor',this)">호감·친밀</button>
+          <button class="chip chip-trust" onclick="filterEdges('trust',this)">신뢰</button>
+          <button class="chip chip-tension" onclick="filterEdges('tension',this)">긴장·라이벌</button>
+          <button class="chip chip-dep" onclick="filterEdges('dep',this)">의존</button>
         </div>
-        <button class="inspector-drawer__close" onclick="window.location.href='03-simulation.html'" style="margin-left:var(--s-3);">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <button onclick="window.location.href='03-simulation.html'" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--c-border);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;">
+          <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="#a4b5d6" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
 
       <div class="rel-modal__body">
+        <!-- SVG with directed arrowheads -->
+        <svg class="graph-svg" viewBox="0 0 1060 530" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <marker id="arr-favor"   markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(92,230,122,0.7)"/></marker>
+            <marker id="arr-trust"   markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(52,179,199,0.7)"/></marker>
+            <marker id="arr-tension" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(219,76,76,0.7)"/></marker>
+            <marker id="arr-dep"     markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(212,178,111,0.7)"/></marker>
+            <marker id="arr-neutral" markerWidth="7" markerHeight="7" refX="5" refY="3" orient="auto"><path d="M0,0 L0,6 L7,3 z" fill="rgba(169,174,199,0.4)"/></marker>
+          </defs>
 
-        <!-- SVG Graph -->
-        <svg class="graph-svg" viewBox="0 0 980 560" xmlns="http://www.w3.org/2000/svg">
+          <!-- Node positions: Adel=530,265  Leo=300,130  Ria=760,130  Kai=190,390  Sera=870,390 -->
 
-          <!-- Edges (drawn first, behind nodes) -->
+          <!-- Adel → Leo (tension, offset -7px perp) -->
+          <line class="edge-base edge-tension" data-type="tension" data-pair="adel-leo"
+                x1="521" y1="259" x2="309" y2="143" marker-end="url(#arr-tension)"
+                onclick="openHistory('adel','leo')"/>
+          <!-- Leo → Adel (neutral, offset +7px) -->
+          <line class="edge-base edge-neutral" data-type="neutral" data-pair="adel-leo"
+                x1="303" y1="151" x2="525" y2="270" marker-end="url(#arr-neutral)"
+                onclick="openHistory('adel','leo')"/>
+          <text font-family="JetBrains Mono" font-size="9.5" fill="rgba(219,76,76,0.8)" x="400" y="188">긴장 72</text>
 
-          <!-- Adel ↔ Leo: tension (negative) -->
-          <line class="edge-negative" id="edge-adel-leo"
-                x1="490" y1="280" x2="280" y2="160"/>
-          <text class="edge-label" x="368" y="208">tension: 72</text>
+          <!-- Adel → Ria (favor) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="adel-ria"
+                x1="539" y1="259" x2="753" y2="143" marker-end="url(#arr-favor)"
+                onclick="openHistory('adel','ria')"/>
+          <!-- Ria → Adel (favor, offset) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="adel-ria"
+                x1="759" y1="151" x2="543" y2="270" marker-end="url(#arr-favor)"
+                onclick="openHistory('adel','ria')"/>
+          <text font-family="JetBrains Mono" font-size="9.5" fill="rgba(92,230,122,0.8)" x="650" y="188">신뢰 85</text>
 
-          <!-- Adel ↔ Ria: trust (positive) -->
-          <line class="edge-positive" id="edge-adel-ria"
-                x1="490" y1="280" x2="700" y2="160"/>
-          <text class="edge-label" x="602" y="208">trust: 85</text>
+          <!-- Adel → Kai (neutral) -->
+          <line class="edge-base edge-neutral" data-type="neutral" data-pair="adel-kai"
+                x1="521" y1="272" x2="202" y2="383" marker-end="url(#arr-neutral)"
+                onclick="openHistory('adel','kai')"/>
+          <!-- Kai → Adel (dep) -->
+          <line class="edge-base edge-dep" data-type="dep" data-pair="adel-kai"
+                x1="197" y1="375" x2="525" y2="275" marker-end="url(#arr-dep)"
+                onclick="openHistory('adel','kai')"/>
+          <text font-family="JetBrains Mono" font-size="9.5" fill="rgba(169,174,199,0.6)" x="325" y="348">친밀 31</text>
 
-          <!-- Adel ↔ Kai: neutral -->
-          <line class="edge-neutral" id="edge-adel-kai"
-                x1="490" y1="280" x2="200" y2="400"/>
-          <text class="edge-label" x="322" y="360" fill="#646A8C">친밀도: 31</text>
+          <!-- Adel → Sera (neutral) -->
+          <line class="edge-base edge-neutral" data-type="neutral" data-pair="adel-sera"
+                x1="539" y1="272" x2="858" y2="383" marker-end="url(#arr-neutral)"
+                onclick="openHistory('adel','sera')"/>
+          <!-- Sera → Adel (favor) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="adel-sera"
+                x1="864" y1="375" x2="543" y2="275" marker-end="url(#arr-favor)"
+                onclick="openHistory('adel','sera')"/>
+          <text font-family="JetBrains Mono" font-size="9.5" fill="rgba(169,174,199,0.6)" x="720" y="346">친밀 44</text>
 
-          <!-- Adel ↔ Sera: neutral -->
-          <line class="edge-neutral" id="edge-adel-sera"
-                x1="490" y1="280" x2="780" y2="400"/>
-          <text class="edge-label" x="640" y="360" fill="#646A8C">친밀도: 44</text>
+          <!-- Leo → Ria (favor, upper offset) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="leo-ria"
+                x1="320" y1="122" x2="740" y2="122" marker-end="url(#arr-favor)"
+                onclick="openHistory('leo','ria')"/>
+          <!-- Ria → Leo (favor, lower offset) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="leo-ria"
+                x1="740" y1="138" x2="320" y2="138" marker-end="url(#arr-favor)"
+                onclick="openHistory('leo','ria')"/>
+          <text font-family="JetBrains Mono" font-size="9.5" fill="rgba(92,230,122,0.8)" x="490" y="116">친구 · 신뢰 78</text>
 
-          <!-- Leo ↔ Ria: positive -->
-          <line class="edge-positive" id="edge-leo-ria"
-                x1="280" y1="160" x2="700" y2="160"/>
-          <text class="edge-label" x="458" y="148" fill="rgba(92,230,122,0.7)">친구: trust 78</text>
+          <!-- Leo → Kai (favor) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="leo-kai"
+                x1="290" y1="148" x2="200" y2="374" marker-end="url(#arr-favor)"
+                onclick="openHistory('leo','kai')"/>
+          <!-- Kai → Leo (trust) -->
+          <line class="edge-base edge-trust" data-type="trust" data-pair="leo-kai"
+                x1="208" y1="374" x2="298" y2="148" marker-end="url(#arr-trust)"
+                onclick="openHistory('leo','kai')"/>
 
-          <!-- Leo ↔ Kai: positive -->
-          <line class="edge-positive" id="edge-leo-kai"
-                x1="280" y1="160" x2="200" y2="400"/>
+          <!-- Ria → Sera (favor) -->
+          <line class="edge-base edge-favor" data-type="favor" data-pair="ria-sera"
+                x1="770" y1="148" x2="860" y2="374" marker-end="url(#arr-favor)"
+                onclick="openHistory('ria','sera')"/>
+          <!-- Sera → Ria (dep) -->
+          <line class="edge-base edge-dep" data-type="dep" data-pair="ria-sera"
+                x1="867" y1="374" x2="776" y2="148" marker-end="url(#arr-dep)"
+                onclick="openHistory('ria','sera')"/>
 
-          <!-- Ria ↔ Sera: positive -->
-          <line class="edge-positive" id="edge-ria-sera"
-                x1="700" y1="160" x2="780" y2="400"/>
-
-          <!-- Kai ↔ Sera: neutral -->
-          <line class="edge-neutral" id="edge-kai-sera"
-                x1="200" y1="400" x2="780" y2="400"/>
-
+          <!-- Kai → Sera (neutral, upper) -->
+          <line class="edge-base edge-neutral" data-type="neutral" data-pair="kai-sera"
+                x1="210" y1="386" x2="850" y2="386" marker-end="url(#arr-neutral)"
+                onclick="openHistory('kai','sera')"/>
+          <!-- Sera → Kai (tension, lower) -->
+          <line class="edge-base edge-tension" data-type="tension" data-pair="kai-sera"
+                x1="850" y1="396" x2="210" y2="396" marker-end="url(#arr-tension)"
+                onclick="openHistory('kai','sera')"/>
         </svg>
 
-        <!-- Graph Nodes (HTML overlaid on SVG) -->
-
-        <!-- Adel — CENTER (selected) MISSING state -->
-        <div class="graph-node selected" data-id="adel"
-             style="left: 490px; top: 280px;"
-             onclick="selectNode('adel')">
-          <div class="graph-node__portrait char-adel"
-               style="
-                 background-image: url('../assets/character/Adel_ISTJ.png');
-                 background-size: cover; background-position: center top;
-                 border-color: var(--c-critical);
-                 opacity: 0.7;
-                 animation: missing-flicker 3s ease infinite;
-               "></div>
+        <!-- Nodes -->
+        <div class="graph-node selected" data-id="adel" style="left:530px;top:265px;" onclick="selectNode('adel')">
+          <div class="graph-node__portrait char-adel" style="background-image:url('../assets/character/Adel_ISTJ.png'); border-color:var(--c-critical); animation:missing-flicker 3s ease infinite;"></div>
           <div class="graph-node__name" style="color:var(--c-critical);">Adel · MISSING</div>
         </div>
-
-        <!-- Leo — top-left -->
-        <div class="graph-node" data-id="leo"
-             style="left: 280px; top: 160px;"
-             onclick="selectNode('leo')">
-          <div class="graph-node__portrait char-leo"
-               style="background-image: url('../assets/character/Leo_ESTP.png'); background-size: cover; background-position: center top;"></div>
+        <div class="graph-node" data-id="leo" style="left:300px;top:130px;" onclick="selectNode('leo')">
+          <div class="graph-node__portrait char-leo" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
           <div class="graph-node__name">Leo</div>
         </div>
-
-        <!-- Ria — top-right -->
-        <div class="graph-node" data-id="ria"
-             style="left: 700px; top: 160px;"
-             onclick="selectNode('ria')">
-          <div class="graph-node__portrait char-ria"
-               style="background-image: url('../assets/character/Ria_INFP.png'); background-size: cover; background-position: center top;"></div>
+        <div class="graph-node" data-id="ria" style="left:760px;top:130px;" onclick="selectNode('ria')">
+          <div class="graph-node__portrait char-ria" style="background-image:url('../assets/character/Ria_INFP.png');"></div>
           <div class="graph-node__name">Ria</div>
         </div>
-
-        <!-- Kai — bottom-left -->
-        <div class="graph-node" data-id="kai"
-             style="left: 200px; top: 400px;"
-             onclick="selectNode('kai')">
-          <div class="graph-node__portrait char-kai"
-               style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size: cover; background-position: center top;"></div>
+        <div class="graph-node" data-id="kai" style="left:190px;top:390px;" onclick="selectNode('kai')">
+          <div class="graph-node__portrait char-kai" style="background-image:url('../assets/character/Kai_ENTJ.png');"></div>
           <div class="graph-node__name">Kai</div>
         </div>
-
-        <!-- Sera — bottom-right -->
-        <div class="graph-node" data-id="sera"
-             style="left: 780px; top: 400px;"
-             onclick="selectNode('sera')">
-          <div class="graph-node__portrait char-sera"
-               style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size: cover; background-position: center top;"></div>
+        <div class="graph-node" data-id="sera" style="left:870px;top:390px;" onclick="selectNode('sera')">
+          <div class="graph-node__portrait char-sera" style="background-image:url('../assets/character/Sera_ESFJ.png');"></div>
           <div class="graph-node__name">Sera</div>
         </div>
 
-      </div><!-- end body -->
-
-      <div class="rel-modal__footer">
-        <!-- Legend -->
-        <div class="rel-legend">
-          <div class="rel-legend-item">
-            <div class="rel-legend-line" style="background:#5CE67A;"></div>
-            <span>우호</span>
-          </div>
-          <div class="rel-legend-item">
-            <div class="rel-legend-line" style="background:var(--c-critical); border-top: 2px dashed var(--c-critical); background:transparent;"></div>
-            <span>적대</span>
-          </div>
-          <div class="rel-legend-item">
-            <div class="rel-legend-line" style="background:rgba(169,174,199,0.3);"></div>
-            <span>중립</span>
-          </div>
-          <div class="rel-legend-item">
-            <div class="rel-legend-line" style="background:var(--c-primary);"></div>
-            <span>선택 강조</span>
-          </div>
-        </div>
-
-        <!-- Selected relationship detail -->
-        <div class="rel-detail" id="rel-detail">
-          <div class="rel-detail-pair">
-            <div class="rel-detail-portrait char-adel"></div>
-            <div class="rel-arrow">→</div>
-            <div class="rel-detail-portrait char-leo"></div>
-          </div>
-          <div class="rel-stats">
-            <div class="rel-stat-row">
-              <span class="rel-stat-key">관계</span>
-              <span class="rel-stat-val" style="color:var(--c-critical);">긴장</span>
+        <!-- History slide panel -->
+        <div class="history-panel" id="history-panel">
+          <div class="history-panel__header">
+            <div>
+              <div id="history-pair-label" style="font-family:var(--f-mono);font-size:11px;color:var(--c-cream);font-weight:600;">—</div>
+              <div style="font-family:var(--f-mono);font-size:9px;color:var(--c-text-3);margin-top:2px;">상호작용 히스토리</div>
             </div>
-            <div class="rel-stat-row">
-              <span class="rel-stat-key">tension</span>
-              <span class="rel-stat-val">72</span>
-            </div>
-            <div class="rel-stat-row">
-              <span class="rel-stat-key">trust</span>
-              <span class="rel-stat-val">28</span>
-            </div>
+            <button onclick="closeHistory()" style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--c-border);cursor:pointer;display:flex;align-items:center;justify-content:center;">
+              <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="#a4b5d6" stroke-width="1.5" stroke-linecap="round"/></svg>
+            </button>
           </div>
-          <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'">
-            Inspector →
-          </button>
+          <div class="history-panel__body" id="history-body"></div>
         </div>
       </div>
 
-    </div><!-- end modal inner -->
-  </div><!-- end modal -->
-
+      <div class="rel-modal__footer">
+        <div class="rel-legend">
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:#5CE67A;"></div><span>호감·친밀</span></div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:var(--c-inspector);"></div><span>신뢰</span></div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="border-top:2px dashed var(--c-critical); background:transparent;"></div><span>긴장·라이벌</span></div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:var(--c-cream);"></div><span>의존</span></div>
+          <div class="rel-legend-item"><div class="rel-legend-line" style="background:rgba(169,174,199,0.3);"></div><span>중립</span></div>
+        </div>
+        <div class="rel-detail" id="rel-detail">
+          <div class="rel-detail-pair">
+            <div class="rel-detail-portrait" style="background-image:url('../assets/character/Adel_ISTJ.png');"></div>
+            <div class="rel-arrow">↔</div>
+            <div class="rel-detail-portrait" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
+          </div>
+          <div class="rel-stats">
+            <div class="rel-stat-row"><span class="rel-stat-key">관계</span><span class="rel-stat-val" style="color:var(--c-critical);">긴장</span></div>
+            <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">72</span></div>
+            <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">25</span></div>
+          </div>
+          <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="font-size:11px;">Inspector →</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="../js/magic-academy.js"></script>
 <script>
   const relData = {
-    'adel-leo':  { rel: '긴장', tension: 72, trust: 28, color: 'var(--c-critical)' },
-    'adel-ria':  { rel: '우호', tension: 12, trust: 85, color: '#5CE67A' },
-    'adel-kai':  { rel: '중립', tension: 35, trust: 31, color: 'var(--c-text-2)' },
-    'adel-sera': { rel: '중립', tension: 20, trust: 44, color: 'var(--c-text-2)' },
-    'leo-ria':   { rel: '친구', tension: 15, trust: 78, color: '#5CE67A' },
-    'leo-kai':   { rel: '우호', tension: 22, trust: 65, color: '#5CE67A' },
-    'ria-sera':  { rel: '우호', tension: 18, trust: 70, color: '#5CE67A' },
-    'kai-sera':  { rel: '중립', tension: 30, trust: 50, color: 'var(--c-text-2)' },
+    'adel-leo':  { rel:'긴장', tension:72, trust:25, favor:-8, color:'var(--c-critical)' },
+    'adel-ria':  { rel:'우호', tension:12, trust:85, favor:72, color:'#5CE67A' },
+    'adel-kai':  { rel:'중립·의존', tension:35, trust:31, favor:15, color:'var(--c-text-2)' },
+    'adel-sera': { rel:'우호', tension:20, trust:44, favor:55, color:'#5CE67A' },
+    'leo-ria':   { rel:'친구', tension:15, trust:78, favor:80, color:'#5CE67A' },
+    'leo-kai':   { rel:'우호', tension:22, trust:65, favor:60, color:'#5CE67A' },
+    'ria-sera':  { rel:'우호·의존', tension:18, trust:70, favor:75, color:'#5CE67A' },
+    'kai-sera':  { rel:'긴장', tension:45, trust:50, favor:30, color:'var(--c-critical)' },
   };
-
+  const histData = {
+    'adel-leo': [
+      { tick:'T09', type:'대화', text:'Leo가 마법 생물을 금서 구역으로 유인하려 해 말다툼 발생', delta:{ '긴장도':'+18', '신뢰도':'-15' } },
+      { tick:'T07', type:'대화', text:'복도에서 마주쳐 규칙 준수 문제로 의견 충돌', delta:{ '긴장도':'+8', '신뢰도':'-5' } },
+      { tick:'T04', type:'사건', text:'마법 실험 실패 수습에서 Leo의 태도에 불만', delta:{ '긴장도':'+12' } },
+      { tick:'T02', type:'관찰', text:'Leo가 금지 마법 시전을 시도하다 발각되는 장면 목격', delta:{ '신뢰도':'-10' } },
+      { tick:'T01', type:'대화', text:'입학 첫날 오리엔테이션에서 처음 인사', delta:{ '호감도':'+5' } },
+    ],
+    'adel-ria': [
+      { tick:'T08', type:'대화', text:'결계 균열에 대해 걱정을 공유하며 서로 위로', delta:{ '신뢰도':'+8', '호감도':'+5' } },
+      { tick:'T06', type:'대화', text:'Ria가 Adel의 스트레스를 감지하고 대화', delta:{ '신뢰도':'+5', '호감도':'+3' } },
+      { tick:'T03', type:'사건', text:'방어마법 조별 과제 공동 수행 — 성공', delta:{ '신뢰도':'+12', '호감도':'+8' } },
+      { tick:'T01', type:'대화', text:'첫날 길을 안내해줌', delta:{ '호감도':'+10' } },
+    ],
+    'adel-kai': [
+      { tick:'T05', type:'사건', text:'마법 약품 폭발 사고 시 함께 대피 지원', delta:{ '신뢰도':'+12', '의존도':'+8' } },
+      { tick:'T03', type:'대화', text:'학과 회의에서 성적 경쟁에 대해 짧은 대화', delta:{ '호감도':'+2' } },
+    ],
+    'adel-sera': [
+      { tick:'T06', type:'대화', text:'Sera가 Adel의 감정 상태를 걱정해 위로', delta:{ '호감도':'+10', '신뢰도':'+5' } },
+      { tick:'T03', type:'대화', text:'수업 노트 빌려주기 요청 수락', delta:{ '호감도':'+5' } },
+    ],
+    'leo-ria': [
+      { tick:'T09', type:'대화', text:'실종 사건에 대해 함께 논의', delta:{ '신뢰도':'+5' } },
+      { tick:'T06', type:'사건', text:'마법 생물 관찰 실습 함께 참가', delta:{ '호감도':'+12', '신뢰도':'+8' } },
+    ],
+    'leo-kai': [
+      { tick:'T07', type:'대화', text:'과감한 마법 실험에 대해 토론, 공감대 형성', delta:{ '호감도':'+8', '신뢰도':'+6' } },
+    ],
+    'ria-sera': [
+      { tick:'T08', type:'대화', text:'기숙사에서 서로의 고민을 나누며 깊은 대화', delta:{ '호감도':'+10', '신뢰도':'+8' } },
+      { tick:'T04', type:'사건', text:'마법 축제 준비 함께 진행', delta:{ '호감도':'+6' } },
+    ],
+    'kai-sera': [
+      { tick:'T07', type:'대화', text:'리더십 방식에 대한 의견 충돌 발생', delta:{ '긴장도':'+15', '신뢰도':'-8' } },
+    ],
+  };
   const portraits = {
-    adel: '../assets/character/Adel_ISTJ.png',
-    leo:  '../assets/character/Leo_ESTP.png',
-    ria:  '../assets/character/Ria_INFP.png',
-    kai:  '../assets/character/Kai_ENTJ.png',
-    sera: '../assets/character/Sera_ESFJ.png',
+    adel:'../assets/character/Adel_ISTJ.png',
+    leo:'../assets/character/Leo_ESTP.png',
+    ria:'../assets/character/Ria_INFP.png',
+    kai:'../assets/character/Kai_ENTJ.png',
+    sera:'../assets/character/Sera_ESFJ.png',
   };
-
-  let selectedNode = 'adel';
+  const names = { adel:'Adel', leo:'Leo', ria:'Ria', kai:'Kai', sera:'Sera' };
 
   function selectNode(id) {
     document.querySelectorAll('.graph-node').forEach(n => n.classList.remove('selected'));
     document.querySelector(`.graph-node[data-id="${id}"]`).classList.add('selected');
-
-    // Reset all edges
-    document.querySelectorAll('[class*="edge"]').forEach(e => {
-      e.style.opacity = '0.3';
-      e.style.strokeWidth = null;
+    document.getElementById('selected-label').textContent = names[id] + ' 선택 중';
+    document.querySelectorAll('[data-pair]').forEach(e => {
+      e.style.opacity = e.dataset.pair.includes(id) ? '1' : '0.15';
     });
-    document.querySelectorAll('.edge-label').forEach(l => l.style.opacity = '0.3');
-
-    // Highlight connected edges
-    document.querySelectorAll('[id*="edge-' + id + '"], [id*="-' + id + '"]').forEach(e => {
-      e.style.opacity = '1';
-      e.style.strokeWidth = '2.5';
-    });
-
-    // Update detail panel
-    const otherNodes = ['adel','leo','ria','kai','sera'].filter(n => n !== id);
-    const connected  = otherNodes.find(n => relData[id+'-'+n] || relData[n+'-'+id]);
-    if (!connected) return;
-
-    const key  = relData[id+'-'+connected] ? id+'-'+connected : connected+'-'+id;
-    const data = relData[key];
-    if (!data) return;
-
-    const detail = document.getElementById('rel-detail');
-    detail.innerHTML = `
-      <div class="rel-detail-pair">
-        <div class="rel-detail-portrait char-${id}" style="background-image:url('${portraits[id]}'); background-size:cover; background-position:center top;"></div>
-        <div class="rel-arrow">→</div>
-        <div class="rel-detail-portrait char-${connected}" style="background-image:url('${portraits[connected]}'); background-size:cover; background-position:center top;"></div>
-      </div>
-      <div class="rel-stats">
-        <div class="rel-stat-row"><span class="rel-stat-key">관계</span><span class="rel-stat-val" style="color:${data.color};">${data.rel}</span></div>
-        <div class="rel-stat-row"><span class="rel-stat-key">tension</span><span class="rel-stat-val">${data.tension}</span></div>
-        <div class="rel-stat-row"><span class="rel-stat-key">trust</span><span class="rel-stat-val">${data.trust}</span></div>
-      </div>
-      <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'">Inspector →</button>
-    `;
-
-    selectedNode = id;
   }
 
-  // Filter buttons
-  document.querySelectorAll('.filter-btn').forEach(btn => {
-    btn.addEventListener('click', function() {
-      document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
+  function filterEdges(type, btn) {
+    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('[data-type]').forEach(e => {
+      e.style.opacity = (type === 'all' || e.dataset.type === type) ? '1' : '0.06';
     });
-  });
+  }
 
-  // Initial state: highlight Adel's edges
+  function openHistory(a, b) {
+    const key = relData[a+'-'+b] ? a+'-'+b : b+'-'+a;
+    document.getElementById('history-pair-label').textContent = names[a] + ' ↔ ' + names[b];
+    const hist = histData[key] || [];
+    document.getElementById('history-body').innerHTML = hist.length === 0
+      ? '<div style="font-family:var(--f-mono);font-size:11px;color:var(--c-text-3);padding:var(--s-4);">기록된 상호작용이 없습니다.</div>'
+      : hist.map(ev => {
+          const deltaHtml = Object.entries(ev.delta||{}).map(([k,v]) => {
+            const col = v.startsWith('+') ? 'var(--c-success)' : 'var(--c-critical)';
+            return `<span style="color:${col};margin-right:6px;">${k} ${v}</span>`;
+          }).join('');
+          const tc = ev.type==='대화' ? 'var(--c-inspector)' : ev.type==='사건' ? 'var(--c-critical)' : 'var(--c-text-3)';
+          return `<div class="history-event">
+            <div class="history-event__tick" style="color:var(--c-cream);">${ev.tick}</div>
+            <div style="flex:1;">
+              <div class="history-event__type" style="color:${tc};">${ev.type}</div>
+              <div class="history-event__text">${ev.text}</div>
+              ${deltaHtml ? `<div class="history-event__delta">${deltaHtml}</div>` : ''}
+            </div></div>`;
+        }).join('');
+    document.getElementById('history-panel').classList.add('open');
+    if (key && relData[key]) {
+      const d = relData[key];
+      const [pa, pb] = key.split('-');
+      document.getElementById('rel-detail').innerHTML = `
+        <div class="rel-detail-pair">
+          <div class="rel-detail-portrait" style="background-image:url('${portraits[pa]}');"></div>
+          <div class="rel-arrow">↔</div>
+          <div class="rel-detail-portrait" style="background-image:url('${portraits[pb]}');"></div>
+        </div>
+        <div class="rel-stats">
+          <div class="rel-stat-row"><span class="rel-stat-key">관계</span><span class="rel-stat-val" style="color:${d.color};">${d.rel}</span></div>
+          <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">${d.tension}</span></div>
+          <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">${d.trust}</span></div>
+        </div>
+        <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="font-size:11px;">Inspector →</button>`;
+    }
+  }
+
+  function closeHistory() {
+    document.getElementById('history-panel').classList.remove('open');
+  }
+
   selectNode('adel');
 </script>
 </body>
