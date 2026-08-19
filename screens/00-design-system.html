@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Design System — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    body { margin: 0; background: var(--c-bg); }
+    .ds-page {
+      max-width: 1320px;
+      margin: 0 auto;
+      padding: var(--s-12) var(--s-8);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-16);
+    }
+
+    /* Section layout */
+    .ds-section { display: flex; flex-direction: column; gap: var(--s-6); }
+    .ds-section-heading {
+      display: flex; align-items: center; gap: var(--s-4);
+      padding-bottom: var(--s-4);
+      border-bottom: 1px solid var(--c-border);
+    }
+    .ds-section-heading h2 {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .ds-section-heading span {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-xl);
+      font-weight: 600;
+      color: var(--c-text);
+    }
+
+    /* Row helpers */
+    .ds-row { display: flex; flex-wrap: wrap; gap: var(--s-4); align-items: flex-start; }
+    .ds-col { display: flex; flex-direction: column; gap: var(--s-3); }
+    .ds-label {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      letter-spacing: 0.1em;
+    }
+
+    /* Color swatch */
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, 120px); gap: var(--s-3); }
+    .color-swatch {
+      border-radius: var(--r-md);
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.05);
+    }
+    .color-swatch__block { height: 56px; }
+    .color-swatch__info {
+      padding: var(--s-2) var(--s-3);
+      background: var(--c-surface);
+    }
+    .color-swatch__name { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-2); }
+    .color-swatch__hex { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-3); margin-top: 1px; }
+
+    /* Typography specimen */
+    .type-scale { display: flex; flex-direction: column; gap: var(--s-4); }
+    .type-row {
+      display: flex; align-items: baseline; gap: var(--s-6);
+      padding: var(--s-3) 0;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+    }
+    .type-row__meta {
+      width: 140px; flex-shrink: 0;
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+    }
+    .type-row__sample { flex: 1; }
+
+    /* Spacing scale */
+    .spacing-grid { display: flex; flex-direction: column; gap: var(--s-2); }
+    .spacing-row {
+      display: flex; align-items: center; gap: var(--s-4);
+    }
+    .spacing-row__label {
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-text-3); width: 80px; flex-shrink: 0;
+    }
+    .spacing-row__bar {
+      height: 4px;
+      background: var(--c-primary);
+      border-radius: 2px;
+      flex-shrink: 0;
+    }
+
+    /* Radius samples */
+    .radius-row { display: flex; gap: var(--s-6); align-items: flex-end; }
+    .radius-sample {
+      width: 64px; height: 64px;
+      background: var(--c-surface-hi);
+      border: 1px solid var(--c-border);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: var(--s-2);
+    }
+    .radius-label { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-3); }
+
+    /* Shadow samples */
+    .shadow-row { display: flex; gap: var(--s-6); align-items: flex-end; }
+    .shadow-sample {
+      width: 80px; height: 50px;
+      background: var(--c-surface);
+      border-radius: var(--r-md);
+      display: flex; align-items: flex-end; justify-content: center;
+      padding-bottom: var(--s-2);
+    }
+
+    /* Agent marker grid */
+    .marker-grid {
+      display: flex; gap: var(--s-8); flex-wrap: wrap;
+    }
+    .marker-cell {
+      display: flex; flex-direction: column; align-items: center; gap: var(--s-3);
+    }
+    .marker-cell__label {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      text-align: center;
+    }
+
+    /* Button row */
+    .btn-row { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+
+    /* Chip row */
+    .chip-row { display: flex; gap: var(--s-3); flex-wrap: wrap; align-items: center; }
+
+    /* Inspector mini */
+    .ds-inspector-mini {
+      background: var(--c-surface);
+      border: 1px solid var(--c-inspector);
+      border-radius: var(--r-lg);
+      padding: var(--s-5);
+      width: 320px;
+    }
+
+    /* Event notice mini */
+    .ds-event-mini {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--s-3);
+      background: rgba(231,183,92,0.1);
+      border: 1px solid var(--c-event);
+      border-radius: var(--r-xl);
+      padding: var(--s-3) var(--s-5);
+    }
+
+    /* Motion card */
+    .motion-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: var(--s-4); }
+    .motion-card {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s-5);
+    }
+    .motion-card__name {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-inspector);
+      letter-spacing: 0.1em;
+      margin-bottom: var(--s-2);
+    }
+    .motion-card__desc { font-size: var(--t-sm); color: var(--c-text-2); line-height: 1.5; }
+    .motion-card__demo { margin-top: var(--s-3); }
+
+    /* Panel components */
+    .ds-panel-row { display: flex; gap: var(--s-6); flex-wrap: wrap; align-items: flex-start; }
+
+    /* Top nav strip */
+    .ds-topnav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 40px;
+      background: rgba(17,22,43,0.95);
+      border-bottom: 1px solid var(--c-border);
+      backdrop-filter: blur(12px);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 var(--s-8);
+      z-index: 100;
+    }
+    .ds-topnav__brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-sm); font-weight: 600;
+      color: var(--c-text); letter-spacing: 0.04em;
+    }
+    .ds-topnav__links {
+      display: flex; gap: var(--s-5);
+    }
+    .ds-topnav__link {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      text-decoration: none;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      transition: color var(--tr-fast);
+    }
+    .ds-topnav__link:hover { color: var(--c-text); }
+
+    body { padding-top: 56px; }
+
+    /* Page header */
+    .ds-page-header {
+      display: flex; flex-direction: column; gap: var(--s-3);
+    }
+    .ds-page-header__eyebrow {
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-event); letter-spacing: 0.14em; text-transform: uppercase;
+    }
+    .ds-page-header__title {
+      font-family: var(--f-serif-en); font-size: 48px;
+      font-weight: 700; color: var(--c-text);
+      letter-spacing: -0.01em;
+    }
+    .ds-page-header__sub {
+      font-family: var(--f-serif-ko); font-size: var(--t-lg);
+      color: var(--c-text-2); margin-top: var(--s-1);
+    }
+    .ds-page-header__divider {
+      width: 40px; height: 2px;
+      background: linear-gradient(to right, var(--c-event), transparent);
+      margin-top: var(--s-4);
+    }
+
+    /* Live demo box */
+    .demo-box {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-lg);
+      padding: var(--s-6);
+      border: 1px solid var(--c-border);
+    }
+  </style>
+</head>
+<body>
+
+<!-- Fixed top nav -->
+<div class="ds-topnav">
+  <div class="ds-topnav__brand">Magic Academy — Design System</div>
+  <div class="ds-topnav__links">
+    <a class="ds-topnav__link" href="#colors">Colors</a>
+    <a class="ds-topnav__link" href="#typography">Typography</a>
+    <a class="ds-topnav__link" href="#spacing">Spacing</a>
+    <a class="ds-topnav__link" href="#components">Components</a>
+    <a class="ds-topnav__link" href="#agents">Agents</a>
+    <a class="ds-topnav__link" href="#motion">Motion</a>
+    <a class="ds-topnav__link" href="../index.html">← Navigator</a>
+  </div>
+</div>
+
+<div class="ds-page">
+
+  <!-- Header -->
+  <div class="ds-page-header">
+    <div class="ds-page-header__eyebrow">Magic Academy · v1.0</div>
+    <div class="ds-page-header__title">Design System</div>
+    <div class="ds-page-header__sub">서사는 마법적으로, 원인은 명확하게.</div>
+    <div class="ds-page-header__divider"></div>
+  </div>
+
+  <!-- ─── COLORS ─── -->
+  <div class="ds-section" id="colors">
+    <div class="ds-section-heading">
+      <h2>01</h2>
+      <span>Color Tokens (color-palette.md)</span>
+    </div>
+
+    <!-- 60:30:10 Ratio Guide -->
+    <div style="background:rgba(14, 23, 48, 0.7); backdrop-filter:blur(12px); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-4); display:flex; gap:var(--s-6); align-items:center;">
+      <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-cream); font-weight:600;">60:30:10 RULE</div>
+      <div style="flex:1; display:flex; gap:2px; height:12px; border-radius:var(--r-sm); overflow:hidden;">
+        <div style="width:60%; background:#070d1e; border:1px solid rgba(255,255,255,0.1);" title="60% Surface (#070d1e / #0e1730)"></div>
+        <div style="width:30%; background:#d7c6a7;" title="30% Primary / Brand Cream (#d7c6a7)"></div>
+        <div style="width:10%; background:#6D5AE6;" title="10% Interactive Violet (#6D5AE6)"></div>
+      </div>
+      <div style="font-size:var(--t-xs); color:var(--c-text-2);">
+        60% Midnight Navy Surface &middot; 30% Cream Ivory &middot; 10% Arcane Violet
+      </div>
+    </div>
+
+    <div class="ds-col" style="gap:var(--s-6)">
+      <!-- Surface Tokens -->
+      <div class="ds-col">
+        <div class="ds-label">Surface & Background</div>
+        <div class="color-grid" style="grid-template-columns: repeat(auto-fill, 140px);">
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#070d1e; border-bottom:1px solid rgba(255,255,255,0.08);"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-bg</div>
+              <div class="color-swatch__hex">#070d1e · Midnight Navy</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#0e1730;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-surface</div>
+              <div class="color-swatch__hex">#0e1730 · Rich Navy</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#162347;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-surface-hi</div>
+              <div class="color-swatch__hex">#162347 · Elevated Navy</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:rgba(10, 17, 38, 0.82);"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-surface-glass</div>
+              <div class="color-swatch__hex">rgba(10,17,38) · Glass</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:rgba(80, 105, 165, 0.22);"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-border</div>
+              <div class="color-swatch__hex">rgba(80,105,165) · Border</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brand & Interactive -->
+      <div class="ds-col">
+        <div class="ds-label">Brand, Interactive & Accent</div>
+        <div class="color-grid" style="grid-template-columns: repeat(auto-fill, 140px);">
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#d7c6a7;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-cream</div>
+              <div class="color-swatch__hex">#d7c6a7 · Brand Primary</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#6D5AE6;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-primary</div>
+              <div class="color-swatch__hex">#6D5AE6 · Arcane Violet</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#38c8dc;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-inspector</div>
+              <div class="color-swatch__hex">#38c8dc · Cyan Trace</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#f4a442;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-event</div>
+              <div class="color-swatch__hex">#f4a442 · Magic Event</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#D4AF37;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-gold</div>
+              <div class="color-swatch__hex">#D4AF37 · Golden Amber</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#e05252;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-critical</div>
+              <div class="color-swatch__hex">#e05252 · Alert / Missing</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#3dba7e;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-success</div>
+              <div class="color-swatch__hex">#3dba7e · Success</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Character Tokens -->
+      <div class="ds-col" style="width:100%;">
+        <div class="ds-label">Character Tokens — 사용 제약 (Border / Badge / Accent bar ONLY)</div>
+        <div style="overflow-x:auto; margin-bottom:var(--s-4);">
+          <table style="width:100%; border-collapse:collapse; font-family:var(--f-mono); font-size:var(--t-sm);">
+            <thead>
+              <tr style="border-bottom:1px solid var(--c-border);">
+                <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">캐릭터</th>
+                <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">색상</th>
+                <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">허용 컨텍스트</th>
+                <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">금지</th>
+                <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">대비율 (on #0a0e1d)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr style="border-bottom:1px solid var(--c-border);">
+                <td style="padding:var(--s-3) var(--s-4); color:#38C8DC;">Adel</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">#0F4C5C</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">마커 링, 관계선 강조, 명찰 테두리</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">텍스트, 버튼</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">1.8:1 — AA 미달</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--c-border);">
+                <td style="padding:var(--s-3) var(--s-4); color:#D4AF37;">Leo</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">#D4AF37</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">마커 링, 관계선 강조, 명찰 테두리</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">텍스트, 버튼</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-success);">8.3:1 — AA ✓</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--c-border);">
+                <td style="padding:var(--s-3) var(--s-4); color:#B56576;">Ria</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">#B56576</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">마커 링, 관계선 강조, 명찰 테두리</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">텍스트, 버튼</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">4.1:1 — 대형만 AA</td>
+              </tr>
+              <tr style="border-bottom:1px solid var(--c-border);">
+                <td style="padding:var(--s-3) var(--s-4); color:#E83030;">Kai</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">#9A1C1C</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">마커 링, 관계선 강조, 명찰 테두리</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">텍스트, 버튼</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">2.1:1 — AA 미달</td>
+              </tr>
+              <tr>
+                <td style="padding:var(--s-3) var(--s-4); color:#9B59D0;">Sera</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">#4A0E6B</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">마커 링, 관계선 강조, 명찰 테두리</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">텍스트, 버튼</td>
+                <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">1.3:1 — AA 미달</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-event); padding:var(--s-2) var(--s-3); background:var(--c-event-muted); border-radius:var(--r-sm); display:inline-block; margin-bottom:var(--s-4);">
+          ⚠ 캐릭터 토큰 5종 중 4종이 다크 배경 기준 WCAG AA 미달. 텍스트·버튼 사용 금지 규칙은 반드시 준수할 것.
+        </div>
+        <div class="color-grid" style="grid-template-columns: repeat(auto-fill, 140px);">
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#0F4C5C;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">Adel</div>
+              <div class="color-swatch__hex">#0F4C5C · Teal Green</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#D4AF37;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">Leo</div>
+              <div class="color-swatch__hex">#D4AF37 · Golden Amber</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#B56576;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">Ria</div>
+              <div class="color-swatch__hex">#B56576 · Dusky Rose</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#9A1C1C;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">Kai</div>
+              <div class="color-swatch__hex">#9A1C1C · Deep Crimson</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#4A0E6B;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">Sera</div>
+              <div class="color-swatch__hex">#4A0E6B · Royal Purple</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Text Scale -->
+      <div class="ds-col">
+        <div class="ds-label">Text Scale & Contrast (WCAG AAA/AA)</div>
+        <div class="color-grid" style="grid-template-columns: repeat(auto-fill, 140px);">
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#e8e0d0;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-text</div>
+              <div class="color-swatch__hex">#e8e0d0 · 17.5:1 AAA</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#9a9090;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-text-2</div>
+              <div class="color-swatch__hex">#9a9090 · 6.2:1 AA</div>
+            </div>
+          </div>
+          <div class="color-swatch">
+            <div class="color-swatch__block" style="background:#5a5858;"></div>
+            <div class="color-swatch__info">
+              <div class="color-swatch__name">--c-text-3</div>
+              <div class="color-swatch__hex">#5a5858 · Disabled</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── TYPOGRAPHY ─── -->
+  <div class="ds-section" id="typography">
+    <div class="ds-section-heading">
+      <h2>02</h2>
+      <span>Typography</span>
+    </div>
+
+    <div class="ds-col" style="gap:var(--s-4)">
+      <div class="ds-label" style="margin-bottom:var(--s-2);">Font Families</div>
+      <div class="ds-row" style="gap:var(--s-8);">
+        <div class="ds-col">
+          <div style="font-family:'Playfair Display',serif; font-size:var(--t-2xl); color:var(--c-text);">Playfair Display</div>
+          <div class="ds-label">--f-serif-en · English display, titles</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:'Noto Serif KR',serif; font-size:var(--t-2xl); color:var(--c-text);">Noto Serif KR · 한국어 세리프</div>
+          <div class="ds-label">--f-serif-ko · Korean narrative, LLM output</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:'Pretendard',sans-serif; font-size:var(--t-2xl); color:var(--c-text);">Pretendard UI</div>
+          <div class="ds-label">--f-ui · Body text, labels</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:var(--t-xl); color:var(--c-text);">JetBrains Mono</div>
+          <div class="ds-label">--f-mono · Data, ticks, values, chips</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="type-scale">
+      <div class="type-row" style="border-left:2px solid var(--c-event); padding-left:var(--s-3);">
+        <div class="type-row__meta">--t-xs / 11px</div>
+        <div class="type-row__sample" style="font-size:var(--t-xs); color:var(--c-text-2);">Agent 상태값 / Chip 레이블 전용 — 본문 사용 금지</div>
+        <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-event); margin-top:var(--s-1);">⚠ 11px = 브라우저 최소 렌더 경계. 칩·상태 레이블 이외 사용 시 즉각 가독성 위반.</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-sm / 13px</div>
+        <div class="type-row__sample" style="font-size:var(--t-sm); color:var(--c-text-2);">Body secondary, list items, descriptions</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-base / 15px</div>
+        <div class="type-row__sample" style="font-size:var(--t-base); color:var(--c-text);">기본 본문, 섹션 제목, 버튼 레이블</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-lg / 18px</div>
+        <div class="type-row__sample" style="font-size:var(--t-lg); color:var(--c-text);">Inspector 소제목, 모달 타이틀</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-xl / 22px</div>
+        <div class="type-row__sample" style="font-family:var(--f-serif-en); font-size:var(--t-xl); color:var(--c-text);">Persona Name Display</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-2xl / 28px</div>
+        <div class="type-row__sample" style="font-family:var(--f-serif-en); font-size:var(--t-2xl); font-weight:700; color:var(--c-text);">Magic Academy</div>
+      </div>
+      <div class="type-row">
+        <div class="type-row__meta">--t-4xl / 42px</div>
+        <div class="type-row__sample" style="font-family:var(--f-serif-ko); font-size:var(--t-4xl); font-weight:600; color:var(--c-text);">마법학교가 살아 움직인다.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── SPACING & RADIUS ─── -->
+  <div class="ds-section" id="spacing">
+    <div class="ds-section-heading">
+      <h2>03</h2>
+      <span>Spacing · Radius · Shadows</span>
+    </div>
+
+    <div class="ds-row" style="gap:var(--s-12); align-items:flex-start;">
+      <!-- Spacing -->
+      <div class="ds-col" style="flex:1;">
+        <div class="ds-label" style="margin-bottom:var(--s-3);">Spacing Scale</div>
+        <div class="spacing-grid">
+          <div class="spacing-row"><div class="spacing-row__label">--s-1 / 4px</div><div class="spacing-row__bar" style="width:4px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-2 / 8px</div><div class="spacing-row__bar" style="width:8px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-3 / 12px</div><div class="spacing-row__bar" style="width:12px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-4 / 16px</div><div class="spacing-row__bar" style="width:16px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-5 / 20px</div><div class="spacing-row__bar" style="width:20px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-6 / 24px</div><div class="spacing-row__bar" style="width:24px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-8 / 32px</div><div class="spacing-row__bar" style="width:32px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-12 / 48px</div><div class="spacing-row__bar" style="width:48px;"></div></div>
+          <div class="spacing-row"><div class="spacing-row__label">--s-16 / 64px</div><div class="spacing-row__bar" style="width:64px;"></div></div>
+        </div>
+      </div>
+
+      <!-- Radius -->
+      <div class="ds-col">
+        <div class="ds-label" style="margin-bottom:var(--s-3);">Border Radius</div>
+        <div class="radius-row">
+          <div class="ds-col" style="align-items:center;">
+            <div class="radius-sample" style="border-radius:var(--r-sm);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--r-sm<br>4px</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="radius-sample" style="border-radius:var(--r-md);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--r-md<br>8px</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="radius-sample" style="border-radius:var(--r-lg);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--r-lg<br>12px</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="radius-sample" style="border-radius:var(--r-xl);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--r-xl<br>16px</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="radius-sample" style="border-radius:9999px; width:56px;"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--r-full<br>9999px</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Shadows -->
+      <div class="ds-col">
+        <div class="ds-label" style="margin-bottom:var(--s-3);">Shadows</div>
+        <div class="shadow-row">
+          <div class="ds-col" style="align-items:center;">
+            <div class="shadow-sample" style="box-shadow:var(--sh-sm);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--sh-sm</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="shadow-sample" style="box-shadow:var(--sh-md);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--sh-md</div>
+          </div>
+          <div class="ds-col" style="align-items:center;">
+            <div class="shadow-sample" style="box-shadow:var(--sh-lg);"></div>
+            <div class="ds-label" style="margin-top:var(--s-2);">--sh-lg</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── COMPONENTS ─── -->
+  <div class="ds-section" id="components">
+    <div class="ds-section-heading">
+      <h2>04</h2>
+      <span>Components</span>
+    </div>
+
+    <!-- Buttons -->
+    <div class="ds-col">
+      <div class="ds-label">Buttons</div>
+      <div class="demo-box">
+        <div class="btn-row">
+          <button class="btn btn-primary btn-lg">Primary Large</button>
+          <button class="btn btn-primary">Primary</button>
+          <button class="btn btn-primary btn-sm">Primary SM</button>
+          <button class="btn btn-outline btn-lg">Outline Large</button>
+          <button class="btn btn-outline">Outline</button>
+          <button class="btn btn-ghost">Ghost</button>
+          <button class="btn btn-ghost btn-sm">Ghost SM</button>
+          <button class="btn btn-danger">Danger</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Chips -->
+    <div class="ds-col">
+      <div class="ds-label">Status Chips</div>
+      <div class="demo-box">
+        <div class="chip-row">
+          <span class="chip chip-active">ACTIVE</span>
+          <span class="chip chip-event">EVENT</span>
+          <span class="chip chip-critical">CRITICAL</span>
+          <span class="chip chip-missing">MISSING</span>
+          <span class="chip chip-inspector">INSPECTOR</span>
+          <span class="chip">DEFAULT</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form inputs -->
+    <div class="ds-col">
+      <div class="ds-label">Form Inputs</div>
+      <div class="demo-box">
+        <div style="display:grid; grid-template-columns:280px 280px; gap:var(--s-4);">
+          <div class="field-group">
+            <label class="field-label">이메일</label>
+            <input class="field-input" type="text" value="mgs10204@gmail.com">
+          </div>
+          <div class="field-group">
+            <label class="field-label">시뮬레이션 이름</label>
+            <input class="field-input" type="text" placeholder="이름을 입력하세요">
+          </div>
+        </div>
+        <div style="margin-top:var(--s-4);">
+          <div class="field-group" style="max-width:560px;">
+            <label class="field-label">이벤트 발생 빈도</label>
+            <input type="range" class="slider" min="0.5" max="3" step="0.5" value="1.5">
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Magic Event Notice -->
+    <div class="ds-col">
+      <div class="ds-label">Magic Event Notice</div>
+      <div class="demo-box" style="display:flex; gap:var(--s-6); align-items:center; flex-wrap:wrap;">
+        <div class="ds-event-mini">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><polygon points="7,2 9,6 13,6 10,9 11,13 7,10.5 3,13 4,9 1,6 5,6" stroke="#E7B75C" stroke-width="1.2" fill="none"/></svg>
+          <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-event); letter-spacing:0.1em;">학생 실종 · ADEL · MISSING</span>
+          <span class="chip chip-critical">4 TICKS</span>
+          <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); cursor:pointer;">원인 보기 →</span>
+        </div>
+        <div style="font-size:var(--t-xs); color:var(--c-text-3);">Fixed · bottom-center · slide-up animation</div>
+      </div>
+    </div>
+
+    <!-- Inspector panel -->
+    <div class="ds-col" style="width:100%;">
+      <div class="ds-label">Inspector Panel — 6 States</div>
+      <div style="display:flex; gap:var(--s-5); flex-wrap:wrap; align-items:flex-start;">
+
+        <!-- State 1: OPEN + 위기 -->
+        <div class="ds-inspector-mini" aria-label="Inspector panel, open, critical condition">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4);">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); letter-spacing:0.12em;">INSPECTOR</span>
+            <span class="chip chip-inspector">OPEN</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:var(--s-3); margin-bottom:var(--s-4);">
+            <div style="width:24px; height:24px; background:var(--c-critical); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-size:10px; color:#fff; font-weight:700;">!</div>
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-critical); letter-spacing:0.08em;">위기 — 임계치 초과</span>
+          </div>
+          <div style="background:var(--c-surface-hi); border-radius:var(--r-md); padding:var(--s-3); margin-bottom:var(--s-3);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:var(--s-2);">
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3);">stress</span>
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-critical);">92 / 90</span>
+            </div>
+            <div class="stat-bar-bg" style="width:100%;"><div class="stat-bar-fill stat-bar-stress" style="width:100%;"></div></div>
+          </div>
+        </div>
+
+        <!-- State 2: OPEN + 경고 -->
+        <div class="ds-inspector-mini" aria-label="Inspector panel, open, warning condition" style="border-color:var(--c-event);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4);">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); letter-spacing:0.12em;">INSPECTOR</span>
+            <span class="chip chip-event">OPEN</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:var(--s-3); margin-bottom:var(--s-4);">
+            <div style="width:24px; height:24px; background:var(--c-event); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-size:10px; color:#000; font-weight:700;">▲</div>
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-event); letter-spacing:0.08em;">경고 — 임계치 근접</span>
+          </div>
+          <div style="background:var(--c-surface-hi); border-radius:var(--r-md); padding:var(--s-3); margin-bottom:var(--s-3);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:var(--s-2);">
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3);">stress</span>
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-event);">72 / 90</span>
+            </div>
+            <div class="stat-bar-bg" style="width:100%;"><div class="stat-bar-fill" style="width:80%; background:var(--c-event);"></div></div>
+          </div>
+        </div>
+
+        <!-- State 3: OPEN + 정상 -->
+        <div class="ds-inspector-mini" aria-label="Inspector panel, open, normal condition" style="border-color:var(--c-success);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4);">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); letter-spacing:0.12em;">INSPECTOR</span>
+            <span class="chip chip-active">OPEN</span>
+          </div>
+          <div style="display:flex; align-items:center; gap:var(--s-3); margin-bottom:var(--s-4);">
+            <div style="width:24px; height:24px; background:var(--c-success); border-radius:50%; display:flex; align-items:center; justify-content:center; font-family:var(--f-mono); font-size:10px; color:#fff; font-weight:700;">✓</div>
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-success); letter-spacing:0.08em;">정상 — 안정 범위</span>
+          </div>
+          <div style="background:var(--c-surface-hi); border-radius:var(--r-md); padding:var(--s-3); margin-bottom:var(--s-3);">
+            <div style="display:flex; justify-content:space-between; margin-bottom:var(--s-2);">
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3);">stress</span>
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-success);">34 / 90</span>
+            </div>
+            <div class="stat-bar-bg" style="width:100%;"><div class="stat-bar-fill" style="width:38%; background:var(--c-success);"></div></div>
+          </div>
+        </div>
+
+        <!-- State 4: CLOSED -->
+        <div class="ds-inspector-mini" aria-label="Inspector panel, closed" style="border-color:var(--c-border); opacity:0.6;">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4);">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); letter-spacing:0.12em;">INSPECTOR</span>
+            <span class="chip" style="background:var(--c-surface-hi); color:var(--c-text-3);">CLOSED</span>
+          </div>
+          <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); text-align:center; padding:var(--s-6) 0;">
+            선택된 Agent 없음
+          </div>
+        </div>
+
+        <!-- State 5: LOADING -->
+        <div class="ds-inspector-mini" aria-label="Inspector panel, loading" style="border-color:var(--c-border);">
+          <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--s-4);">
+            <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-inspector); letter-spacing:0.12em;">INSPECTOR</span>
+            <span class="chip chip-inspector">LOADING</span>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:var(--s-2); margin-bottom:var(--s-3);">
+            <div style="height:10px; background:var(--c-surface-hi); border-radius:var(--r-sm); width:60%;"></div>
+            <div style="height:10px; background:var(--c-surface-hi); border-radius:var(--r-sm); width:80%;"></div>
+            <div style="height:10px; background:var(--c-surface-hi); border-radius:var(--r-sm); width:45%;"></div>
+          </div>
+          <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3);">데이터 동기화 중…</div>
+        </div>
+
+      </div>
+      <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); margin-top:var(--s-3);">→ 05-relationship.html에서 전체 Inspector 확인</div>
+    </div>
+  </div>
+
+  <!-- ─── AGENT MARKERS ─── -->
+  <div class="ds-section" id="agents">
+    <div class="ds-section-heading">
+      <h2>05</h2>
+      <span>Character & Agent Marker Showcase</span>
+    </div>
+
+    <!-- 5 Character Full Showcase Cards -->
+    <div class="ds-label" style="margin-bottom:var(--s-2);">Core 5 Characters (High-Res Portraits)</div>
+    <div class="demo-box" style="display:grid; grid-template-columns:repeat(5, 1fr); gap:var(--s-4); background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
+      
+      <!-- Adel -->
+      <div class="persona-card" data-char="adel">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Adel</div>
+        <div class="persona-card__mbti">ISTJ · 방어마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">원칙주의</span>
+          <span class="trait-tag">결계 방어</span>
+        </div>
+      </div>
+
+      <!-- Leo -->
+      <div class="persona-card selected" data-char="leo">
+        <div class="persona-card__badge">PERSONA</div>
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Leo_ESTP.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Leo</div>
+        <div class="persona-card__mbti">ESTP · 마법공학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">모험심</span>
+          <span class="trait-tag">마법 생물</span>
+        </div>
+      </div>
+
+      <!-- Ria -->
+      <div class="persona-card" data-char="ria">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Ria</div>
+        <div class="persona-card__mbti">INFP · 고대룬학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">감성적</span>
+          <span class="trait-tag">고대 룬</span>
+        </div>
+      </div>
+
+      <!-- Kai -->
+      <div class="persona-card" data-char="kai">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Kai</div>
+        <div class="persona-card__mbti">ENTJ · 변성마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">전략적</span>
+          <span class="trait-tag">아티팩트</span>
+        </div>
+      </div>
+
+      <!-- Sera -->
+      <div class="persona-card" data-char="sera">
+        <div class="persona-card__portrait" style="background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; background-position:center top; width:100%; height:160px; border-radius:var(--r-sm);"></div>
+        <div class="persona-card__name" style="font-family:var(--f-serif-en); margin-top:8px;">Sera</div>
+        <div class="persona-card__mbti">ESFJ · 치유마법학과</div>
+        <div class="persona-card__tags" style="margin-top:6px;">
+          <span class="trait-tag">이타적</span>
+          <span class="trait-tag">약초 치유</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Agent Marker Spec Table -->
+    <div class="ds-label" style="margin-top:var(--s-6); margin-bottom:var(--s-2);">Agent Marker — 수치 스펙</div>
+    <div style="overflow-x:auto; margin-bottom:var(--s-6);">
+      <table style="width:100%; border-collapse:collapse; font-family:var(--f-mono); font-size:var(--t-sm);">
+        <thead>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">상태</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">마커 크기</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">링 두께</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">링 색상</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">그림자</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">애니메이션</th>
+            <th style="text-align:left; padding:var(--s-3) var(--s-4); color:var(--c-text-3); font-weight:500;">aria-label 패턴</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">Default</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">44 × 44 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">2 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">--c-border-hi</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-3);">없음</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-3);">없음</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">"[이름], 기본 상태"</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-primary);">Selected</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">44 × 44 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">2 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-primary);">--c-primary</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">0 0 12px --c-primary</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-primary);">ring-pulse (2s)</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">"[이름], 선택됨"</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-event);">Warning</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">44 × 44 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">2 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-event);">--c-event</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">0 0 10px --c-event</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-event);">ring-pulse-critical (1.2s)</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">"[이름], 경고 상태"</td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--c-border);">
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">Critical</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">44 × 44 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">2 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">--c-critical</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">0 0 12px --c-critical</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">ring-pulse-critical (1.2s)</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">"[이름], 위기 상태"</td>
+          </tr>
+          <tr>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-primary);">Missing</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">44 × 44 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">2 px</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-critical);">--c-critical</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text);">0 0 12px --c-critical</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-primary);">missing-flicker (3s) + opacity 0.3↔1</td>
+            <td style="padding:var(--s-3) var(--s-4); color:var(--c-text-2);">"[이름], 실종"</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Agent Markers State Preview -->
+    <div class="ds-label" style="margin-top:var(--s-6); margin-bottom:var(--s-2);">Agent Marker State Tokens</div>
+    <div class="demo-box" style="background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
+      <div class="marker-grid">
+        <!-- Default -->
+        <div class="marker-cell">
+          <div class="agent-marker" style="background-image:url('../assets/character/Leo_ESTP.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
+          <div class="marker-cell__label">Default<br><span style="color:var(--c-text-3);">Leo</span></div>
+        </div>
+
+        <!-- Selected -->
+        <div class="marker-cell">
+          <div class="agent-marker selected" style="background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-primary); box-shadow:0 0 12px var(--c-primary);"></div>
+          <div class="marker-cell__label">Selected<br><span style="color:var(--c-primary);">ring-pulse</span></div>
+        </div>
+
+        <!-- Critical / Missing -->
+        <div class="marker-cell">
+          <div class="agent-marker state-missing" style="background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-critical); box-shadow:0 0 12px var(--c-critical);"></div>
+          <div class="marker-cell__label">Missing<br><span style="color:var(--c-critical);">flicker</span></div>
+        </div>
+
+        <!-- Kai Active -->
+        <div class="marker-cell">
+          <div class="agent-marker" style="background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
+          <div class="marker-cell__label">Active<br><span style="color:var(--c-text-3);">Kai</span></div>
+        </div>
+
+        <!-- Sera Active -->
+        <div class="marker-cell">
+          <div class="agent-marker" style="background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; width:44px; height:44px; border-radius:50%; border:2px solid var(--c-border-hi);"></div>
+          <div class="marker-cell__label">Active<br><span style="color:var(--c-text-3);">Sera</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ─── CHARACTER PALETTE ─── -->
+  <div class="ds-section" id="character-palette">
+    <div class="ds-section-heading">
+      <h2>06</h2>
+      <span>Character Palette System</span>
+    </div>
+
+    <!-- Color Swatches -->
+    <div class="ds-label" style="margin-bottom:var(--s-2);">6인 캐릭터 5단계 컬러 토큰</div>
+    <div class="demo-box" style="display:flex; flex-direction:column; gap:var(--s-4); background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
+
+      <!-- Adel -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-adel-light);">Adel · ISTJ</div>
+        <div title="--c-char-adel" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-adel);"></div>
+        <div title="--c-char-adel-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-adel-light);"></div>
+        <div title="--c-char-adel-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-adel-muted);border:1px solid var(--c-char-adel-ring);"></div>
+        <div title="--c-char-adel-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-adel-ring);"></div>
+        <div title="--sh-char-adel" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-adel-light);box-shadow:var(--sh-char-adel);"></div>
+        <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">base · light · muted · ring · glow</div>
+      </div>
+
+      <!-- Leo -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-leo-light);">Leo · ESTP</div>
+        <div title="--c-char-leo" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-leo);"></div>
+        <div title="--c-char-leo-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-leo-light);"></div>
+        <div title="--c-char-leo-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-leo-muted);border:1px solid var(--c-char-leo-ring);"></div>
+        <div title="--c-char-leo-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-leo-ring);"></div>
+        <div title="--sh-char-leo" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-leo-light);box-shadow:var(--sh-char-leo);"></div>
+      </div>
+
+      <!-- Ria -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-ria-light);">Ria · INFP</div>
+        <div title="--c-char-ria" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-ria);"></div>
+        <div title="--c-char-ria-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-ria-light);"></div>
+        <div title="--c-char-ria-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-ria-muted);border:1px solid var(--c-char-ria-ring);"></div>
+        <div title="--c-char-ria-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-ria-ring);"></div>
+        <div title="--sh-char-ria" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-ria-light);box-shadow:var(--sh-char-ria);"></div>
+      </div>
+
+      <!-- Kai -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-kai-light);">Kai · ENTJ</div>
+        <div title="--c-char-kai" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-kai);"></div>
+        <div title="--c-char-kai-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-kai-light);"></div>
+        <div title="--c-char-kai-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-kai-muted);border:1px solid var(--c-char-kai-ring);"></div>
+        <div title="--c-char-kai-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-kai-ring);"></div>
+        <div title="--sh-char-kai" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-kai-light);box-shadow:var(--sh-char-kai);"></div>
+      </div>
+
+      <!-- Sera -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-sera-light);">Sera · ESFJ</div>
+        <div title="--c-char-sera" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-sera);"></div>
+        <div title="--c-char-sera-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-sera-light);"></div>
+        <div title="--c-char-sera-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-sera-muted);border:1px solid var(--c-char-sera-ring);"></div>
+        <div title="--c-char-sera-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-sera-ring);"></div>
+        <div title="--sh-char-sera" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-sera-light);box-shadow:var(--sh-char-sera);"></div>
+      </div>
+
+      <!-- Prof. Zephyr -->
+      <div style="display:flex; align-items:center; gap:var(--s-4);">
+        <div style="width:120px; font-family:var(--f-serif-en); font-size:var(--t-sm); color:var(--c-char-prof-light);">Prof. Zephyr</div>
+        <div title="--c-char-prof" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-prof);"></div>
+        <div title="--c-char-prof-light" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-prof-light);"></div>
+        <div title="--c-char-prof-muted" style="width:40px;height:40px;border-radius:var(--r-sm);background:var(--c-char-prof-muted);border:1px solid var(--c-char-prof-ring);"></div>
+        <div title="--c-char-prof-ring" style="width:40px;height:40px;border-radius:50%;background:transparent;border:2px solid var(--c-char-prof-ring);"></div>
+        <div title="--sh-char-prof" style="width:40px;height:40px;border-radius:50%;background:rgba(11,24,56,0.85);border:2px solid var(--c-char-prof-light);box-shadow:var(--sh-char-prof);"></div>
+      </div>
+    </div>
+
+    <!-- Component Showcase -->
+    <div class="ds-label" style="margin-top:var(--s-6); margin-bottom:var(--s-2);">적용 컴포넌트 쇼케이스</div>
+    <div class="demo-box" style="display:grid; grid-template-columns:repeat(6,1fr); gap:var(--s-5); background:rgba(11,24,56,0.85); border:1px solid var(--c-border); padding:var(--s-5);">
+
+      <!-- Adel -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-adel-light);letter-spacing:0.06em;">ADEL</div>
+        <!-- Avatar badge -->
+        <div class="agent-badge--adel" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Adel_ISTJ.png');background-size:cover;background-position:center top;"></div>
+        <!-- Selected state -->
+        <div class="agent-badge--adel selected" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Adel_ISTJ.png');background-size:cover;background-position:center top;"></div>
+        <!-- Dialogue bubble -->
+        <div class="dialogue-bubble--adel" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Adel</div>
+          <div style="font-size:10px;color:var(--c-text-2);">결계를 확인해.</div>
+        </div>
+      </div>
+
+      <!-- Leo -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-leo-light);letter-spacing:0.06em;">LEO</div>
+        <div class="agent-badge--leo" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Leo_ESTP.png');background-size:cover;background-position:center top;"></div>
+        <div class="agent-badge--leo selected" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Leo_ESTP.png');background-size:cover;background-position:center top;"></div>
+        <div class="dialogue-bubble--leo" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Leo</div>
+          <div style="font-size:10px;color:var(--c-text-2);">가자, 빠르게!</div>
+        </div>
+      </div>
+
+      <!-- Ria -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-ria-light);letter-spacing:0.06em;">RIA</div>
+        <div class="agent-badge--ria" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Ria_INFP.png');background-size:cover;background-position:center top;"></div>
+        <div class="agent-badge--ria selected" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Ria_INFP.png');background-size:cover;background-position:center top;"></div>
+        <div class="dialogue-bubble--ria" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Ria</div>
+          <div style="font-size:10px;color:var(--c-text-2);">저도 느꼈어요…</div>
+        </div>
+      </div>
+
+      <!-- Kai -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-kai-light);letter-spacing:0.06em;">KAI</div>
+        <div class="agent-badge--kai" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Kai_ENTJ.png');background-size:cover;background-position:center top;"></div>
+        <div class="agent-badge--kai selected" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Kai_ENTJ.png');background-size:cover;background-position:center top;"></div>
+        <div class="dialogue-bubble--kai" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Kai</div>
+          <div style="font-size:10px;color:var(--c-text-2);">전략을 세워야 해.</div>
+        </div>
+      </div>
+
+      <!-- Sera -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-sera-light);letter-spacing:0.06em;">SERA</div>
+        <div class="agent-badge--sera" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Sera_ESFJ.png');background-size:cover;background-position:center top;"></div>
+        <div class="agent-badge--sera selected" style="width:44px;height:44px;border-radius:50%;background-image:url('../assets/character/Sera_ESFJ.png');background-size:cover;background-position:center top;"></div>
+        <div class="dialogue-bubble--sera" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Sera</div>
+          <div style="font-size:10px;color:var(--c-text-2);">모두 괜찮아요?</div>
+        </div>
+      </div>
+
+      <!-- Prof. Zephyr -->
+      <div style="display:flex;flex-direction:column;align-items:center;gap:var(--s-3);">
+        <div style="font-family:var(--f-serif-en);font-size:var(--t-xs);color:var(--c-char-prof-light);letter-spacing:0.06em;">PROF.</div>
+        <div class="agent-badge--prof" style="width:44px;height:44px;border-radius:50%;background:var(--c-char-prof-muted);border:1.5px solid var(--c-char-prof-ring);display:flex;align-items:center;justify-content:center;font-family:var(--f-serif-en);font-size:16px;color:var(--c-char-prof-light);">Z</div>
+        <div class="agent-badge--prof selected" style="width:44px;height:44px;border-radius:50%;background:var(--c-char-prof-muted);display:flex;align-items:center;justify-content:center;font-family:var(--f-serif-en);font-size:16px;color:var(--c-char-prof-light);">Z</div>
+        <div class="dialogue-bubble--prof" style="padding:var(--s-2) var(--s-3);border-radius:var(--r-sm);width:100%;">
+          <div class="bubble-speaker" style="font-family:var(--f-mono);font-size:9px;margin-bottom:3px;">Zephyr</div>
+          <div style="font-size:10px;color:var(--c-text-2);">수업을 시작하지.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ─── MOTION ─── -->
+  <div class="ds-section" id="motion">
+    <div class="ds-section-heading">
+      <h2>07</h2>
+      <span>Motion Semantics</span>
+    </div>
+
+    <div class="motion-grid">
+      <div class="motion-card">
+        <div class="motion-card__name">ring-pulse</div>
+        <div class="motion-card__desc">Agent 선택 시 보라색 링 확장. 관심 집중 신호.</div>
+        <div class="motion-card__demo">
+          <div style="display:inline-flex; align-items:center; justify-content:center; position:relative; width:44px; height:44px;">
+            <div style="position:absolute; inset:0; border-radius:50%; border:2px solid var(--c-primary); animation:ring-pulse 1.8s ease-out infinite;"></div>
+            <div style="width:36px; height:36px; border-radius:50%; background:var(--c-primary-muted); border:2px solid var(--c-primary);"></div>
+          </div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">ring-pulse-critical</div>
+        <div class="motion-card__desc">Critical 상태 빨간 링. 긴급 상태 경보.</div>
+        <div class="motion-card__demo">
+          <div style="display:inline-flex; align-items:center; justify-content:center; position:relative; width:44px; height:44px;">
+            <div style="position:absolute; inset:0; border-radius:50%; border:2px solid var(--c-critical); animation:ring-pulse-critical 1.2s ease-out infinite;"></div>
+            <div style="width:36px; height:36px; border-radius:50%; background:rgba(217,93,117,0.2); border:2px solid var(--c-critical);"></div>
+          </div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">missing-flicker</div>
+        <div class="motion-card__desc">MISSING Agent opacity 교란. 존재 불확실성 표현.</div>
+        <div class="motion-card__demo">
+          <div style="width:36px; height:36px; border-radius:50%; background:rgba(217,93,117,0.2); border:2px solid var(--c-critical); animation:missing-flicker 2.5s ease-in-out infinite;"></div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">path-dash</div>
+        <div class="motion-card__desc">SVG stroke-dashoffset 흐름. Agent 이동 경로 추적.</div>
+        <div class="motion-card__demo">
+          <svg width="120" height="40" viewBox="0 0 120 40" fill="none">
+            <path d="M10 30 Q40 10 80 20 Q100 26 110 15" stroke="var(--c-primary)" stroke-width="1.5" stroke-dasharray="4 3" fill="none" stroke-linecap="round" style="animation:path-dash 2s linear infinite;"/>
+            <circle cx="10" cy="30" r="3" fill="var(--c-primary)"/>
+            <circle cx="110" cy="15" r="2" fill="var(--c-primary)" opacity="0.4"/>
+          </svg>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">float-up</div>
+        <div class="motion-card__desc">translateY + opacity 진입. 모달, 알림 등장.</div>
+        <div class="motion-card__demo">
+          <span class="chip chip-event" style="animation:float-up 1.2s ease infinite;">EVENT</span>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">footprint-fade</div>
+        <div class="motion-card__desc">발자국 아이콘 점진 소멸. Agent 이동 흔적.</div>
+        <div class="motion-card__demo">
+          <svg width="50" height="24" viewBox="0 0 50 24" fill="none">
+            <ellipse cx="8" cy="16" rx="4" ry="6" fill="var(--c-text-3)" opacity="0.8" style="animation:footprint-fade 2s ease-out infinite;"/>
+            <ellipse cx="24" cy="12" rx="4" ry="6" fill="var(--c-text-3)" opacity="0.5" style="animation:footprint-fade 2s ease-out infinite 0.4s;"/>
+            <ellipse cx="40" cy="16" rx="4" ry="6" fill="var(--c-text-3)" opacity="0.2" style="animation:footprint-fade 2s ease-out infinite 0.8s;"/>
+          </svg>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">event-glow</div>
+        <div class="motion-card__desc">Event 영역 금빛 glow 맥동. Magic Event 활성화.</div>
+        <div class="motion-card__demo">
+          <div style="width:80px; height:32px; border-radius:var(--r-md); background:rgba(231,183,92,0.1); border:1px solid var(--c-event); animation:event-glow 2s ease-in-out infinite;"></div>
+        </div>
+      </div>
+      <div class="motion-card">
+        <div class="motion-card__name">dissolve-out</div>
+        <div class="motion-card__desc">opacity·blur·scale 소멸. Agent 퇴장 연출.</div>
+        <div class="motion-card__demo" style="overflow:hidden;">
+          <div style="width:36px; height:36px; border-radius:50%; background:rgba(109,90,230,0.3); border:2px solid var(--c-primary); animation:dissolve-out 3s ease-out infinite;"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Timing tokens -->
+    <div class="ds-col" style="margin-top:var(--s-4);">
+      <div class="ds-label">Timing Tokens</div>
+      <div class="ds-row" style="gap:var(--s-8);">
+        <div class="ds-col">
+          <div style="font-family:var(--f-mono); font-size:var(--t-sm); color:var(--c-text);">--tr-fast</div>
+          <div class="ds-label">120ms · Hover, chip active</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:var(--f-mono); font-size:var(--t-sm); color:var(--c-text);">--tr-base</div>
+          <div class="ds-label">200ms · Component transitions</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:var(--f-mono); font-size:var(--t-sm); color:var(--c-text);">--tr-slow</div>
+          <div class="ds-label">360ms · Panel slide, drawer open</div>
+        </div>
+        <div class="ds-col">
+          <div style="font-family:var(--f-mono); font-size:var(--t-sm); color:var(--c-text);">--tr-xslow</div>
+          <div class="ds-label">600ms · Modal enter, major layout</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <div style="padding:var(--s-8) 0; border-top:1px solid var(--c-border); display:flex; justify-content:space-between; align-items:center;">
+    <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); letter-spacing:0.08em;">Magic Academy Design System v1.0 — 2026</div>
+    <a href="../index.html" class="btn btn-ghost btn-sm">← Navigator로 돌아가기</a>
+  </div>
+
+</div>
+<script src="../js/magic-academy.js"></script>
+<script>
+  // Smooth scroll for anchor links
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      e.preventDefault();
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+  });
+</script>
+</body>
+</html>

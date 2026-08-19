@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Persona 선택 — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .screen {
+      width: 1440px; height: 900px;
+      display: flex; flex-direction: column;
+      background: var(--c-bg);
+      position: relative;
+    }
+
+    /* Subtle background */
+    .bg-texture {
+      position: absolute; inset: 0;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      opacity: 0.06;
+      pointer-events: none;
+    }
+
+    /* Top nav */
+    .page-nav {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: var(--s-4);
+      padding: var(--s-4) var(--s-8);
+      border-bottom: 1px solid var(--c-border);
+      flex-shrink: 0;
+    }
+    .page-nav__brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-base);
+      font-weight: 600;
+      color: var(--c-text);
+      letter-spacing: 0.04em;
+    }
+    .page-nav__steps {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      margin-left: auto;
+    }
+    .step {
+      display: flex; align-items: center; gap: var(--s-2);
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-text-3); letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .step.done { color: var(--c-text-2); }
+    .step.active { color: var(--c-primary); }
+    .step-dot {
+      width: 6px; height: 6px; border-radius: 50%;
+      background: var(--c-border-hi);
+    }
+    .step.done .step-dot { background: var(--c-text-3); }
+    .step.active .step-dot { background: var(--c-primary); animation: ring-pulse 2s ease infinite; }
+    .step-line { width: 24px; height: 1px; background: var(--c-border-hi); }
+
+    /* Main content */
+    .page-body {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: var(--s-6) var(--s-12);
+      gap: var(--s-8);
+      position: relative;
+    }
+
+    .page-title {
+      text-align: center;
+    }
+    .page-title__main {
+      font-family: var(--f-serif-ko);
+      font-size: var(--t-2xl);
+      font-weight: 600;
+      color: var(--c-text);
+    }
+    .page-title__sub {
+      font-size: var(--t-sm);
+      color: var(--c-text-2);
+      margin-top: var(--s-2);
+    }
+
+    /* Card row */
+    .card-row {
+      display: flex;
+      gap: var(--s-5);
+      align-items: flex-start;
+    }
+
+    /* Override persona-card for this page */
+    .persona-card {
+      width: 196px;
+      animation: float-up 400ms ease both;
+    }
+    .persona-card:nth-child(1) { animation-delay: 0ms; }
+    .persona-card:nth-child(2) { animation-delay: 60ms; }
+    .persona-card:nth-child(3) { animation-delay: 120ms; }
+    .persona-card:nth-child(4) { animation-delay: 180ms; }
+    .persona-card:nth-child(5) { animation-delay: 240ms; }
+
+    .persona-card__portrait {
+      width: 196px;
+      height: 248px;
+    }
+
+    /* Selected card indicator */
+    .persona-card.selected::before {
+      content: '선택됨';
+      position: absolute;
+      top: var(--s-2); right: var(--s-2);
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: #fff;
+      background: var(--c-primary);
+      padding: 2px var(--s-2);
+      border-radius: var(--r-sm);
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+    .persona-card { position: relative; }
+
+    /* Trait tags */
+    .persona-traits {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      margin-top: var(--s-2);
+    }
+    .trait-tag {
+      font-size: 10px;
+      color: var(--c-text-2);
+      background: var(--c-surface-hi);
+      padding: 2px var(--s-2);
+      border-radius: var(--r-sm);
+    }
+
+    /* Bottom action bar */
+    .page-footer {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: var(--s-4) var(--s-8);
+      border-top: 1px solid var(--c-border);
+      flex-shrink: 0;
+    }
+
+    /* Selected summary */
+    .selected-summary {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      opacity: 0;
+      transition: opacity var(--tr-normal);
+    }
+    .selected-summary.visible { opacity: 1; }
+    .selected-summary__portrait {
+      width: 32px; height: 32px;
+      border-radius: 50%;
+      background-image: url('../assets/character.png');
+      background-repeat: no-repeat;
+      background-size: 96px 120px;
+      border: 2px solid var(--c-primary);
+    }
+    .selected-summary__name {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-md);
+      font-weight: 600;
+      color: var(--c-text);
+    }
+    .selected-summary__mbti {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-primary);
+      letter-spacing: 0.1em;
+    }
+  </style>
+</head>
+<body>
+
+<div class="screen">
+  <div class="bg-texture"></div>
+
+  <!-- Top Nav -->
+  <div class="page-nav">
+    <a href="01-onboarding.html" class="btn btn-ghost btn-sm" style="padding: var(--s-2);">
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <span class="page-nav__brand">Magic Academy</span>
+
+    <!-- Progress Steps -->
+    <div class="page-nav__steps">
+      <div class="step done">
+        <div class="step-dot"></div>
+        <span>온보딩</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step active">
+        <div class="step-dot"></div>
+        <span>Persona 선택</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-dot"></div>
+        <span>설정</span>
+      </div>
+      <div class="step-line"></div>
+      <div class="step">
+        <div class="step-dot"></div>
+        <span>시뮬레이션</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Main Body -->
+  <div class="page-body">
+    <div class="page-title">
+      <div class="page-title__main">관찰할 Persona를 선택하세요</div>
+      <div class="page-title__sub">선택한 Persona의 시점으로 세계를 관찰합니다. 나중에 변경할 수 없습니다.</div>
+    </div>
+
+    <!-- Character Cards -->
+    <div class="card-row">
+
+      <!-- Adel -->
+      <div class="persona-card" data-id="adel" onclick="selectPersona(this, 'Adel', 'ISTJ', '방어 마법', '../assets/character/Adel_ISTJ.png')">
+        <div class="persona-card__portrait agent-badge--adel"
+             style="background-image: url('../assets/character/Adel_ISTJ.png'); background-size: cover; background-position: center top;"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">Adel</div>
+          <div class="persona-card__mbti">ISTJ</div>
+          <div class="persona-card__major">방어 마법</div>
+          <div class="persona-traits">
+            <span class="trait-tag">성실</span>
+            <span class="trait-tag">내향</span>
+            <span class="trait-tag">원칙주의</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Leo -->
+      <div class="persona-card selected" data-id="leo" onclick="selectPersona(this, 'Leo', 'ESTP', '마법 생물', '../assets/character/Leo_ESTP.png')">
+        <div class="persona-card__portrait agent-badge--leo"
+             style="background-image: url('../assets/character/Leo_ESTP.png'); background-size: cover; background-position: center top;"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">Leo</div>
+          <div class="persona-card__mbti">ESTP</div>
+          <div class="persona-card__major">마법 생물</div>
+          <div class="persona-traits">
+            <span class="trait-tag">충동적</span>
+            <span class="trait-tag">외향</span>
+            <span class="trait-tag">실용주의</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Ria -->
+      <div class="persona-card" data-id="ria" onclick="selectPersona(this, 'Ria', 'INFP', '고대 마법', '../assets/character/Ria_INFP.png')">
+        <div class="persona-card__portrait agent-badge--ria"
+             style="background-image: url('../assets/character/Ria_INFP.png'); background-size: cover; background-position: center top;"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">Ria</div>
+          <div class="persona-card__mbti">INFP</div>
+          <div class="persona-card__major">고대 마법</div>
+          <div class="persona-traits">
+            <span class="trait-tag">몽상적</span>
+            <span class="trait-tag">내향</span>
+            <span class="trait-tag">감수성</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Kai -->
+      <div class="persona-card" data-id="kai" onclick="selectPersona(this, 'Kai', 'ENTJ', '마법 도구 제작', '../assets/character/Kai_ENTJ.png')">
+        <div class="persona-card__portrait agent-badge--kai"
+             style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size: cover; background-position: center top;"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">Kai</div>
+          <div class="persona-card__mbti">ENTJ</div>
+          <div class="persona-card__major">마법 도구 제작</div>
+          <div class="persona-traits">
+            <span class="trait-tag">리더십</span>
+            <span class="trait-tag">외향</span>
+            <span class="trait-tag">전략적</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sera -->
+      <div class="persona-card" data-id="sera" onclick="selectPersona(this, 'Sera', 'ESFJ', '약초학 & 치유', '../assets/character/Sera_ESFJ.png')">
+        <div class="persona-card__portrait agent-badge--sera"
+             style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size: cover; background-position: center top;"></div>
+        <div class="persona-card__info">
+          <div class="persona-card__name">Sera</div>
+          <div class="persona-card__mbti">ESFJ</div>
+          <div class="persona-card__major">약초학 & 치유</div>
+          <div class="persona-traits">
+            <span class="trait-tag">사교적</span>
+            <span class="trait-tag">친화력</span>
+            <span class="trait-tag">조화</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Footer with Selected Summary -->
+  <div class="page-footer">
+    <div class="selected-summary visible" id="selected-summary">
+      <div class="selected-summary__portrait" id="summary-portrait" style="background-image: url('../assets/character/Leo_ESTP.png'); background-size: cover; background-position: center top;"></div>
+      <div>
+        <div class="selected-summary__name" id="summary-name">Leo</div>
+        <div class="selected-summary__mbti" id="summary-mbti">ESTP &middot; 마법 생물</div>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="confirm-btn" onclick="startWithPersona()" style="padding: var(--s-3) var(--s-8);">
+      이 Persona로 시작하기 &rarr;
+    </button>
+  </div>
+
+</div>
+
+<script src="../js/magic-academy.js"></script>
+<script>
+  let currentSelectedId = 'leo';
+
+  function selectPersona(el, name, mbti, major, imgPath) {
+    document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
+    el.classList.add('selected');
+    currentSelectedId = el.dataset.id;
+
+    document.getElementById('summary-name').textContent = name;
+    document.getElementById('summary-mbti').textContent = `${mbti} · ${major}`;
+    document.getElementById('summary-portrait').style.backgroundImage = `url('${imgPath}')`;
+    document.getElementById('selected-summary').classList.add('visible');
+  }
+
+  function startWithPersona() {
+    window.location.href = `06-persona-setup.html?char=${currentSelectedId}`;
+  }
+</script>
+</body>
+</html>

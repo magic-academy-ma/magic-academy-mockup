@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Persona 설정 — Magic Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .screen { width: 1440px; height: 900px; display: flex; background: var(--c-bg); }
+
+    /* ── Left portrait panel ─────────────────────────────── */
+    .setup-portrait-panel {
+      width: 360px; height: 900px;
+      flex-shrink: 0;
+      position: relative; overflow: hidden;
+      background: #060b1a;
+      border-right: 1px solid var(--c-border);
+    }
+    .setup-portrait-panel__bg {
+      position: absolute; inset: 0;
+      background-image: url('../assets/character/Leo_ESTP.png');
+      background-size: cover;
+      background-position: center top;
+      background-repeat: no-repeat;
+      opacity: 0.95;
+    }
+    .setup-portrait-panel__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 30%, rgba(7, 17, 40, 0.75) 65%, #071128 95%);
+    }
+    .setup-portrait-panel__info {
+      position: absolute;
+      bottom: var(--s-8); left: var(--s-6); right: var(--s-6);
+      z-index: 2;
+    }
+    .setup-portrait-panel__chip { display: flex; gap: var(--s-2); margin-bottom: var(--s-3); }
+    .setup-portrait-panel__name {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-4xl); font-weight: 700;
+      color: var(--c-text);
+      letter-spacing: 0.02em;
+    }
+    .setup-portrait-panel__sub {
+      font-family: var(--f-mono); font-size: var(--t-sm);
+      color: var(--c-cream); letter-spacing: 0.12em; margin-top: var(--s-1);
+    }
+    .setup-portrait-panel__desc {
+      font-size: var(--t-sm); color: var(--c-text-2);
+      margin-top: var(--s-3); line-height: 1.6;
+    }
+
+    /* ── Right form panel ────────────────────────────────── */
+    .setup-form-panel {
+      flex: 1; display: flex; flex-direction: column; overflow: hidden;
+      background: radial-gradient(circle at 80% 20%, rgba(109, 90, 230, 0.06), transparent 50%), var(--c-bg);
+    }
+
+    .setup-nav {
+      display: flex; align-items: center; gap: var(--s-4);
+      padding: var(--s-4) var(--s-8);
+      border-bottom: 1px solid var(--c-border);
+      flex-shrink: 0;
+      background: rgba(8, 14, 32, 0.75);
+      backdrop-filter: blur(12px);
+    }
+    .setup-nav__brand {
+      font-family: var(--f-serif-en); font-size: var(--t-base);
+      font-weight: 600; color: var(--c-text); letter-spacing: 0.04em;
+    }
+
+    .setup-form-body {
+      flex: 1; overflow-y: auto;
+      padding: var(--s-8);
+      display: flex; flex-direction: column; gap: var(--s-8);
+    }
+
+    .setup-section {
+      display: flex; flex-direction: column; gap: var(--s-4);
+      background: rgba(14, 23, 48, 0.5);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      padding: var(--s-6);
+      backdrop-filter: blur(8px);
+    }
+    .setup-section-title {
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-cream); letter-spacing: 0.14em;
+      text-transform: uppercase;
+      padding-bottom: var(--s-2); border-bottom: 1px solid rgba(80, 105, 165, 0.15);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .setup-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+
+    /* Read-only field */
+    .field-readonly {
+      background: rgba(8, 14, 32, 0.6);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+      color: var(--c-text); font-size: var(--t-sm); font-weight: 500;
+      cursor: default;
+    }
+
+    /* MBTI buttons */
+    .mbti-grid { display: flex; gap: var(--s-3); }
+    .mbti-btn {
+      flex: 1;
+      padding: var(--s-3) var(--s-2);
+      background: rgba(8, 14, 32, 0.6);
+      border: 1.5px solid var(--c-border);
+      border-radius: var(--r-md);
+      color: var(--c-text-2);
+      font-family: var(--f-mono); font-size: var(--t-sm);
+      letter-spacing: 0.1em; cursor: pointer; text-align: center;
+      transition: all var(--tr-fast);
+    }
+    .mbti-btn:hover {
+      border-color: var(--c-border-hi);
+      color: var(--c-text);
+      background: rgba(22, 35, 71, 0.6);
+    }
+    .mbti-btn.selected {
+      border-color: var(--c-primary);
+      background: rgba(109, 90, 230, 0.2);
+      color: #ffffff;
+      font-weight: 600;
+      box-shadow: 0 0 14px rgba(109, 90, 230, 0.35);
+    }
+    .mbti-hint {
+      font-size: var(--t-xs); color: var(--c-text-2); margin-top: var(--s-1);
+    }
+
+    /* Big Five sliders */
+    .bigfive-axis {
+      display: flex; justify-content: space-between;
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-text-3); padding: 0 var(--s-1); margin-bottom: var(--s-1);
+    }
+    .bigfive-row {
+      display: grid;
+      grid-template-columns: 90px 1fr 46px;
+      align-items: center; gap: var(--s-3);
+    }
+    .bigfive-row__label { font-size: var(--t-sm); color: var(--c-text-2); text-align: right; }
+    .bigfive-row__val {
+      font-family: var(--f-mono); font-size: var(--t-xs);
+      color: var(--c-cream); text-align: right; font-weight: 600;
+    }
+    .bigfive-rows { display: flex; flex-direction: column; gap: var(--s-4); }
+    .bigfive-rows.disabled .bigfive-row__label { color: var(--c-text-3); }
+    .bigfive-rows.disabled .bigfive-row__val   { color: var(--c-text-3); }
+    .bigfive-rows.disabled .slider { opacity: 0.3; pointer-events: none; }
+
+    /* Footer */
+    .setup-footer {
+      padding: var(--s-4) var(--s-8);
+      border-top: 1px solid var(--c-border);
+      display: flex; justify-content: space-between; align-items: center;
+      flex-shrink: 0;
+      background: rgba(8, 14, 32, 0.75);
+      backdrop-filter: blur(12px);
+    }
+  </style>
+</head>
+<body>
+<div class="screen">
+
+  <!-- ── Left Portrait ─────────────────────────────────────── -->
+  <div class="setup-portrait-panel">
+    <div class="setup-portrait-panel__bg"></div>
+    <div class="setup-portrait-panel__overlay"></div>
+    <div class="setup-portrait-panel__info">
+      <div class="setup-portrait-panel__chip">
+        <span class="chip chip-missing">ESTP</span>
+        <span class="chip chip-event">마법 생물</span>
+      </div>
+      <div class="setup-portrait-panel__name">Leo</div>
+      <div class="setup-portrait-panel__sub">ESTP · 마법공학과 · 2학년</div>
+      <div class="setup-portrait-panel__desc">충동적이고 실용적인 Leo는 규칙보다 경험을 중시한다. 마법 생물과의 교감에 뛰어나며 위험한 상황도 즐긴다.</div>
+    </div>
+  </div>
+
+  <!-- ── Right Form ─────────────────────────────────────────── -->
+  <div class="setup-form-panel">
+    <div class="setup-nav">
+      <a href="02-persona-select.html" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <span class="setup-nav__brand">Persona 초기 설정</span>
+      <span style="font-size:var(--t-sm); color:var(--c-text-2); margin-left:var(--s-2);">— Leo</span>
+    </div>
+
+    <div class="setup-form-body">
+
+      <!-- 1. 기본 정보 (읽기 전용) -->
+      <div class="setup-section">
+        <div class="setup-section-title">기본 정보 (읽기 전용)</div>
+        <div class="setup-grid-2">
+          <div class="field-group">
+            <label class="field-label">학년</label>
+            <div class="field-readonly">2학년</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">전공</label>
+            <div class="field-readonly">마법공학과</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">성별</label>
+            <div class="field-readonly">남</div>
+          </div>
+          <div class="field-group">
+            <label class="field-label">관심 분야</label>
+            <div class="field-readonly">마법 생물</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. MBTI 선택 -->
+      <div class="setup-section">
+        <div class="setup-section-title">MBTI 선택</div>
+        <div class="mbti-grid" id="mbti-grid">
+          <button class="mbti-btn" data-mbti="ISTJ">ISTJ</button>
+          <button class="mbti-btn selected" data-mbti="ESTP">ESTP</button>
+          <button class="mbti-btn" data-mbti="INFP">INFP</button>
+          <button class="mbti-btn" data-mbti="ENTJ">ENTJ</button>
+          <button class="mbti-btn" data-mbti="ESFJ">ESFJ</button>
+        </div>
+        <div class="mbti-hint" id="mbti-hint">MBTI 재선택 시 Big Five 전체 값이 초기화됩니다</div>
+      </div>
+
+      <!-- 3. Big Five 성격 조정 -->
+      <div class="setup-section">
+        <div class="setup-section-title">Big Five 성격 조정</div>
+        <div class="bigfive-rows" id="bigfive-rows">
+          <div class="bigfive-axis">
+            <span>-50</span><span>0</span><span>+50</span>
+          </div>
+          <div class="bigfive-row">
+            <div class="bigfive-row__label">개방성</div>
+            <input type="range" class="slider" id="bf-openness" min="-50" max="50" step="5" value="15">
+            <div class="bigfive-row__val" id="bf-openness-val">+15</div>
+          </div>
+          <div class="bigfive-row">
+            <div class="bigfive-row__label">성실성</div>
+            <input type="range" class="slider" id="bf-conscientiousness" min="-50" max="50" step="5" value="-20">
+            <div class="bigfive-row__val" id="bf-conscientiousness-val">-20</div>
+          </div>
+          <div class="bigfive-row">
+            <div class="bigfive-row__label">외향성</div>
+            <input type="range" class="slider" id="bf-extraversion" min="-50" max="50" step="5" value="30">
+            <div class="bigfive-row__val" id="bf-extraversion-val">+30</div>
+          </div>
+          <div class="bigfive-row">
+            <div class="bigfive-row__label">우호성</div>
+            <input type="range" class="slider" id="bf-agreeableness" min="-50" max="50" step="5" value="-10">
+            <div class="bigfive-row__val" id="bf-agreeableness-val">-10</div>
+          </div>
+          <div class="bigfive-row">
+            <div class="bigfive-row__label">정서 안정성</div>
+            <input type="range" class="slider" id="bf-stability" min="-50" max="50" step="5" value="20">
+            <div class="bigfive-row__val" id="bf-stability-val">+20</div>
+          </div>
+      <!-- 4. 시뮬레이션 파라미터 설정 -->
+      <div class="setup-section">
+        <div class="setup-section-title" style="display:flex; justify-content:space-between; align-items:center;">
+          <span>시뮬레이션 파라미터 & Magic Layer 설정</span>
+          <span class="chip chip-event" id="magic-status-chip">MAGIC LAYER ON</span>
+        </div>
+        <div style="font-size:var(--t-xs); color:var(--c-text-2); margin-top:-4px;">
+          Magic Layer의 빈도/영향도가 설정값으로 지정됩니다.
+        </div>
+        
+        <div class="setup-grid-2" style="margin-top:var(--s-2);">
+          <!-- 일반 Event -->
+          <div style="background:var(--c-surface-hi); padding:var(--s-4); border-radius:var(--r-md); border:1px solid var(--c-border); display:flex; flex-direction:column; gap:var(--s-3);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:var(--t-sm); font-weight:600; color:var(--c-text);">일반 Event</span>
+              <span style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3);">STANDARD</span>
+            </div>
+            <div class="bigfive-row" style="grid-template-columns: 70px 1fr 36px;">
+              <div class="bigfive-row__label" style="font-size:var(--t-xs);">발생 빈도</div>
+              <input type="range" class="slider" id="param-gen-freq" min="10" max="100" step="5" value="50">
+              <div class="bigfive-row__val" id="param-gen-freq-val" style="color:var(--c-text-2);">50</div>
+            </div>
+            <div class="bigfive-row" style="grid-template-columns: 70px 1fr 36px;">
+              <div class="bigfive-row__label" style="font-size:var(--t-xs);">영향도</div>
+              <input type="range" class="slider" id="param-gen-impact" min="10" max="100" step="5" value="50">
+              <div class="bigfive-row__val" id="param-gen-impact-val" style="color:var(--c-text-2);">50</div>
+            </div>
+          </div>
+
+          <!-- Magic Layer -->
+          <div style="background:var(--c-surface-hi); padding:var(--s-4); border-radius:var(--r-md); border:1px solid var(--c-border); display:flex; flex-direction:column; gap:var(--s-3);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:var(--t-sm); font-weight:600; color:var(--c-cream);">Magic Layer</span>
+              <div style="display:flex; align-items:center; gap:var(--s-2);">
+                <label style="font-size:11px; color:var(--c-text-3); cursor:pointer;" id="magic-toggle-label">Magic OFF 토글</label>
+                <input type="checkbox" id="magic-off-toggle" disabled style="cursor:pointer; accent-color:var(--c-primary);">
+              </div>
+            </div>
+            <div class="bigfive-row" style="grid-template-columns: 70px 1fr 36px;">
+              <div class="bigfive-row__label" style="font-size:var(--t-xs);">발생 빈도</div>
+              <input type="range" class="slider" id="param-magic-freq" min="10" max="100" step="5" value="60">
+              <div class="bigfive-row__val" id="param-magic-freq-val" style="color:var(--c-cream);">60</div>
+            </div>
+            <div class="bigfive-row" style="grid-template-columns: 70px 1fr 36px;">
+              <div class="bigfive-row__label" style="font-size:var(--t-xs);">영향도</div>
+              <input type="range" class="slider" id="param-magic-impact" min="10" max="100" step="5" value="70">
+              <div class="bigfive-row__val" id="param-magic-impact-val" style="color:var(--c-cream);">70</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Magic OFF 경고 메시지 (토글 시) -->
+        <div id="magic-off-warning" style="display:none; background:rgba(224,82,82,0.1); border:1px solid var(--c-critical); border-radius:var(--r-md); padding:var(--s-3) var(--s-4); font-size:var(--t-xs); color:var(--c-critical);">
+          ⚠️ <strong>Magic Layer OFF 적용 범위:</strong> 변환·특수 사건·World Effect가 비활성화되며 일반 사회 시뮬레이션만 진행됩니다.
+        </div>
+      </div>
+
+    </div><!-- /form-body -->
+
+    <div class="setup-footer">
+      <span style="font-size:var(--t-sm); color:var(--c-text-2);">시뮬레이션 시작 후에는 성격 및 파라미터 설정이 잠깁니다</span>
+      <div style="display:flex; gap:var(--s-3);">
+        <button class="btn btn-outline" onclick="window.location.href='02-persona-select.html'">Persona 변경</button>
+        <button class="btn btn-primary" onclick="window.location.href='03-simulation.html'">시뮬레이션 시작 →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+<script src="../js/magic-academy.js"></script>
+<script>
+  const CHAR_DATA = {
+    adel: { name: 'Adel', mbti: 'ISTJ', major: '방어 마법', interest: '규율', img: '../assets/character/Adel_ISTJ.png', desc: '원칙과 질서를 중시하는 수호계 마법학도. 마법 도서관의 규율을 철저히 지킵니다.' },
+    leo: { name: 'Leo', mbti: 'ESTP', major: '마법공학과', interest: '마법 생물', img: '../assets/character/Leo_ESTP.png', desc: '충동적이고 실용적인 Leo는 규칙보다 경험을 중시한다. 마법 생물과의 교감에 뛰어나며 위험한 상황도 즐긴다.' },
+    ria: { name: 'Ria', mbti: 'INFP', major: '고대 마법', interest: '룬 문자', img: '../assets/character/Ria_INFP.png', desc: '직관과 감수성이 풍부한 몽상가. 잊혀진 고대 룬 문자의 속삭임을 듣습니다.' },
+    kai: { name: 'Kai', mbti: 'ENTJ', major: '마법 도구 제작', interest: '아티팩트', img: '../assets/character/Kai_ENTJ.png', desc: '냉철한 전략가이자 아티팩트 제작자. 마법 사회의 효율적 구조를 설계하고자 합니다.' },
+    sera: { name: 'Sera', mbti: 'ESFJ', major: '약초학 & 치유', interest: '중재', img: '../assets/character/Sera_ESFJ.png', desc: '온화하고 친화력 있는 치유 마법사. 학생들 사이의 갈등을 중재하고 조화를 추구합니다.' }
+  };
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const charParam = urlParams.get('char') || 'leo';
+  const charInfo = CHAR_DATA[charParam] || CHAR_DATA.leo;
+
+  document.querySelector('.setup-portrait-panel__bg').style.backgroundImage = `url('${charInfo.img}')`;
+  document.querySelector('.setup-portrait-panel__name').textContent = charInfo.name;
+  document.querySelector('.setup-portrait-panel__sub').textContent = `${charInfo.mbti} · ${charInfo.major} · 2학년`;
+  document.querySelector('.setup-portrait-panel__desc').textContent = charInfo.desc;
+  document.getElementById('field-mbti').textContent = charInfo.mbti;
+  document.getElementById('field-interest').textContent = charInfo.interest;
+  document.getElementById('nav-char-name').textContent = '— ' + charInfo.name;
+  document.getElementById('field-major').textContent = charInfo.major;
+  document.getElementById('field-interest-val').textContent = charInfo.interest;
+
+  /* MBTI → Big Five 기본값 */
+  const MBTI_DEFAULTS = {
+    ISTJ: { openness: -20, conscientiousness: 35, extraversion: -25, agreeableness: 10, stability: 25 },
+    ESTP: { openness:  15, conscientiousness:-20, extraversion:  30, agreeableness:-10, stability: 20 },
+    INFP: { openness:  30, conscientiousness:-10, extraversion: -20, agreeableness: 25, stability:-15 },
+    ENTJ: { openness:  20, conscientiousness: 30, extraversion:  25, agreeableness:-15, stability: 20 },
+    ESFJ: { openness:  -5, conscientiousness: 20, extraversion:  20, agreeableness: 35, stability: 15 },
+  };
+  const BF_FIELDS = ['openness', 'conscientiousness', 'extraversion', 'agreeableness', 'stability'];
+
+  function fmt(v) { return v >= 0 ? '+' + v : '' + v; }
+
+  function applyDefaults(mbti) {
+    const d = MBTI_DEFAULTS[mbti];
+    if (!d) return;
+    BF_FIELDS.forEach(f => {
+      const s = document.getElementById('bf-' + f);
+      const v = document.getElementById('bf-' + f + '-val');
+      if (s) s.value = d[f];
+      if (v) v.textContent = fmt(d[f]);
+    });
+  }
+
+  // Set initial MBTI button selection
+  document.querySelectorAll('.mbti-btn').forEach(btn => {
+    if (btn.dataset.mbti === charInfo.mbti) {
+      btn.classList.add('selected');
+      applyDefaults(charInfo.mbti);
+    } else {
+      btn.classList.remove('selected');
+    }
+  });
+
+  document.querySelectorAll('.mbti-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mbti-btn').forEach(b => b.classList.remove('selected'));
+      btn.classList.add('selected');
+      document.getElementById('bigfive-rows').classList.remove('disabled');
+      applyDefaults(btn.dataset.mbti);
+    });
+  });
+
+  BF_FIELDS.forEach(f => {
+    const s = document.getElementById('bf-' + f);
+    const v = document.getElementById('bf-' + f + '-val');
+    if (s && v) {
+      s.addEventListener('input', () => { v.textContent = fmt(parseInt(s.value)); });
+    }
+  });
+
+  /* 시뮬레이션 파라미터 리스너 & Magic OFF 임계값 토글 */
+  const MAGIC_OFF_THRESHOLD = 70;
+  const pGenFreq = document.getElementById('param-gen-freq');
+  const pGenFreqVal = document.getElementById('param-gen-freq-val');
+  const pGenImpact = document.getElementById('param-gen-impact');
+  const pGenImpactVal = document.getElementById('param-gen-impact-val');
+  const pMagicFreq = document.getElementById('param-magic-freq');
+  const pMagicFreqVal = document.getElementById('param-magic-freq-val');
+  const pMagicImpact = document.getElementById('param-magic-impact');
+  const pMagicImpactVal = document.getElementById('param-magic-impact-val');
+  const magicOffToggle = document.getElementById('magic-off-toggle');
+  const magicStatusChip = document.getElementById('magic-status-chip');
+  const magicOffWarning = document.getElementById('magic-off-warning');
+  const magicToggleLabel = document.getElementById('magic-toggle-label');
+
+  if (pGenFreq && pGenFreqVal) {
+    pGenFreq.addEventListener('input', () => { pGenFreqVal.textContent = pGenFreq.value; });
+  }
+  if (pGenImpact && pGenImpactVal) {
+    pGenImpact.addEventListener('input', () => { pGenImpactVal.textContent = pGenImpact.value; });
+  }
+  if (pMagicFreq && pMagicFreqVal) {
+    pMagicFreq.addEventListener('input', () => { pMagicFreqVal.textContent = pMagicFreq.value; });
+  }
+
+  function checkMagicThreshold() {
+    const impact = parseInt(pMagicImpact.value, 10);
+    pMagicImpactVal.textContent = impact;
+    if (impact >= MAGIC_OFF_THRESHOLD) {
+      magicOffToggle.disabled = false;
+      magicToggleLabel.style.color = 'var(--c-text-2)';
+    } else {
+      magicOffToggle.disabled = true;
+      magicOffToggle.checked = false;
+      magicToggleLabel.style.color = 'var(--c-text-3)';
+      magicOffWarning.style.display = 'none';
+      magicStatusChip.textContent = 'MAGIC LAYER ON';
+      magicStatusChip.className = 'chip chip-event';
+    }
+  }
+
+  if (pMagicImpact) {
+    pMagicImpact.addEventListener('input', checkMagicThreshold);
+  }
+
+  if (magicOffToggle) {
+    magicOffToggle.addEventListener('change', () => {
+      if (magicOffToggle.checked) {
+        magicOffWarning.style.display = 'block';
+        magicStatusChip.textContent = 'MAGIC LAYER OFF';
+        magicStatusChip.className = 'chip chip-critical';
+      } else {
+        magicOffWarning.style.display = 'none';
+        magicStatusChip.textContent = 'MAGIC LAYER ON';
+        magicStatusChip.className = 'chip chip-event';
+      }
+    });
+  }
+
+  checkMagicThreshold();
+</script>
+</body>
+</html>

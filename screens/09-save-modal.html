@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>저장 — Magic Academy</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    body { margin: 0; overflow: hidden; }
+    .screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
+
+    .sim-bg {
+      position: absolute; inset: 0;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.3) saturate(0.6);
+    }
+    .sim-overlay {
+      position: absolute; inset: 0;
+      background: rgba(11,14,35,0.6);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Modal */
+    .save-modal {
+      background: var(--c-surface);
+      border: 1px solid var(--c-border-hi);
+      border-radius: var(--r-xl);
+      width: 520px;
+      overflow: hidden;
+      box-shadow: var(--sh-lg);
+      animation: float-up 280ms ease both;
+    }
+
+    .save-modal__header {
+      padding: var(--s-6);
+      border-bottom: 1px solid var(--c-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .save-modal__title {
+      font-size: var(--t-lg);
+      font-weight: 500;
+      color: var(--c-text);
+    }
+    .save-modal__close {
+      width: 28px; height: 28px;
+      display: flex; align-items: center; justify-content: center;
+      border-radius: var(--r-sm);
+      color: var(--c-text-2);
+      cursor: pointer;
+      transition: background var(--tr-fast);
+    }
+    .save-modal__close:hover { background: var(--c-surface-hi); }
+
+    .save-modal__body {
+      padding: var(--s-6);
+      display: flex;
+      flex-direction: column;
+      gap: var(--s-5);
+    }
+
+    /* Snapshot thumbnail */
+    .save-thumb {
+      width: 100%;
+      height: 140px;
+      border-radius: var(--r-md);
+      overflow: hidden;
+      position: relative;
+      background: var(--c-surface-hi);
+    }
+    .save-thumb__img {
+      width: 100%; height: 100%;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.7) saturate(0.8);
+    }
+    .save-thumb__overlay {
+      position: absolute; inset: 0;
+      background: linear-gradient(to right, rgba(27,35,64,0.6) 0%, transparent 60%);
+    }
+    .save-thumb__info {
+      position: absolute;
+      left: var(--s-4); top: 50%;
+      transform: translateY(-50%);
+    }
+    .save-thumb__tick {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-event);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .save-thumb__name {
+      font-family: var(--f-serif-ko);
+      font-size: var(--t-xl);
+      font-weight: 600;
+      color: var(--c-text);
+      margin-top: var(--s-1);
+    }
+
+    /* Info grid */
+    .save-info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--s-3);
+    }
+    .save-info-item {
+      background: var(--c-surface-hi);
+      border-radius: var(--r-md);
+      padding: var(--s-3) var(--s-4);
+    }
+    .save-info-item__key {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-1);
+    }
+    .save-info-item__val {
+      font-family: var(--f-mono);
+      font-size: var(--t-sm);
+      color: var(--c-text);
+    }
+
+    /* Event summary */
+    .event-summary-item {
+      display: flex;
+      align-items: center;
+      gap: var(--s-3);
+      padding: var(--s-2) 0;
+      border-bottom: 1px solid var(--c-border);
+    }
+    .event-summary-item:last-child { border-bottom: none; }
+    .event-summary-item__tick {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-3);
+      width: 40px;
+      flex-shrink: 0;
+    }
+    .event-summary-item__name {
+      font-size: var(--t-sm);
+      color: var(--c-text);
+      flex: 1;
+    }
+
+    .save-modal__footer {
+      padding: var(--s-5) var(--s-6);
+      border-top: 1px solid var(--c-border);
+      display: flex;
+      gap: var(--s-3);
+      justify-content: flex-end;
+    }
+  </style>
+</head>
+<body>
+<div class="screen">
+  <div class="sim-bg"></div>
+  <div class="sim-overlay">
+
+    <div class="save-modal">
+      <div class="save-modal__header">
+        <span class="save-modal__title">시뮬레이션 저장</span>
+        <button class="save-modal__close" onclick="window.location.href='03-simulation.html'">
+          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        </button>
+      </div>
+
+      <div class="save-modal__body">
+
+        <!-- Thumbnail -->
+        <div class="save-thumb">
+          <div class="save-thumb__img"></div>
+          <div class="save-thumb__overlay"></div>
+          <div class="save-thumb__info">
+            <div class="save-thumb__tick">TICK 10 · DAY 01</div>
+            <div class="save-thumb__name">첫 번째 시뮬레이션</div>
+          </div>
+        </div>
+
+        <!-- Name input -->
+        <div class="field-group">
+          <label class="field-label">저장 이름</label>
+          <input class="field-input" type="text" value="첫 번째 시뮬레이션">
+        </div>
+
+        <!-- Info grid -->
+        <div class="save-info-grid">
+          <div class="save-info-item">
+            <div class="save-info-item__key">Current Tick</div>
+            <div class="save-info-item__val">10</div>
+          </div>
+          <div class="save-info-item">
+            <div class="save-info-item__key">Seed</div>
+            <div class="save-info-item__val">7f3a9c21</div>
+          </div>
+          <div class="save-info-item">
+            <div class="save-info-item__key">Persona</div>
+            <div class="save-info-item__val">Leo (ESTP)</div>
+          </div>
+          <div class="save-info-item">
+            <div class="save-info-item__key">Active Agents</div>
+            <div class="save-info-item__val">4 / 5</div>
+          </div>
+        </div>
+
+        <!-- Event summary -->
+        <div>
+          <div style="font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:var(--s-2);">주요 이벤트 요약</div>
+          <div>
+            <div class="event-summary-item">
+              <span class="event-summary-item__tick">T02</span>
+              <span class="event-summary-item__name">Adel — stress 상승 시작</span>
+              <span class="chip chip-critical">stress</span>
+            </div>
+            <div class="event-summary-item">
+              <span class="event-summary-item__tick">T07</span>
+              <span class="event-summary-item__name">Leo & Adel 갈등 발생</span>
+              <span class="chip chip-event">관계 변화</span>
+            </div>
+            <div class="event-summary-item">
+              <span class="event-summary-item__tick">T10</span>
+              <span class="event-summary-item__name">학생 실종 — STUDENT_MISSING</span>
+              <span class="chip chip-missing">MISSING</span>
+            </div>
+          </div>
+        </div>
+
+      </div><!-- end body -->
+
+      <div class="save-modal__footer">
+        <button class="btn btn-ghost" onclick="window.location.href='03-simulation.html'">취소</button>
+        <button class="btn btn-primary" onclick="window.location.href='10-mypage.html'">
+          저장
+        </button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<script src="../js/magic-academy.js"></script>
+</body>
+</html>
