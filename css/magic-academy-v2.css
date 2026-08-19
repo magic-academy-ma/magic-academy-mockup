@@ -986,17 +986,21 @@ ul, ol { list-style: none; }
   transition: border-color var(--tr-fast), transform var(--tr-fast), box-shadow var(--tr-fast);
 }
 
-.graph-node__portrait.char-adel { background-position: 0px -8px; }
-.graph-node__portrait.char-leo  { background-position: -52px -8px; background-size: 156px 195px; }
-.graph-node__portrait.char-ria  { background-position: -104px -8px; background-size: 156px 195px; }
-.graph-node__portrait.char-kai  { background-size: 104px 130px; background-position: 0px -64px; }
-.graph-node__portrait.char-sera { background-size: 104px 130px; background-position: -52px -64px; }
+.graph-node__portrait.char-adel { background-position: 0px -8px; border-color: var(--c-char-adel-ring); }
+.graph-node__portrait.char-leo  { background-position: -52px -8px; background-size: 156px 195px; border-color: var(--c-char-leo-ring); }
+.graph-node__portrait.char-ria  { background-position: -104px -8px; background-size: 156px 195px; border-color: var(--c-char-ria-ring); }
+.graph-node__portrait.char-kai  { background-size: 104px 130px; background-position: 0px -64px; border-color: var(--c-char-kai-ring); }
+.graph-node__portrait.char-sera { background-size: 104px 130px; background-position: -52px -64px; border-color: var(--c-char-sera-ring); }
 
 .graph-node.selected .graph-node__portrait {
-  border-color: var(--c-primary);
   box-shadow: var(--sh-primary);
   transform: scale(1.1);
 }
+.graph-node[data-id="adel"].selected .graph-node__portrait { border-color: var(--c-char-adel-light); box-shadow: var(--sh-char-adel); }
+.graph-node[data-id="leo"].selected  .graph-node__portrait { border-color: var(--c-char-leo-light);  box-shadow: var(--sh-char-leo); }
+.graph-node[data-id="ria"].selected  .graph-node__portrait { border-color: var(--c-char-ria-light);  box-shadow: var(--sh-char-ria); }
+.graph-node[data-id="kai"].selected  .graph-node__portrait { border-color: var(--c-char-kai-light);  box-shadow: var(--sh-char-kai); }
+.graph-node[data-id="sera"].selected .graph-node__portrait { border-color: var(--c-char-sera-light); box-shadow: var(--sh-char-sera); }
 
 .graph-node:hover .graph-node__portrait {
   border-color: rgba(255, 255, 255, 0.3);
