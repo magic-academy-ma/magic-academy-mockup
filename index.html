@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>Magic Academy — Mockup Navigator (S0 ~ S9)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="css/magic-academy-v2.css">
+  <style>
+    body { background: var(--c-bg); min-height: 100vh; padding: var(--s-8) var(--s-12); font-family: var(--f-sans); color: var(--c-text); }
+    .nav-header { margin-bottom: var(--s-8); }
+    .nav-brand {
+      font-family: var(--f-serif-en);
+      font-size: var(--t-2xl);
+      font-weight: 700;
+      color: var(--c-text);
+      letter-spacing: 0.04em;
+    }
+    .nav-sub {
+      font-size: var(--t-sm);
+      color: var(--c-cream);
+      margin-top: var(--s-1);
+      font-family: var(--f-mono);
+      letter-spacing: 0.08em;
+    }
+    .spec-banner {
+      background: rgba(11, 24, 56, 0.85);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: var(--s-4) var(--s-6);
+      margin-bottom: var(--s-8);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-section { margin-bottom: var(--s-8); }
+    .nav-section-title {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-text-2);
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      margin-bottom: var(--s-4);
+      padding-bottom: var(--s-2);
+      border-bottom: 1px solid var(--c-border);
+      display: flex;
+      justify-content: space-between;
+    }
+    .nav-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--s-4);
+    }
+    .nav-card {
+      display: block;
+      background: rgba(14, 23, 48, 0.7);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-lg);
+      overflow: hidden;
+      transition: all var(--tr-normal);
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    }
+    .nav-card:hover {
+      border-color: var(--c-primary);
+      transform: translateY(-4px);
+      box-shadow: var(--sh-md), 0 0 24px rgba(109, 90, 230, 0.3);
+    }
+    .nav-card.priority { border-color: var(--c-cream-ring); }
+    .nav-card.priority:hover { border-color: var(--c-cream); box-shadow: 0 0 20px rgba(212, 178, 111, 0.3); }
+
+    .nav-card__preview {
+      width: 100%;
+      height: 130px;
+      position: relative;
+      overflow: hidden;
+      background: rgba(16, 26, 56, 0.6);
+    }
+    .nav-card__preview-img {
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.7) saturate(0.85);
+    }
+    .nav-card__preview-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to bottom, transparent 20%, rgba(14, 23, 48, 0.95) 100%);
+    }
+    .nav-card__preview-badge {
+      position: absolute;
+      top: var(--s-2);
+      right: var(--s-2);
+    }
+    .screen-tag {
+      font-family: var(--f-mono);
+      font-size: 11px;
+      font-weight: 700;
+      color: #060d20;
+      background: var(--c-cream);
+      padding: 2px 8px;
+      border-radius: var(--r-sm);
+    }
+    .nav-card__body { padding: var(--s-4); }
+    .nav-card__num {
+      font-family: var(--f-mono);
+      font-size: var(--t-xs);
+      color: var(--c-cream);
+      margin-bottom: var(--s-1);
+      letter-spacing: 0.1em;
+      font-weight: 600;
+    }
+    .nav-card__title {
+      font-size: var(--t-base);
+      font-weight: 600;
+      color: var(--c-text);
+    }
+    .nav-card__desc {
+      font-size: var(--t-sm);
+      color: var(--c-text-2);
+      margin-top: var(--s-1);
+      line-height: 1.5;
+    }
+    .nav-card__states {
+      display: flex;
+      flex-wrap: wrap;
+      gap: var(--s-1);
+      margin-top: var(--s-3);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="nav-header">
+    <div class="nav-brand">Magic Academy</div>
+    <div class="nav-sub">CONFLUENCE SPEC (S0 ~ S9) FULL MOCKUP SUITE &middot; 1440&times;900</div>
+  </div>
+
+  <div class="spec-banner">
+    <div>
+      <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream); font-weight:600;">CONFLUENCE SPECIFICATION: 1단계 Magic Academy MVP</div>
+      <div style="font-size:13px; color:var(--c-text-2); margin-top:2px;">모든 S0 ~ S9 화면이 상호 완벽하게 연결되어 있습니다. 카드를 클릭해 화면을 탐색하세요.</div>
+    </div>
+    <a href="screens/00-design-system.html" class="btn btn-outline btn-sm" style="font-size:11px;">
+      디자인 시스템 (DS) &rarr;
+    </a>
+  </div>
+
+  <!-- ── 1. Onboarding & Entry Flow (S0 ~ S4) ── -->
+  <div class="nav-section">
+    <div class="nav-section-title">
+      <span>1. 진입 및 페르소나 설정 플로우 (S0 ~ S4)</span>
+      <span>Entry &amp; Persona</span>
+    </div>
+    <div class="nav-grid">
+
+      <!-- S0: 로그인 -->
+      <a href="screens/07-login.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/login_bg_clean.png');"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S0</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 00</div>
+          <div class="nav-card__title">로그인 화면</div>
+          <div class="nav-card__desc">진입점 &middot; 이메일 / 소셜 로그인 및 세션 생성 &rarr; S1 이동</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">진입점</span>
+            <span class="chip chip-primary">Auth Flow</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S1: 메인 화면 -->
+      <a href="screens/08-main.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png');"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S1</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 01</div>
+          <div class="nav-card__title">메인 화면 (Hub)</div>
+          <div class="nav-card__desc">S0 &rarr; [시뮬레이션 시작(S2)] 또는 [마이페이지(S9)] 진입 허브</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">시뮬레이션 시작</span>
+            <span class="chip chip-inspector">마이페이지</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S2: 온보딩 브랜딩 -->
+      <a href="screens/01-onboarding.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/onboading_v1.1.png');"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S2</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 02</div>
+          <div class="nav-card__title">시뮬레이션 시작 (브랜딩)</div>
+          <div class="nav-card__desc">세계관 소개 3단계 슬라이드 &middot; [입학하기] 클릭 시 S3 이동</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">Slide 1: 자율 학생</span>
+            <span class="chip chip-active">Slide 2: 지능 상호작용</span>
+            <span class="chip chip-active">Slide 3: 인과 관측</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S3: User Persona 선택 -->
+      <a href="screens/02-persona-select.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Leo_ESTP.png'); background-position:center 20%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S3</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 03</div>
+          <div class="nav-card__title">User Persona 선택</div>
+          <div class="nav-card__desc">5인 학생 중 플레이할 1명 선택 (FR-03) &rarr; S4 설정 화면 이동</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">5인 캐릭터 카드</span>
+            <span class="chip chip-missing">Leo 선택됨</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S4: User Persona 설정 -->
+      <a href="screens/06-persona-setup.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Leo_ESTP.png'); background-position:center 10%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S4</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 04</div>
+          <div class="nav-card__title">User Persona 설정</div>
+          <div class="nav-card__desc">MBTI 5종 &amp; Big Five (-50~+50) 슬라이더 조절 &rarr; S5 시뮬레이션 시작</div>
+          <div class="nav-card__states">
+            <span class="chip chip-primary">MBTI 재선택</span>
+            <span class="chip chip-active">Big Five 슬라이더</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── 2. Core Simulation & Causal Analysis (S5 ~ S7) ── -->
+  <div class="nav-section">
+    <div class="nav-section-title">
+      <span>2. 핵심 시뮬레이션 및 인과 분석 플로우 (S5 ~ S7)</span>
+      <span>Core Simulation &amp; Causal Trace</span>
+    </div>
+    <div class="nav-grid">
+
+      <!-- S5: 시뮬레이션 메인 -->
+      <a href="screens/03-simulation.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png');"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S5</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 05</div>
+          <div class="nav-card__title">시뮬레이션 메인 화면</div>
+          <div class="nav-card__desc">6인 에이전트 맵 &middot; Event Log 4줄 핏 &middot; 실시간 Right Panel</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">Prof. Aldric 포함 (6인)</span>
+            <span class="chip chip-inspector">초상화 연동</span>
+            <span class="chip chip-event">T10 실종 사건</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S6: Inspector -->
+      <a href="screens/04-inspector.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Adel_ISTJ.png'); background-position:center 15%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S6</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 06</div>
+          <div class="nav-card__title">Inspector 패널 / 화면</div>
+          <div class="nav-card__desc">§3.1~3.6 사용자 사건 인과 분석 + §3.7 개발자 확장 메트릭 탭</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">사용자 언어 서사</span>
+            <span class="chip chip-inspector">pgvector &middot; AST 탭</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S7: 관계 그래프 -->
+      <a href="screens/05-relationship.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.35) saturate(0.5);"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S7</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 07</div>
+          <div class="nav-card__title">관계 그래프 화면</div>
+          <div class="nav-card__desc">에이전트 간 호감&middot;신뢰&middot;긴장 노드-엣지 인터랙티브 그래프</div>
+          <div class="nav-card__states">
+            <span class="chip chip-primary">친밀도 / 긴장도 필터</span>
+            <span class="chip chip-active">실시간 Right Panel</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── 3. Campaign Analysis & Ending Flow (S10 ~ S13) ── -->
+  <div class="nav-section">
+    <div class="nav-section-title">
+      <span>3. 캠페인 분석 &amp; 결말 플로우 (S10 ~ S13)</span>
+      <span>Campaign Replay · Branch · Compare · Ending</span>
+    </div>
+    <div class="nav-grid">
+
+      <!-- S10: 타임라인 리플레이어 -->
+      <a href="screens/11-replay.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.45) saturate(0.6);"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S10</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 10</div>
+          <div class="nav-card__title">타임라인 리플레이어</div>
+          <div class="nav-card__desc">Tick 1~10 스크러버 바 &middot; 시점별 에이전트 스냅샷 &middot; [분기 생성] CTA (FR-16)</div>
+          <div class="nav-card__states">
+            <span class="chip chip-inspector">Tick 스크러버</span>
+            <span class="chip chip-event">사건 핀 마킹</span>
+            <span class="chip chip-active">대화 스냅샷</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S11: What-If 분기 트리 -->
+      <a href="screens/12-branch-tree.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.2) saturate(0.3);"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S11</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 11</div>
+          <div class="nav-card__title">What-If 분기 트리</div>
+          <div class="nav-card__desc">Git Graph 형태 인터랙티브 분기 &middot; Fork A/B 노드 인스펙터 &middot; 새 분기 생성 모달 (FR-17)</div>
+          <div class="nav-card__states">
+            <span class="chip chip-inspector">Fork A (T04)</span>
+            <span class="chip chip-primary">Fork B (T07)</span>
+            <span class="chip chip-active">관계 델타</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S12: Magic ON vs OFF 비교 -->
+      <a href="screens/13-magic-comparison.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.4) hue-rotate(20deg);"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S12</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 12</div>
+          <div class="nav-card__title">Magic ON vs OFF 비교</div>
+          <div class="nav-card__desc">동일 Seed 2열 Split View &middot; 관계 변화량 델타 차트 &middot; 결말 예측 비교 (FR-12, FR-20, FR-21)</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">Side-by-Side 동기화</span>
+            <span class="chip chip-inspector">Δ 관계 그래프</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S13: 결말 리포트 -->
+      <a href="screens/14-ending-summary.html" class="nav-card priority">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Ria_INFP.png'); background-position:center 10%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S13</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 13</div>
+          <div class="nav-card__title">대표 캠페인 결말 리포트</div>
+          <div class="nav-card__desc">6인 에필로그 카드 &middot; 레이더 차트 &middot; T01~T10 사건 타임라인 &middot; 4종 액션 버튼 (FR-18, FR-21)</div>
+          <div class="nav-card__states">
+            <span class="chip chip-event">COMPLETED 판정</span>
+            <span class="chip chip-active">6인 후일담</span>
+            <span class="chip chip-inspector">타임라인 요약</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+  <!-- ── 4. Save, Restore & Mypage Flow (S8 ~ S9) ── -->
+  <div class="nav-section">
+    <div class="nav-section-title">
+      <span>4. 저장 및 마이페이지 플로우 (S8 ~ S9)</span>
+      <span>Save, Restore &amp; Archives</span>
+    </div>
+    <div class="nav-grid">
+
+      <!-- S8: 시뮬레이션 저장 -->
+      <a href="screens/09-save-modal.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png');"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S8</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 08</div>
+          <div class="nav-card__title">시뮬레이션 저장 모달</div>
+          <div class="nav-card__desc">현재 Tick 시점 스냅샷 저장 및 분기(Branch) 슬롯 지정</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">슬롯 1~3 저장</span>
+            <span class="chip chip-event">Tick 스냅샷</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- S9: 마이페이지 -->
+      <a href="screens/10-mypage.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Leo_ESTP.png'); background-position:center 20%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">S9</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">SCREEN 09</div>
+          <div class="nav-card__title">마이페이지</div>
+          <div class="nav-card__desc">저장된 시뮬레이션 슬롯 불러오기(S5) &middot; 페르소나 및 이벤트 아카이브</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">불러오기 &rarr; S5</span>
+            <span class="chip chip-inspector">사건 아카이브</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- DS: 디자인 시스템 -->
+      <a href="screens/00-design-system.html" class="nav-card">
+        <div class="nav-card__preview">
+          <div class="nav-card__preview-img" style="background-image:url('assets/character/Kai_ENTJ.png'); background-position:center 10%;"></div>
+          <div class="nav-card__preview-overlay"></div>
+          <div class="nav-card__preview-badge"><span class="screen-tag">DS</span></div>
+        </div>
+        <div class="nav-card__body">
+          <div class="nav-card__num">DESIGN SYSTEM</div>
+          <div class="nav-card__title">디자인 시스템 보드</div>
+          <div class="nav-card__desc">색상 팔레트, 타이포그래피, 5인 캐릭터 쇼케이스, 마커 토큰</div>
+          <div class="nav-card__states">
+            <span class="chip chip-active">5인 캐릭터 쇼케이스</span>
+            <span class="chip chip-primary">Motion Tokens</span>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+
+</body>
+</html>

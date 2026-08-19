@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <title>What-If 시나리오 분기 트리 — Magic Academy</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
+  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; overflow: hidden; background: var(--c-bg); font-family: var(--f-sans); color: var(--c-text); }
+    .screen { width: 1440px; height: 900px; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+    .bg-map {
+      position: absolute; inset: 0;
+      background-image: url('../assets/concept/concept_v1.1.png');
+      background-size: cover; background-position: center;
+      filter: brightness(0.08) saturate(0.3) blur(14px);
+      transform: scale(1.06); pointer-events: none;
+    }
+    .bg-overlay {
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(5, 20, 56, 0.6) 0%, rgba(6, 13, 32, 0.98) 75%);
+      pointer-events: none;
+    }
+
+    /* ── Topbar ── */
+    .topbar {
+      height: 52px; padding: 0 var(--s-6);
+      display: flex; align-items: center; justify-content: space-between;
+      border-bottom: 1px solid var(--c-border);
+      background: rgba(6, 13, 32, 0.96); backdrop-filter: blur(16px);
+      z-index: 30; flex-shrink: 0; position: relative;
+    }
+    .topbar__left { display: flex; align-items: center; gap: var(--s-4); }
+    .topbar__brand { font-family: var(--f-serif-en); font-size: var(--t-md); font-weight: 600; color: var(--c-text); letter-spacing: 0.04em; }
+    .topbar__sep { width: 1px; height: 16px; background: var(--c-border); }
+    .topbar__title { font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-text-2); letter-spacing: 0.1em; }
+    .topbar__right { display: flex; align-items: center; gap: var(--s-3); }
+    .btn-nav { display: flex; align-items: center; gap: var(--s-2); padding: 6px 14px; border-radius: var(--r-sm); border: 1px solid var(--c-border); background: transparent; color: var(--c-text-2); font-family: var(--f-mono); font-size: var(--t-xs); cursor: pointer; transition: all 0.18s; text-decoration: none; }
+    .btn-nav:hover { border-color: var(--c-border-hi); color: var(--c-cream); }
+    .btn-new-fork {
+      padding: 7px 16px; border-radius: var(--r-sm); border: 1px solid var(--c-inspector-ring);
+      background: var(--c-inspector-muted); color: var(--c-inspector);
+      font-family: var(--f-mono); font-size: var(--t-xs); cursor: pointer; transition: all 0.18s;
+      letter-spacing: 0.06em;
+    }
+    .btn-new-fork:hover { background: rgba(52, 179, 199, 0.25); box-shadow: 0 0 12px rgba(52, 179, 199, 0.3); }
+
+    /* ── Main layout ── */
+    .main-body { flex: 1; display: grid; grid-template-columns: 1fr 360px; overflow: hidden; position: relative; }
+
+    /* ── Left: Branch tree canvas ── */
+    .tree-col {
+      display: flex; flex-direction: column; padding: var(--s-6);
+      overflow: hidden; position: relative;
+    }
+    .tree-legend {
+      display: flex; align-items: center; gap: var(--s-5); margin-bottom: var(--s-5); flex-shrink: 0;
+    }
+    .legend-item { display: flex; align-items: center; gap: var(--s-2); font-family: var(--f-mono); font-size: 10px; color: var(--c-text-2); }
+    .legend-dot { width: 10px; height: 10px; border-radius: 50%; }
+
+    .tree-canvas { flex: 1; position: relative; overflow: hidden; }
+    svg.branch-svg { width: 100%; height: 100%; overflow: visible; }
+
+    /* Branch nodes */
+    .branch-node {
+      cursor: pointer; transition: all 0.18s;
+    }
+    .branch-node:hover .node-rect { stroke-opacity: 1; filter: brightness(1.2); }
+
+    /* Node cards (foreignObject) */
+    .node-card {
+      background: rgba(8, 16, 42, 0.95);
+      border: 1px solid;
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-family: var(--f-mono);
+      overflow: hidden;
+    }
+    .node-card__tag { font-size: 9px; letter-spacing: 0.12em; text-transform: uppercase; margin-bottom: 4px; }
+    .node-card__name { font-size: 12px; font-weight: 600; margin-bottom: 2px; }
+    .node-card__desc { font-size: 10px; color: var(--c-text-2); line-height: 1.4; }
+    .node-card__ticks { font-size: 10px; margin-top: 6px; display: flex; gap: 4px; flex-wrap: wrap; }
+    .tick-pip { padding: 1px 5px; border-radius: 3px; background: rgba(70,100,180,0.2); font-size: 9px; color: var(--c-text-3); }
+    .tick-pip.done { background: rgba(56,178,119,0.15); color: var(--c-success); }
+    .tick-pip.active { background: rgba(52,179,199,0.15); color: var(--c-inspector); }
+    .tick-pip.pending { opacity: 0.4; }
+
+    /* ── Right panel: Node inspector ── */
+    .right-panel {
+      width: 360px; display: flex; flex-direction: column;
+      background: var(--c-surface-glass); border-left: 1px solid var(--c-border);
+    }
+    .rpanel-header {
+      padding: var(--s-5); border-bottom: 1px solid var(--c-border); flex-shrink: 0;
+    }
+    .rpanel-badge {
+      display: inline-block; font-family: var(--f-mono); font-size: 9px;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 4px; margin-bottom: var(--s-2);
+    }
+    .rpanel-title { font-family: var(--f-serif-en); font-size: var(--t-xl); font-weight: 700; }
+    .rpanel-subtitle { font-size: var(--t-xs); color: var(--c-text-2); margin-top: var(--s-1); }
+
+    .rpanel-body { flex: 1; overflow-y: auto; padding: var(--s-4) var(--s-5); display: flex; flex-direction: column; gap: var(--s-4); }
+
+    .info-row { display: flex; justify-content: space-between; align-items: baseline; padding: var(--s-2) 0; border-bottom: 1px solid rgba(70,100,180,0.08); }
+    .info-row__label { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-3); }
+    .info-row__val { font-family: var(--f-mono); font-size: var(--t-xs); }
+
+    .diff-block {
+      background: rgba(8, 16, 42, 0.6); border: 1px solid var(--c-border);
+      border-radius: var(--r-sm); padding: var(--s-3);
+    }
+    .diff-block__title { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: var(--s-2); }
+    .diff-item { display: flex; gap: var(--s-3); align-items: center; padding: 4px 0; font-size: 11px; color: var(--c-text-2); }
+    .diff-item .delta { font-family: var(--f-mono); font-size: 10px; font-weight: 600; flex-shrink: 0; width: 44px; text-align: right; }
+    .delta.pos { color: var(--c-success); }
+    .delta.neg { color: var(--c-critical); }
+
+    .char-mini-row { display: flex; align-items: center; gap: var(--s-2); padding: var(--s-2) 0; }
+    .char-mini-avatar { width: 24px; height: 24px; border-radius: 50%; background-size: cover; background-position: center top; border: 1.5px solid; flex-shrink: 0; }
+    .char-mini-name { font-family: var(--f-mono); font-size: 10px; }
+    .char-mini-emo { font-size: 10px; color: var(--c-text-2); flex: 1; }
+
+    .action-area { padding: var(--s-4) var(--s-5); border-top: 1px solid var(--c-border); flex-shrink: 0; display: flex; flex-direction: column; gap: var(--s-3); }
+    .btn-full {
+      width: 100%; padding: 10px; border-radius: var(--r-sm); cursor: pointer;
+      font-family: var(--f-mono); font-size: var(--t-xs); font-weight: 600; letter-spacing: 0.06em;
+      transition: all 0.18s; text-align: center; display: block; text-decoration: none;
+    }
+    .btn-primary { background: var(--c-inspector-muted); border: 1px solid var(--c-inspector-ring); color: var(--c-inspector); }
+    .btn-primary:hover { background: rgba(52,179,199,0.25); box-shadow: 0 0 12px rgba(52,179,199,0.25); }
+    .btn-ghost { background: transparent; border: 1px solid var(--c-border); color: var(--c-text-2); }
+    .btn-ghost:hover { border-color: var(--c-border-hi); color: var(--c-cream); }
+
+    /* Fork modal overlay */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(6,13,32,0.85); backdrop-filter: blur(4px);
+      z-index: 100; display: flex; align-items: center; justify-content: center;
+      display: none;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal-box {
+      width: 520px; background: var(--c-surface-drawer); border: 1px solid var(--c-border-hi);
+      border-radius: var(--r-lg); overflow: hidden;
+    }
+    .modal-header { padding: var(--s-5) var(--s-6); border-bottom: 1px solid var(--c-border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-title { font-family: var(--f-serif-en); font-size: var(--t-lg); font-weight: 700; color: var(--c-cream); }
+    .modal-close { width: 28px; height: 28px; border-radius: 50%; border: 1px solid var(--c-border); background: transparent; color: var(--c-text-2); cursor: pointer; font-size: 14px; display: flex; align-items: center; justify-content: center; }
+    .modal-body { padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-4); }
+    .form-group { display: flex; flex-direction: column; gap: var(--s-2); }
+    .form-label { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-3); letter-spacing: 0.1em; text-transform: uppercase; }
+    .form-input {
+      background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-sm);
+      padding: 8px 12px; font-family: var(--f-mono); font-size: var(--t-xs); color: var(--c-text);
+      transition: border-color 0.15s;
+    }
+    .form-input:focus { outline: none; border-color: var(--c-inspector-ring); }
+    .tick-selector { display: flex; gap: var(--s-2); flex-wrap: wrap; }
+    .tick-opt {
+      padding: 5px 10px; border-radius: var(--r-sm); border: 1px solid var(--c-border);
+      font-family: var(--f-mono); font-size: 10px; cursor: pointer; transition: all 0.15s;
+      background: transparent; color: var(--c-text-2);
+    }
+    .tick-opt.selected { border-color: var(--c-inspector-ring); background: var(--c-inspector-muted); color: var(--c-inspector); }
+    .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: var(--s-3) var(--s-4); background: var(--c-surface); border-radius: var(--r-sm); border: 1px solid var(--c-border); }
+    .toggle-label { font-family: var(--f-mono); font-size: var(--t-xs); }
+    .toggle { width: 38px; height: 20px; border-radius: 10px; background: var(--c-surface-hi); border: 1px solid var(--c-border); position: relative; cursor: pointer; transition: background 0.2s; }
+    .toggle.on { background: var(--c-inspector); }
+    .toggle::after { content: ''; width: 14px; height: 14px; border-radius: 50%; background: var(--c-text); position: absolute; top: 2px; left: 2px; transition: left 0.2s; }
+    .toggle.on::after { left: 20px; }
+    .modal-footer { padding: var(--s-4) var(--s-6); border-top: 1px solid var(--c-border); display: flex; gap: var(--s-3); justify-content: flex-end; }
+  </style>
+</head>
+<body>
+<div class="screen">
+  <div class="bg-map"></div>
+  <div class="bg-overlay"></div>
+
+  <!-- Topbar -->
+  <div class="topbar">
+    <div class="topbar__left">
+      <span class="topbar__brand">Magic Academy</span>
+      <div class="topbar__sep"></div>
+      <span class="topbar__title">BRANCH TREE — What-If 시나리오 분기</span>
+    </div>
+    <div class="topbar__right">
+      <a href="11-replay.html" class="btn-nav">⏮ 리플레이</a>
+      <a href="13-magic-comparison.html" class="btn-nav">⚖ 비교 뷰</a>
+      <button class="btn-new-fork" onclick="document.querySelector('.modal-overlay').classList.add('open')">⑂ 새 분기 생성</button>
+    </div>
+  </div>
+
+  <div class="main-body">
+    <!-- Tree canvas -->
+    <div class="tree-col">
+      <div class="tree-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:var(--c-success);"></div> 완료 분기</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--c-inspector);"></div> 진행 중 분기</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--c-cream);"></div> 분기 포인트</div>
+        <div class="legend-item"><div class="legend-dot" style="background:rgba(70,100,180,0.5);"></div> 미진행</div>
+        <div style="flex:1;"></div>
+        <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);">Seed #8842 · Ria(INFP) User Persona</span>
+      </div>
+
+      <div class="tree-canvas">
+        <svg class="branch-svg" viewBox="0 0 900 620">
+          <defs>
+            <marker id="arrow-main" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(56,178,119,0.6)"/>
+            </marker>
+            <marker id="arrow-fork-a" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(52,179,199,0.6)"/>
+            </marker>
+            <marker id="arrow-fork-b" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+              <polygon points="0 0, 8 3, 0 6" fill="rgba(157,78,221,0.6)"/>
+            </marker>
+          </defs>
+
+          <!-- Main branch line -->
+          <path d="M 80 60 L 780 60" stroke="rgba(56,178,119,0.5)" stroke-width="2.5" fill="none" stroke-dasharray="4 3" marker-end="url(#arrow-main)"/>
+
+          <!-- Fork A connector from T04 -->
+          <path d="M 340 60 C 340 120, 340 200, 340 240" stroke="rgba(52,179,199,0.4)" stroke-width="2" fill="none" marker-end="url(#arrow-fork-a)"/>
+          <path d="M 340 240 L 760 240" stroke="rgba(52,179,199,0.4)" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+
+          <!-- Fork B connector from T07 -->
+          <path d="M 590 60 C 590 360, 590 420, 590 460" stroke="rgba(157,78,221,0.4)" stroke-width="2" fill="none" marker-end="url(#arrow-fork-b)"/>
+          <path d="M 590 460 L 760 460" stroke="rgba(157,78,221,0.4)" stroke-width="2" fill="none" stroke-dasharray="4 3"/>
+
+          <!-- Tick dots on main branch -->
+          <!-- T01 -->
+          <circle cx="80" cy="60" r="7" fill="rgba(56,178,119,0.8)" stroke="var(--c-success)" stroke-width="1.5"/>
+          <!-- T02 -->
+          <circle cx="165" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T03 -->
+          <circle cx="250" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T04 (fork point A) -->
+          <circle cx="340" cy="60" r="10" fill="rgba(212,178,111,0.2)" stroke="var(--c-cream)" stroke-width="2"/>
+          <text x="340" y="65" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#d4b26f" font-weight="600">T04</text>
+          <!-- T05 -->
+          <circle cx="425" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T06 -->
+          <circle cx="510" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T07 (fork point B) -->
+          <circle cx="590" cy="60" r="10" fill="rgba(157,78,221,0.2)" stroke="var(--c-char-sera-light)" stroke-width="2"/>
+          <text x="590" y="65" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#9d4edd" font-weight="600">T07</text>
+          <!-- T08 -->
+          <circle cx="670" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T09 -->
+          <circle cx="725" cy="60" r="6" fill="rgba(56,178,119,0.6)"/>
+          <!-- T10 -->
+          <circle cx="780" cy="60" r="9" fill="rgba(56,178,119,0.9)" stroke="var(--c-success)" stroke-width="2"/>
+          <text x="780" y="65" text-anchor="middle" font-family="JetBrains Mono" font-size="9" fill="#38b277" font-weight="700">END</text>
+
+          <!-- Fork A dots -->
+          <circle cx="340" cy="240" r="7" fill="rgba(52,179,199,0.8)" stroke="var(--c-inspector)" stroke-width="1.5"/>
+          <circle cx="425" cy="240" r="6" fill="rgba(52,179,199,0.5)"/>
+          <circle cx="510" cy="240" r="6" fill="rgba(52,179,199,0.5)"/>
+          <circle cx="590" cy="240" r="6" fill="rgba(52,179,199,0.5)"/>
+          <!-- T08 active on Fork A -->
+          <circle cx="670" cy="240" r="8" fill="rgba(52,179,199,0.25)" stroke="var(--c-inspector)" stroke-width="1.5" stroke-dasharray="3 2"/>
+          <text x="670" y="244" text-anchor="middle" font-family="JetBrains Mono" font-size="8" fill="var(--c-inspector)">NOW</text>
+          <!-- Future T09, T10 on Fork A (pending) -->
+          <circle cx="725" cy="240" r="5" fill="rgba(70,100,180,0.3)" stroke="rgba(70,100,180,0.4)" stroke-width="1"/>
+          <circle cx="780" cy="240" r="5" fill="rgba(70,100,180,0.3)" stroke="rgba(70,100,180,0.4)" stroke-width="1"/>
+
+          <!-- Fork B dots (pendingline) -->
+          <circle cx="590" cy="460" r="7" fill="rgba(157,78,221,0.8)" stroke="var(--c-char-sera-light)" stroke-width="1.5"/>
+          <circle cx="670" cy="460" r="5" fill="rgba(157,78,221,0.3)" stroke="rgba(157,78,221,0.4)" stroke-width="1" stroke-dasharray="3 2"/>
+          <circle cx="725" cy="460" r="5" fill="rgba(157,78,221,0.2)" stroke="rgba(157,78,221,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
+          <circle cx="780" cy="460" r="5" fill="rgba(157,78,221,0.2)" stroke="rgba(157,78,221,0.3)" stroke-width="1" stroke-dasharray="3 2"/>
+
+          <!-- Branch labels -->
+          <text x="440" y="42" text-anchor="middle" font-family="JetBrains Mono" font-size="10" fill="rgba(56,178,119,0.8)" letter-spacing="1">MAIN — 원본 시나리오 (COMPLETED)</text>
+
+          <text x="70" y="225" font-family="JetBrains Mono" font-size="10" fill="var(--c-inspector)">FORK A</text>
+          <text x="70" y="238" font-family="JetBrains Mono" font-size="9" fill="rgba(52,179,199,0.6)">T04 복원 분기</text>
+
+          <text x="70" y="445" font-family="JetBrains Mono" font-size="10" fill="var(--c-char-sera-light)">FORK B</text>
+          <text x="70" y="458" font-family="JetBrains Mono" font-size="9" fill="rgba(157,78,221,0.6)">T07 Magic OFF 분기</text>
+        </svg>
+
+        <!-- Node cards overlaid on SVG positions -->
+        <!-- Main T01 label -->
+        <div style="position:absolute; top:10px; left:36px; font-family:var(--f-mono); font-size:9px; color:var(--c-text-3);">T01<br>입학식</div>
+
+        <!-- Fork A node card -->
+        <div class="node-card" style="position:absolute; left:300px; top:260px; width:220px; border-color:var(--c-inspector-ring); cursor:pointer;" onclick="showForkA()">
+          <div class="node-card__tag" style="color:var(--c-inspector);">⑂ FORK A — T04 복원</div>
+          <div class="node-card__name" style="color:var(--c-inspector);">금지 서고 대신 도서관</div>
+          <div class="node-card__desc">"Adel이 봉인된 서고 대신 도서관으로 향했을 때"</div>
+          <div class="node-card__ticks">
+            <span class="tick-pip done">T04</span>
+            <span class="tick-pip done">T05</span>
+            <span class="tick-pip done">T06</span>
+            <span class="tick-pip done">T07</span>
+            <span class="tick-pip active">T08 ▶</span>
+            <span class="tick-pip pending">T09</span>
+            <span class="tick-pip pending">T10</span>
+          </div>
+        </div>
+
+        <!-- Fork B node card -->
+        <div class="node-card" style="position:absolute; left:300px; top:480px; width:220px; border-color:var(--c-char-sera-ring); cursor:pointer;" onclick="showForkB()">
+          <div class="node-card__tag" style="color:var(--c-char-sera-light);">⑂ FORK B — T07 복원</div>
+          <div class="node-card__name" style="color:var(--c-char-sera-light);">Magic Layer OFF 전환</div>
+          <div class="node-card__desc">"마법 개입 없이 일반 대학 생활로 진행"</div>
+          <div class="node-card__ticks">
+            <span class="tick-pip done">T07</span>
+            <span class="tick-pip pending">T08</span>
+            <span class="tick-pip pending">T09</span>
+            <span class="tick-pip pending">T10</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right panel -->
+    <div class="right-panel" id="right-panel-default">
+      <div class="rpanel-header">
+        <div class="rpanel-badge" style="background:rgba(52,179,199,0.12); color:var(--c-inspector); border:1px solid var(--c-inspector-ring);">FORK A — 진행 중</div>
+        <div class="rpanel-title" style="color:var(--c-inspector);">금지 서고 대신 도서관</div>
+        <div class="rpanel-subtitle">T04 스냅샷에서 분기 · Seed #8842-A</div>
+      </div>
+      <div class="rpanel-body">
+        <div>
+          <div class="info-row"><span class="info-row__label">기준 Tick</span><span class="info-row__val" style="color:var(--c-cream);">TICK 04</span></div>
+          <div class="info-row"><span class="info-row__label">현재 진행</span><span class="info-row__val" style="color:var(--c-inspector);">TICK 08 (진행 중)</span></div>
+          <div class="info-row"><span class="info-row__label">변경 변수</span><span class="info-row__val">Adel 이동 경로</span></div>
+          <div class="info-row"><span class="info-row__label">Magic Layer</span><span class="info-row__val" style="color:var(--c-success);">ON (유지)</span></div>
+          <div class="info-row"><span class="info-row__label">생성 일시</span><span class="info-row__val" style="color:var(--c-text-3);">2026-08-19 14:32</span></div>
+        </div>
+
+        <div class="diff-block">
+          <div class="diff-block__title">관계 변화 델타 (vs Main)</div>
+          <div class="diff-item">
+            <div class="char-mini-avatar" style="background-image:url('../assets/character/Adel_ISTJ.png'); border-color:var(--c-char-adel-light);"></div>
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-adel-light);">Adel</span>
+            <span style="flex:1; font-size:10px;color:var(--c-text-2);">스트레스 감소</span>
+            <span class="delta pos">-18</span>
+          </div>
+          <div class="diff-item">
+            <div class="char-mini-avatar" style="background-image:url('../assets/character/Ria_INFP.png'); border-color:var(--c-char-ria-light);"></div>
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-ria-light);">Ria ★</span>
+            <span style="flex:1; font-size:10px;color:var(--c-text-2);">Adel 신뢰도 ↑</span>
+            <span class="delta pos">+24</span>
+          </div>
+          <div class="diff-item">
+            <div class="char-mini-avatar" style="background-image:url('../assets/character/Kai_ENTJ.png'); border-color:var(--c-char-kai-light);"></div>
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-kai-light);">Kai</span>
+            <span style="flex:1; font-size:10px;color:var(--c-text-2);">갈등 라이벌 감소</span>
+            <span class="delta neg">-12</span>
+          </div>
+          <div class="diff-item">
+            <div class="char-mini-avatar" style="background-image:url('../assets/character/Leo_ESTP.png'); border-color:var(--c-char-leo-light);"></div>
+            <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-leo-light);">Leo</span>
+            <span style="flex:1; font-size:10px;color:var(--c-text-2);">친밀도 상승</span>
+            <span class="delta pos">+9</span>
+          </div>
+        </div>
+
+        <div class="diff-block">
+          <div class="diff-block__title">현재 예측 결말</div>
+          <div style="font-size:12px; color:var(--c-text-2); line-height:1.6; font-family:var(--f-sans);">
+            마법석 폭주 사건이 지연되어 T10 내 완전 해결 가능성 <span style="color:var(--c-success); font-family:var(--f-mono); font-weight:600;">↑74%</span>
+          </div>
+        </div>
+      </div>
+      <div class="action-area">
+        <a href="11-replay.html" class="btn-full btn-primary">⏮ 이 분기 리플레이 보기</a>
+        <a href="13-magic-comparison.html" class="btn-full btn-ghost">⚖ Main과 비교하기</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Fork creation modal -->
+<div class="modal-overlay" onclick="if(event.target===this)this.classList.remove('open')">
+  <div class="modal-box">
+    <div class="modal-header">
+      <div class="modal-title">⑂ 새 분기 생성</div>
+      <button class="modal-close" onclick="document.querySelector('.modal-overlay').classList.remove('open')">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-group">
+        <div class="form-label">분기 이름</div>
+        <input class="form-input" type="text" placeholder="예: Leo가 도서관에 먼저 도착했을 때" value="">
+      </div>
+      <div class="form-group">
+        <div class="form-label">기준 Tick 선택</div>
+        <div class="tick-selector">
+          <button class="tick-opt">T01</button>
+          <button class="tick-opt">T02</button>
+          <button class="tick-opt">T03</button>
+          <button class="tick-opt selected">T04</button>
+          <button class="tick-opt">T05</button>
+          <button class="tick-opt">T06</button>
+          <button class="tick-opt">T07</button>
+          <button class="tick-opt">T08</button>
+          <button class="tick-opt">T09</button>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">파라미터 변경</div>
+        <div class="toggle-row">
+          <span class="toggle-label">Magic Layer</span>
+          <div class="toggle on" onclick="this.classList.toggle('on')"></div>
+        </div>
+        <div class="toggle-row" style="margin-top:var(--s-2);">
+          <span class="toggle-label">User Persona 성격 재설정</span>
+          <div class="toggle" onclick="this.classList.toggle('on')"></div>
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="form-label">분기 메모 (선택)</div>
+        <input class="form-input" type="text" placeholder="이 분기에서 탐색하려는 가설...">
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn-full btn-ghost" style="width:auto;padding:8px 20px;" onclick="document.querySelector('.modal-overlay').classList.remove('open')">취소</button>
+      <button class="btn-full btn-primary" style="width:auto;padding:8px 20px;">⑂ 분기 생성 및 시작</button>
+    </div>
+  </div>
+</div>
+<script>
+  function showForkA() { /* Highlight Fork A in right panel — mockup only */ }
+  function showForkB() { /* Highlight Fork B in right panel — mockup only */ }
+  document.querySelectorAll('.tick-opt').forEach(btn => {
+    btn.addEventListener('click', function() {
+      document.querySelectorAll('.tick-opt').forEach(b => b.classList.remove('selected'));
+      this.classList.add('selected');
+    });
+  });
+</script>
+</body>
+</html>
