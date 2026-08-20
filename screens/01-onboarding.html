@@ -153,21 +153,31 @@
       background: linear-gradient(
         90deg,
         transparent 0%,
-        rgba(212, 178, 111, 0.55) 35%,
-        rgba(235, 205, 145, 0.9) 50%,
-        rgba(212, 178, 111, 0.55) 65%,
+        rgba(235, 205, 145, 0.95) 18%,
+        rgba(212, 178, 111, 0.65) 42%,
+        rgba(212, 178, 111, 0.2) 70%,
         transparent 100%
       );
+      box-shadow: 0 0 4px rgba(235, 205, 145, 0.8), 0 0 16px rgba(212, 178, 111, 0.35);
+      filter: blur(0.4px);
       opacity: 0;
       will-change: transform, opacity;
     }
     @keyframes gold-streak-slide {
-      0%   { opacity: 0; transform: translateX(-460px); }
+      0%   { opacity: 0; transform: translateX(-460px) rotate(var(--streak-rotate, 0deg)); }
       12%  { opacity: 0; }
       28%  { opacity: 1; }
       72%  { opacity: 0.75; }
       88%  { opacity: 0; }
-      100% { opacity: 0; transform: translateX(1400px); }
+      100% { opacity: 0; transform: translateX(1400px) rotate(var(--streak-rotate, 0deg)); }
+    }
+    @keyframes gold-streak-slide-reverse {
+      0%   { opacity: 0; transform: translateX(1400px) rotate(var(--streak-rotate, 0deg)); }
+      12%  { opacity: 0; }
+      28%  { opacity: 0.45; }
+      72%  { opacity: 0.3; }
+      88%  { opacity: 0; }
+      100% { opacity: 0; transform: translateX(-460px) rotate(var(--streak-rotate, 0deg)); }
     }
     .ob-campus__img {
       position: absolute;
@@ -419,13 +429,15 @@
 
     <!-- ── Animated Gold Streaks ── -->
     <div class="bg-gold-streaks">
-      <div class="bg-gold-streak" style="top:  7%; width: 360px; animation: gold-streak-slide 5.2s 0.4s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 19%; width: 220px; animation: gold-streak-slide 4.6s 1.5s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 33%; width: 310px; animation: gold-streak-slide 6.0s 0.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 48%; width: 190px; animation: gold-streak-slide 3.9s 2.3s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 61%; width: 400px; animation: gold-streak-slide 5.5s 0.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 75%; width: 270px; animation: gold-streak-slide 4.3s 1.9s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
-      <div class="bg-gold-streak" style="top: 88%; width: 230px; animation: gold-streak-slide 4.9s 0.6s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top:  7%; width: 360px; height: 1px; --streak-rotate: -3deg; animation: gold-streak-slide 5.2s 0.4s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 19%; width: 220px; height: 2px; --streak-rotate:  2deg; animation: gold-streak-slide 4.6s 1.5s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 33%; width: 310px; height: 1px; --streak-rotate: -1deg; animation: gold-streak-slide 6.0s 0.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 48%; width: 190px; height: 3px; --streak-rotate:  4deg; animation: gold-streak-slide 3.9s 2.3s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 61%; width: 400px; height: 1px; --streak-rotate: -4deg; animation: gold-streak-slide 5.5s 0.8s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 75%; width: 270px; height: 2px; --streak-rotate:  1deg; animation: gold-streak-slide 4.3s 1.9s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 88%; width: 230px; height: 1px; --streak-rotate: -2deg; animation: gold-streak-slide 4.9s 0.6s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 28%; width: 280px; height: 1px; --streak-rotate:  3deg; animation: gold-streak-slide-reverse 7.2s 3.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="bg-gold-streak" style="top: 68%; width: 200px; height: 1px; --streak-rotate: -2deg; animation: gold-streak-slide-reverse 5.8s 1.2s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
     </div>
 
     <!-- ── STAGE 1: Alive Magic World (Pulsing Agents & Arcane Path) ── -->
