@@ -113,6 +113,7 @@
       border-top: 1px solid rgba(70,100,180,0.1); padding-top: var(--s-2);
       font-style: italic;
     }
+    .impact-line { font-family:var(--f-mono); font-size:9px; color:var(--c-text-2); background:rgba(94,96,232,.08); border-left:2px solid var(--c-primary); padding:6px 8px; line-height:1.5; }
 
     /* User persona highlight */
     .char-card.user-persona::before {
@@ -157,6 +158,16 @@
 
     /* Radar polygon helper */
     .radar-poly { fill-opacity: 0.25; stroke-width: 1.5; }
+    @media (max-width: 900px) {
+      body { overflow:auto; }
+      .screen { width:100%; height:auto; min-height:100vh; overflow:visible; }
+      .campaign-banner { height:auto; padding:var(--s-4); flex-wrap:wrap; }
+      .campaign-status, .campaign-brief { border:0; padding:0; }
+      .main-body { display:block; overflow:visible; }
+      .epilogue-area { overflow:visible; }
+      .epilogue-grid { grid-template-columns:1fr; grid-template-rows:none; overflow:visible; }
+      .right-panel { width:100%; border-left:0; border-top:1px solid var(--c-border); }
+    }
   </style>
 </head>
 <body>
@@ -230,6 +241,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">스트레스 62 → 84 · Leo 긴장도 +18 · 규칙 중심에서 독자 조사로 변화</div>
             <div class="epilogue-text">"사건의 진실을 기록관에 봉인하고, 수석 졸업을 향해 묵묵히 나아갑니다."</div>
           </div>
         </div>
@@ -271,6 +283,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">자신감 48 → 76 · 팀 신뢰 +21 · 수동 관찰에서 결계 탐지 주도자로 변화</div>
             <div class="epilogue-text">"자신만의 고유한 마법 체계를 정립하며, 동료들의 가장 깊은 신뢰를 얻었습니다."</div>
           </div>
         </div>
@@ -312,6 +325,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">리더십 72 → 91 · Adel 경쟁 +16 · 단독 지시에서 역할 분담으로 변화</div>
             <div class="epilogue-text">"Adel과의 라이벌 관계를 발판 삼아, 학기말 최우수 프로젝트를 쟁취했습니다."</div>
           </div>
         </div>
@@ -353,6 +367,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">팀 신뢰 44 → 67 · Adel 친밀도 +12 · 충동 행동에서 위험 감수 구조로 변화</div>
             <div class="epilogue-text">"실종 사건 수색에서 가장 앞장서, 동료들에게 '진짜 친구'로 인정받았습니다."</div>
           </div>
         </div>
@@ -394,6 +409,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">공감 88 → 97 · 집단 긴장 −24 · 갈등 중재자 역할이 강화됨</div>
             <div class="epilogue-text">"위기의 순간마다 다섯 명을 하나로 묶어, 팀의 정서적 중심이 되었습니다."</div>
           </div>
         </div>
@@ -435,6 +451,7 @@
                 </div>
               </div>
             </div>
+            <div class="impact-line">학생 신뢰 71 → 86 · 직접 개입 −18 · 통제자에서 관찰형 조력자로 변화</div>
             <div class="epilogue-text">"봉인된 마법서의 비밀을 알면서도, 학생들이 스스로 답을 찾도록 기다렸습니다."</div>
           </div>
         </div>
@@ -463,12 +480,6 @@
         <div style="font-family:var(--f-mono);font-size:9px;color:var(--c-text-3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:var(--s-1);">다음 액션</div>
         <a href="11-replay.html" class="action-btn primary">
           <span class="action-btn__icon">⏮</span>전체 리플레이 복기하기
-        </a>
-        <a href="12-branch-tree.html" class="action-btn ria">
-          <span class="action-btn__icon">⑂</span>중간 시점에서 분기 생성하기
-        </a>
-        <a href="13-magic-comparison.html" class="action-btn inspector">
-          <span class="action-btn__icon">⚖</span>Magic OFF 결과와 비교하기
         </a>
         <a href="09-save-modal.html" class="action-btn ghost">
           <span class="action-btn__icon">💾</span>결과 스냅샷 저장

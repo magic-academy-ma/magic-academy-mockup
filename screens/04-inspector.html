@@ -555,11 +555,6 @@
               <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:var(--c-inspector);">관찰기억</div></div>
               <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">T10 이탈 결정</div></div>
             </div>
-            <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 벡터 임베딩 미리보기 ]</div>
-              <div style="font-family:var(--f-mono); font-size:9px; color:#526388; word-break:break-all;">[0.0241, -0.0512, 0.1184, -0.0094, 0.0732, ...]</div>
-              <div style="margin-top:4px; font-family:var(--f-mono); font-size:9px; color:var(--c-text-3);">Cosine 유사도: <span style="color:var(--c-cream);">0.892 (TOP-1)</span></div>
-            </div>
           </div>
         </div>
       </div>
@@ -572,16 +567,16 @@
 <script src="../js/magic-academy.js"></script>
 <script>
   const memData = {
-    m1: { type:'관찰기억', tick:'Tick 08', imp:'85', id:'mem_01j5a87b', color:'var(--c-inspector)', text:'"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."', causal:'T10 이탈 결정', emb:'[0.0241, -0.0512, 0.1184, ...]', score:'0.892 (TOP-1)' },
-    m2: { type:'대화기억', tick:'Tick 09', imp:'90', id:'mem_01j5a99c', color:'#7375f5', text:'"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."', causal:'T10 이탈 결정', emb:'[-0.0128, 0.0891, ...]', score:'0.841 (TOP-2)' },
-    m3: { type:'장기 회고', tick:'Tick 06', imp:'96', id:'mem_01j5b12d', color:'var(--c-cream)', text:'"나는 규칙을 수호해야 한다. 그것이 내 존재 이유이자 불안을 억제하는 유일한 방법이다."', causal:'성격 파라미터 강화', emb:'[0.0892, 0.0241, ...]', score:'0.779 (TOP-3)' },
-    m4: { type:'사건기억', tick:'Tick 05', imp:'88', id:'mem_01j5b08e', color:'var(--c-critical)', text:'"마법 약품 실험실 폭발 사고를 목격하고 Kai와 협력해 대피를 도왔다."', causal:'Kai 신뢰도 +12', emb:'[0.0554, -0.0312, ...]', score:'0.701' },
-    m5: { type:'관찰기억', tick:'Tick 04', imp:'72', id:'mem_01j5a76f', color:'var(--c-inspector)', text:'"Ria가 혼자 마법진 연구실에서 밤새 실험하는 것을 목격했다."', causal:'Ria 관찰 기록', emb:'[0.0178, 0.0621, ...]', score:'0.612' },
-    m6: { type:'대화기억', tick:'Tick 03', imp:'68', id:'mem_01j5a65g', color:'#7375f5', text:'"Sera가 수업 노트를 빌려달라 해 흔쾌히 응했다."', causal:'Sera 친밀도 +5', emb:'[-0.0223, 0.0445, ...]', score:'0.589' },
-    m7: { type:'관찰기억', tick:'Tick 02', imp:'60', id:'mem_01j5a54h', color:'var(--c-inspector)', text:'"Prof. Aldric이 강의 중 내 이름을 모범 사례로 언급했다."', causal:'자아효능감 +8', emb:'[0.0341, -0.0178, ...]', score:'0.543' },
-    m8: { type:'장기 회고', tick:'Tick 02', imp:'82', id:'mem_01j5a43i', color:'var(--c-cream)', text:'"Leo는 규칙을 경시한다. 그의 행동은 언젠가 문제를 일으킬 것이다."', causal:'Leo 긴장도 누적', emb:'[0.0672, 0.0234, ...]', score:'0.521' },
-    m9: { type:'관찰기억', tick:'Tick 01', imp:'55', id:'mem_01j5a32j', color:'var(--c-inspector)', text:'"첫 오리엔테이션에서 Kai가 리더십을 자처해 조별 대표를 맡았다."', causal:'Kai 초기 인상', emb:'[-0.0112, 0.0789, ...]', score:'0.489' },
-    m10: { type:'대화기억', tick:'Tick 01', imp:'50', id:'mem_01j5a21k', color:'#7375f5', text:'"Ria에게 입학 첫날 길을 안내해주며 인사를 나눴다."', causal:'Ria 초기 친밀도 +3', emb:'[0.0198, -0.0534, ...]', score:'0.467' },
+    m1: { type:'관찰기억', tick:'Tick 08', imp:'85', id:'mem_01j5a87b', color:'var(--c-inspector)', text:'"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."', causal:'T10 이탈 결정' },
+    m2: { type:'대화기억', tick:'Tick 09', imp:'90', id:'mem_01j5a99c', color:'#7375f5', text:'"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."', causal:'T10 이탈 결정' },
+    m3: { type:'장기 회고', tick:'Tick 06', imp:'96', id:'mem_01j5b12d', color:'var(--c-cream)', text:'"나는 규칙을 수호해야 한다. 그것이 내 존재 이유이자 불안을 억제하는 유일한 방법이다."', causal:'성격 파라미터 강화' },
+    m4: { type:'사건기억', tick:'Tick 05', imp:'88', id:'mem_01j5b08e', color:'var(--c-critical)', text:'"마법 약품 실험실 폭발 사고를 목격하고 Kai와 협력해 대피를 도왔다."', causal:'Kai 신뢰도 +12' },
+    m5: { type:'관찰기억', tick:'Tick 04', imp:'72', id:'mem_01j5a76f', color:'var(--c-inspector)', text:'"Ria가 혼자 마법진 연구실에서 밤새 실험하는 것을 목격했다."', causal:'Ria 관찰 기록' },
+    m6: { type:'대화기억', tick:'Tick 03', imp:'68', id:'mem_01j5a65g', color:'#7375f5', text:'"Sera가 수업 노트를 빌려달라 해 흔쾌히 응했다."', causal:'Sera 친밀도 +5' },
+    m7: { type:'관찰기억', tick:'Tick 02', imp:'60', id:'mem_01j5a54h', color:'var(--c-inspector)', text:'"Prof. Aldric이 강의 중 내 이름을 모범 사례로 언급했다."', causal:'자아효능감 +8' },
+    m8: { type:'장기 회고', tick:'Tick 02', imp:'82', id:'mem_01j5a43i', color:'var(--c-cream)', text:'"Leo는 규칙을 경시한다. 그의 행동은 언젠가 문제를 일으킬 것이다."', causal:'Leo 긴장도 누적' },
+    m9: { type:'관찰기억', tick:'Tick 01', imp:'55', id:'mem_01j5a32j', color:'var(--c-inspector)', text:'"첫 오리엔테이션에서 Kai가 리더십을 자처해 조별 대표를 맡았다."', causal:'Kai 초기 인상' },
+    m10: { type:'대화기억', tick:'Tick 01', imp:'50', id:'mem_01j5a21k', color:'#7375f5', text:'"Ria에게 입학 첫날 길을 안내해주며 인사를 나눴다."', causal:'Ria 초기 친밀도 +3' },
   };
 
   function switchTab(key) {
@@ -619,12 +614,14 @@
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:${d.color};">${d.type}</div></div>
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">${d.causal}</div></div>
         </div>
-        <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-          <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 벡터 임베딩 ]</div>
-          <div style="font-family:var(--f-mono); font-size:9px; color:#526388; word-break:break-all;">${d.emb}</div>
-          <div style="margin-top:4px; font-family:var(--f-mono); font-size:9px; color:var(--c-text-3);">Cosine: <span style="color:var(--c-cream);">${d.score}</span></div>
-        </div>
       </div>`;
+  }
+  const inspectorParams = new URLSearchParams(window.location.search);
+  if (inspectorParams.get('tab') === 'memory') switchTab('memory');
+  const requestedMemory = inspectorParams.get('memory');
+  if (requestedMemory) {
+    const requestedEntry = document.querySelector(`[onclick*="'${requestedMemory}'"]`);
+    if (requestedEntry) selectMem(requestedEntry, requestedMemory);
   }
 </script>
 </body>

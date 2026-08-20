@@ -10,7 +10,7 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; overflow: hidden; background: var(--c-bg); }
-    .sim-screen { width: 100vw; height: 100vh; min-width: 1100px; min-height: 700px; position: relative; overflow: hidden; }
+    .sim-screen { width: 100vw; height: 100vh; min-height: 640px; position: relative; overflow: hidden; }
     .sim-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/academy-night-background.png');
@@ -102,6 +102,7 @@
     .rel-modal__title, .rel-detail, .history-event__text { font-size:14px; }
     button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+    @media (max-width:900px) { .rel-modal { inset:70px 8px 8px; } .rel-modal__header { flex-wrap:wrap; gap:8px; } .rel-filter-chips { width:100%; overflow-x:auto; } .scope-bar { overflow-x:auto; } .rel-modal__body { overflow:auto; } .graph-svg { min-width:760px; } .rel-detail { min-width:280px; } }
   </style>
 </head>
 <body>
@@ -139,7 +140,7 @@
         </button>
       </div>
 
-      <div class="scope-bar"><span class="scope-label">보이는 Agent</span><button class="chip scope-chip active" onclick="filterScope('all',this)">전체</button><button class="chip scope-chip" onclick="filterScope('focus',this)">선택 Agent 중심</button><button class="chip scope-chip" onclick="filterScope('direct',this)">직접 관계만</button></div>
+      <div class="scope-bar"><span class="scope-label">보이는 Agent</span><button class="chip scope-chip active" data-scope="all" onclick="filterScope('all',this)">전체</button><button class="chip scope-chip" data-scope="focus" onclick="filterScope('focus',this)">선택 Agent 중심</button><button class="chip scope-chip" data-scope="direct" onclick="filterScope('direct',this)">직접 관계만</button></div>
 
       <div class="rel-modal__body">
         <!-- SVG with directed arrowheads -->
@@ -352,7 +353,9 @@
     sera:'../assets/character/Sera_ESFJ.png',
   };
   const names = { adel:'Adel', leo:'Leo', ria:'Ria', kai:'Kai', sera:'Sera' };
+  const directNeighbors = { adel:['leo','ria'], leo:['adel','kai'], ria:['adel','sera'], kai:['leo','sera'], sera:['ria','kai'] };
   let selectedAgent = 'adel';
+  let activeScope = 'all';
 
   function selectNode(id) {
     selectedAgent = id;
@@ -362,24 +365,27 @@
     document.querySelectorAll('[data-pair]').forEach(e => {
       e.style.opacity = e.dataset.pair.includes(id) ? '1' : '0.15';
     });
+    filterScope(activeScope, document.querySelector(`.scope-chip[data-scope="${activeScope}"]`));
   }
 
   function filterScope(scope, btn) {
+    activeScope = scope;
     document.querySelectorAll('.scope-chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
-    const connected = new Set([selectedAgent]);
+    const direct = new Set([selectedAgent, ...(directNeighbors[selectedAgent] || [])]);
     document.querySelectorAll('[data-pair]').forEach(edge => {
-      if (edge.dataset.pair.includes(selectedAgent)) edge.dataset.pair.split('-').forEach(id => connected.add(id));
-      edge.style.opacity = scope === 'all' || edge.dataset.pair.includes(selectedAgent) ? '1' : '0.06';
+      const pair = edge.dataset.pair.split('-');
+      const visible = scope === 'all' || (scope === 'focus' && edge.dataset.pair.includes(selectedAgent)) || (scope === 'direct' && pair.every(id => direct.has(id)) && pair.includes(selectedAgent));
+      edge.style.opacity = visible ? '1' : '0.06';
     });
     document.querySelectorAll('.graph-node').forEach(node => {
-      const visible = scope === 'all' || connected.has(node.dataset.id);
-      node.style.opacity = visible ? '1' : '0.12';
+      const visible = scope !== 'direct' || direct.has(node.dataset.id);
+      node.style.opacity = visible ? '1' : '0.08';
     });
   }
 
   function filterEdges(type, btn) {
-    document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+    document.querySelectorAll('.rel-filter-chips .chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
     document.querySelectorAll('[data-type]').forEach(e => {
       e.style.opacity = (type === 'all' || e.dataset.type === type) ? '1' : '0.06';
