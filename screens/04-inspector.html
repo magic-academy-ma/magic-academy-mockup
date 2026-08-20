@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Causal Inspector — Magic Academy</title>
+  <title>사건 원인 보기 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -136,6 +136,12 @@
     .mem-entry__icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
     .mem-entry__meta { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 9px; color: var(--c-text-3); margin-bottom: 3px; }
     .mem-entry__text { font-size: 11px; color: var(--c-text); line-height: 1.4; }
+    #pane-user .info-card__body, #pane-memory .info-card__body { font-size:14px; }
+    #pane-user .info-card__header, #pane-memory .info-card__header { font-size:12px; text-transform:none; }
+    #pane-user .gauge-row, #pane-user .weight-label, #pane-user .weight-score, #pane-user .rel-dim-row, #pane-memory .mem-entry__text { font-size:13px; }
+    .tab-btn { font-size:13px; padding:7px 15px; }
+    button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
@@ -153,17 +159,17 @@
       <div style="width:1px; height:16px; background:var(--c-border);"></div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="inspector-tab-nav">
-        <button class="tab-btn active" id="btn-tab-user" onclick="switchTab('user')">§3.1~3.6 사건 인과 분석</button>
+        <button class="tab-btn active" id="btn-tab-user" onclick="switchTab('user')">사건 원인</button>
         <button class="tab-btn memory-tab" id="btn-tab-memory" onclick="switchTab('memory')">
-          <span style="color:var(--c-inspector);">§3.5 Memory Stream</span>
+          <span style="color:var(--c-inspector);">최근 기억</span>
         </button>
         <button class="tab-btn" id="btn-tab-dev" onclick="switchTab('dev')">
-          <span style="color:var(--c-inspector);">§3.7 개발자 메트릭</span>
+          <span style="color:var(--c-inspector);">기술 정보</span>
         </button>
       </div>
     </div>
     <div style="display:flex; align-items:center; gap:var(--s-3);">
-      <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2);">Tick 10 &middot; 14:02:15</span>
+      <span style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-2);">시간 10 &middot; 오후 2:02</span>
       <div style="width:1px; height:16px; background:var(--c-border);"></div>
       <a href="05-relationship.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:11px;">관계망 그래프</a>
       <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding:4px 12px; font-size:11px;">시뮬레이션 뷰 &rarr;</a>
@@ -178,8 +184,8 @@
       <!-- Col 1: §3.1 프로필 & §3.2 상태 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.1 프로필 &amp; §3.2 상태</span>
-          <span style="color:var(--c-critical);">CRITICAL</span>
+          <span>Agent 정보와 현재 상태</span>
+          <span style="color:var(--c-critical);">위험</span>
         </div>
         <div class="info-card__body">
           <div style="display:flex; gap:var(--s-3); padding:var(--s-2) var(--s-3); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
@@ -213,9 +219,9 @@
           </div>
 
           <div style="margin-top:auto; background:rgba(94,96,232,0.12); border:1px solid var(--c-primary-ring); border-radius:var(--r-sm); padding:var(--s-3);">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-primary); font-weight:700; margin-bottom:4px;">RUNTIME FORECAST</div>
+            <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-primary); font-weight:700; margin-bottom:4px;">이후 예상</div>
             <div style="font-size:11px; color:#fff;">상태: <strong>MISSING</strong></div>
-            <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">예상 복귀: <strong>TICK 14</strong></div>
+            <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">예상 복귀: <strong>시간 14</strong></div>
           </div>
         </div>
       </div>
@@ -223,8 +229,8 @@
       <!-- Col 2: §3.3 의사결정 가중치 & §3.4 행동 로그 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.3 의사결정 가중치 &amp; §3.4 행동 로그</span>
-          <span style="color:var(--c-cream);">NARRATIVE</span>
+          <span>결정에 영향을 준 요인과 최근 행동</span>
+          <span style="color:var(--c-cream);">이야기</span>
         </div>
         <div class="info-card__body">
           <div class="decision-card">
@@ -255,8 +261,8 @@
               <span class="weight-score">+0.03</span>
             </div>
             <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(70,100,180,0.2); display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px;">
-              <span style="color:var(--c-text-3);">Final Score</span>
-              <span style="color:var(--c-critical); font-weight:700;">1.00 → COMMIT(MISSING) ✓</span>
+              <span style="color:var(--c-text-3);">종합 결과</span>
+              <span style="color:var(--c-critical); font-weight:700;">실종 상태로 변경됨</span>
             </div>
           </div>
 
@@ -276,8 +282,8 @@
       <!-- Col 3: §3.5 기억 미리보기 & §3.6 관계 레이더 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.5 기억 미리보기 &amp; §3.6 관계 레이더</span>
-          <span style="color:var(--c-inspector);">RETRIEVED</span>
+          <span>관련 기억과 관계 변화</span>
+          <span style="color:var(--c-inspector);">확인됨</span>
         </div>
         <div class="info-card__body">
 
@@ -425,7 +431,7 @@
       <!-- Left sidebar -->
       <div class="info-card">
         <div class="info-card__header" style="border-left:3px solid var(--c-inspector);">
-          <span>§3.5 Memory Stream</span><span style="color:var(--c-inspector);">10 ITEMS</span>
+          <span>최근 기억</span><span style="color:var(--c-inspector);">10개</span>
         </div>
         <div class="info-card__body">
           <div style="display:flex; gap:8px; padding:var(--s-2); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
@@ -450,7 +456,7 @@
             <div style="display:flex; flex-direction:column; gap:4px; font-family:var(--f-mono); font-size:11px;">
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">평균 중요도</span><span style="color:var(--c-cream);">76.4</span></div>
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">최고 중요도</span><span style="color:var(--c-critical);">96 (회고)</span></div>
-              <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">가장 오래된</span><span style="color:var(--c-text-3);">Tick 01</span></div>
+              <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">가장 오래된</span><span style="color:var(--c-text-3);">시간 01</span></div>
             </div>
           </div>
         </div>
@@ -536,7 +542,7 @@
         <div style="flex:1; padding:var(--s-4); overflow-y:auto;" id="mem-detail-panel">
           <div style="background:rgba(6,13,32,0.6); border:1px solid rgba(70,100,180,0.25); border-radius:var(--r-sm); padding:var(--s-4);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">관찰기억 · Tick 08</div>
+              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">관찰 기억 · 시간 08</div>
               <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">중요도 85 / 100</div>
             </div>
             <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); margin-bottom:8px;">ID: mem_01j5a87b</div>
@@ -544,7 +550,7 @@
               "도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."
             </div>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-family:var(--f-mono); font-size:11px; margin-bottom:12px;">
-              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:#fff;">Tick 08</div></div>
+              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:#fff;">시간 08</div></div>
               <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">중요도</div><div style="color:var(--c-cream);">85</div></div>
               <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:var(--c-inspector);">관찰기억</div></div>
               <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">T10 이탈 결정</div></div>
