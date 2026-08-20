@@ -74,6 +74,7 @@
     .nav-card.priority { border-color: var(--c-cream-ring); }
     .nav-card.priority:hover { border-color: var(--c-cream); box-shadow: 0 0 20px rgba(212, 178, 111, 0.3); }
     .nav-card.archived { opacity: 0.5; border-color: rgba(100, 90, 70, 0.4); pointer-events: auto; }
+    .nav-card.removed { display: none; }
     .nav-card.archived:hover { opacity: 0.65; border-color: rgba(140, 120, 90, 0.5); transform: none; box-shadow: none; }
     .archive-badge {
       position: absolute;
@@ -177,8 +178,8 @@
     </div>
     <div class="nav-grid">
 
-      <!-- S0: 로그인 -->
-      <a href="screens/07-login.html" class="nav-card">
+      <!-- S0: 랜딩 -->
+      <a href="screens/07-landing.html" class="nav-card">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/concept/login_bg_clean.png');"></div>
           <div class="nav-card__preview-overlay"></div>
@@ -186,8 +187,8 @@
         </div>
         <div class="nav-card__body">
           <div class="nav-card__num">SCREEN 00</div>
-          <div class="nav-card__title">로그인 화면</div>
-          <div class="nav-card__desc">진입점 &middot; 이메일 / 소셜 로그인 및 세션 생성 &rarr; S1 이동</div>
+          <div class="nav-card__title">랜딩 화면</div>
+          <div class="nav-card__desc">제품 소개 &middot; 새 관찰 시작 및 로그인 진입점</div>
           <div class="nav-card__states">
             <span class="chip chip-active">진입점</span>
             <span class="chip chip-primary">Auth Flow</span>
@@ -341,7 +342,7 @@
   <div class="nav-section">
     <div class="nav-section-title">
       <span>3. 캠페인 분석 &amp; 결말 플로우 (S10 ~ S13)</span>
-      <span>Campaign Replay · Branch · Compare · Ending</span>
+      <span>Campaign Replay · Ending · Archived Concepts</span>
     </div>
     <div class="nav-grid">
 
@@ -355,7 +356,7 @@
         <div class="nav-card__body">
           <div class="nav-card__num">SCREEN 10</div>
           <div class="nav-card__title">타임라인 리플레이어</div>
-          <div class="nav-card__desc">Tick 1~10 스크러버 바 &middot; 시점별 에이전트 스냅샷 &middot; [분기 생성] CTA (FR-16)</div>
+          <div class="nav-card__desc">Tick 1~10 스크러버 바 &middot; 시점별 에이전트 스냅샷 &middot; 사건 복기 (FR-16)</div>
           <div class="nav-card__states">
             <span class="chip chip-inspector">Tick 스크러버</span>
             <span class="chip chip-event">사건 핀 마킹</span>
@@ -365,7 +366,7 @@
       </a>
 
       <!-- S11: What-If 분기 트리 -->
-      <a href="screens/12-branch-tree.html" class="nav-card priority archived">
+      <a href="screens/12-branch-tree.html" class="nav-card priority archived removed">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.2) saturate(0.3);"></div>
           <div class="nav-card__preview-overlay"></div>
@@ -385,10 +386,11 @@
       </a>
 
       <!-- S12: Magic ON vs OFF 비교 -->
-      <a href="screens/13-magic-comparison.html" class="nav-card priority">
+      <a href="screens/13-magic-comparison.html" class="nav-card priority archived">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:brightness(0.4) hue-rotate(20deg);"></div>
           <div class="nav-card__preview-overlay"></div>
+          <div class="archive-badge">ARCHIVED</div>
           <div class="nav-card__preview-badge"><span class="screen-tag">S12</span></div>
         </div>
         <div class="nav-card__body">
@@ -506,16 +508,16 @@
         <div class="nav-card__body">
           <div class="nav-card__num">SCREEN 11</div>
           <div class="nav-card__title">타임라인 리플레이어</div>
-          <div class="nav-card__desc">Tick 1~10 스크러버 바, 0.5×~4× 배속, 주요 사건 핀, 월드맵·스탯 동기화 재생, 분기 CTA</div>
+          <div class="nav-card__desc">Tick 1~10 스크러버 바, 0.5×~4× 배속, 주요 사건 핀, 월드맵·스탯 동기화 재생</div>
           <div class="nav-card__states">
             <span class="chip chip-active">재생/배속 제어</span>
             <span class="chip chip-inspector">사건 핀</span>
-            <span class="chip chip-primary">Fork CTA</span>
+            <span class="chip chip-primary">장면 복기</span>
           </div>
         </div>
       </a>
 
-      <a href="screens/12-branch-tree.html" class="nav-card priority archived">
+      <a href="screens/12-branch-tree.html" class="nav-card priority archived removed">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/character/Ria_INFP.png'); background-position:center 10%;"></div>
           <div class="nav-card__preview-overlay"></div>
@@ -533,10 +535,11 @@
         </div>
       </a>
 
-      <a href="screens/13-magic-comparison.html" class="nav-card priority">
+      <a href="screens/13-magic-comparison.html" class="nav-card priority archived">
         <div class="nav-card__preview">
           <div class="nav-card__preview-img" style="background-image:url('assets/concept/concept_v1.1.png'); filter:hue-rotate(120deg);"></div>
           <div class="nav-card__preview-overlay"></div>
+          <div class="archive-badge">ARCHIVED</div>
           <div class="nav-card__preview-badge"><span class="screen-tag">S13</span></div>
         </div>
         <div class="nav-card__body">
