@@ -10,7 +10,7 @@
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; overflow: hidden; background: var(--c-bg); }
-    .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
+    .sim-screen { width: 100vw; height: 100vh; min-width: 1100px; min-height: 700px; position: relative; overflow: hidden; }
     .sim-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/concept_v1.1.png');
@@ -27,7 +27,7 @@
       border: 1px solid var(--c-border); cursor: pointer; transition: all var(--tr-fast); white-space: nowrap;
     }
     .chip:hover { color: var(--c-text); border-color: var(--c-border-hi); }
-    .chip.active { color: var(--c-inspector); background: rgba(52,179,199,0.15); border-color: rgba(52,179,199,0.45); }
+    .chip.active { color: #d9d9ff; background: rgba(94,96,232,0.18); border-color: rgba(140,143,255,0.48); }
     .chip.chip-favor.active { color: #5CE67A; background: rgba(92,230,122,0.12); border-color: rgba(92,230,122,0.4); }
     .chip.chip-trust.active { color: var(--c-inspector); background: rgba(52,179,199,0.12); border-color: rgba(52,179,199,0.4); }
     .chip.chip-tension.active { color: var(--c-critical); background: rgba(219,76,76,0.12); border-color: rgba(219,76,76,0.4); }
@@ -96,6 +96,12 @@
     .history-event__type { font-family: var(--f-mono); font-size: 9px; color: var(--c-text-3); margin-bottom: 2px; letter-spacing: 0.06em; text-transform: uppercase; }
     .history-event__text { font-size: 11px; color: var(--c-text); line-height: 1.5; }
     .history-event__delta { font-family: var(--f-mono); font-size: 10px; margin-top: 3px; }
+    .scope-bar { display:flex; align-items:center; gap:6px; padding:10px 18px; border-bottom:1px solid var(--c-border); background:rgba(6,13,32,.72); }
+    .scope-label { margin-right:6px; color:var(--c-text-3); font-size:12px; }
+    .scope-chip { font-size:12px; }
+    .rel-modal__title, .rel-detail, .history-event__text { font-size:14px; }
+    button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
@@ -107,7 +113,7 @@
     </a>
     <div class="topbar__brand">Magic Academy</div>
     <div class="topbar__sep"></div>
-    <div class="topbar__tick">TICK <span>10</span></div>
+    <div class="topbar__tick">시간 10 · 오전 9:20</div>
     <div style="margin-left:auto; display:flex; gap:var(--s-2);">
       <a href="../index.html" class="control-btn" title="Navigator">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="3" width="10" height="8" rx="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M5 3V2M9 3V2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
@@ -120,7 +126,7 @@
       <div class="rel-modal__header">
         <span class="rel-modal__title">관계 그래프</span>
         <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2);" id="selected-label">Adel 선택 중</span>
-        <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);">선 클릭 → 상호작용 히스토리</span>
+        <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-3);">관계선을 누르면 함께한 기록을 볼 수 있어요</span>
         <div class="rel-filter-chips">
           <button class="chip active" onclick="filterEdges('all',this)">전체</button>
           <button class="chip chip-favor" onclick="filterEdges('favor',this)">호감·친밀</button>
@@ -132,6 +138,8 @@
           <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="#a4b5d6" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
+
+      <div class="scope-bar"><span class="scope-label">보이는 Agent</span><button class="chip scope-chip active" onclick="filterScope('all',this)">전체</button><button class="chip scope-chip" onclick="filterScope('focus',this)">선택 Agent 중심</button><button class="chip scope-chip" onclick="filterScope('direct',this)">직접 관계만</button></div>
 
       <div class="rel-modal__body">
         <!-- SVG with directed arrowheads -->
@@ -280,7 +288,7 @@
             <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">72</span></div>
             <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">25</span></div>
           </div>
-          <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="font-size:11px;">Inspector →</button>
+          <button class="btn btn-outline btn-sm" onclick="window.location.href='03-simulation.html?event=missing'" style="font-size:12px;">사건 원인 보기</button>
         </div>
       </div>
     </div>
@@ -301,7 +309,7 @@
   };
   const histData = {
     'adel-leo': [
-      { tick:'T09', type:'대화', text:'Leo가 마법 생물을 금서 구역으로 유인하려 해 말다툼 발생', delta:{ '긴장도':'+18', '신뢰도':'-15' } },
+      { tick:'시간 09', type:'대화', text:'Leo가 마법 생물을 금서 구역으로 유인하려 해 말다툼 발생', delta:{ '긴장도':'+18', '신뢰도':'-15' } },
       { tick:'T07', type:'대화', text:'복도에서 마주쳐 규칙 준수 문제로 의견 충돌', delta:{ '긴장도':'+8', '신뢰도':'-5' } },
       { tick:'T04', type:'사건', text:'마법 실험 실패 수습에서 Leo의 태도에 불만', delta:{ '긴장도':'+12' } },
       { tick:'T02', type:'관찰', text:'Leo가 금지 마법 시전을 시도하다 발각되는 장면 목격', delta:{ '신뢰도':'-10' } },
@@ -344,13 +352,29 @@
     sera:'../assets/character/Sera_ESFJ.png',
   };
   const names = { adel:'Adel', leo:'Leo', ria:'Ria', kai:'Kai', sera:'Sera' };
+  let selectedAgent = 'adel';
 
   function selectNode(id) {
+    selectedAgent = id;
     document.querySelectorAll('.graph-node').forEach(n => n.classList.remove('selected'));
     document.querySelector(`.graph-node[data-id="${id}"]`).classList.add('selected');
     document.getElementById('selected-label').textContent = names[id] + ' 선택 중';
     document.querySelectorAll('[data-pair]').forEach(e => {
       e.style.opacity = e.dataset.pair.includes(id) ? '1' : '0.15';
+    });
+  }
+
+  function filterScope(scope, btn) {
+    document.querySelectorAll('.scope-chip').forEach(c => c.classList.remove('active'));
+    btn.classList.add('active');
+    const connected = new Set([selectedAgent]);
+    document.querySelectorAll('[data-pair]').forEach(edge => {
+      if (edge.dataset.pair.includes(selectedAgent)) edge.dataset.pair.split('-').forEach(id => connected.add(id));
+      edge.style.opacity = scope === 'all' || edge.dataset.pair.includes(selectedAgent) ? '1' : '0.06';
+    });
+    document.querySelectorAll('.graph-node').forEach(node => {
+      const visible = scope === 'all' || connected.has(node.dataset.id);
+      node.style.opacity = visible ? '1' : '0.12';
     });
   }
 
@@ -397,7 +421,7 @@
           <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">${d.tension}</span></div>
           <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">${d.trust}</span></div>
         </div>
-        <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="font-size:11px;">Inspector →</button>`;
+        <button class="btn btn-outline btn-sm" onclick="window.location.href='03-simulation.html?event=missing'" style="font-size:12px;">사건 원인 보기</button>`;
     }
   }
 
