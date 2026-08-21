@@ -11,14 +11,14 @@
   <style>
     body { margin: 0; overflow: hidden; background: var(--c-bg); }
 
-    .sim-screen { width: 100vw; height: 100vh; min-height: 640px; position: relative; overflow: hidden; }
+    .sim-screen { width: 1440px; height: 900px; position: relative; overflow: hidden; }
 
     /* ── Background (blurred atmospheric) ─── */
     .sim-map {
       position: absolute; inset: 0;
       background-image: url('../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
-      filter: blur(8px) brightness(0.22) saturate(0.5);
+      filter: brightness(0) saturate(0);
       transform: scale(1.03);
     }
     .sim-vignette {
@@ -198,7 +198,7 @@
       display: flex; align-items: center;
     }
     .sim-right__body {
-      flex: 1; overflow-y: auto;
+      flex: 1; overflow-y: hidden;
       padding: var(--s-3) var(--s-4);
       display: flex; flex-direction: column; gap: var(--s-3);
     }
@@ -230,7 +230,7 @@
       left: 254px; right: 314px;
       top: 58px; bottom: 148px;
       z-index: 15;
-      display: grid;
+      display: none;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 10px;
@@ -460,7 +460,7 @@
       border-radius:var(--r-sm); color:var(--c-text-2); cursor:pointer;
       transition:background var(--tr-fast), color var(--tr-fast);
     }
-    .dialogue-modal__close:hover { background:var(--c-surface-hi); color:#fff; }
+    .dialogue-modal__close:hover { background:var(--c-surface-hi); color:var(--c-text); }
     .dialogue-modal__participants {
       display:flex; align-items:center; justify-content:space-around;
       padding:var(--s-3) var(--s-6); background:rgba(14,28,64,0.5);
@@ -536,7 +536,7 @@
       left: 254px; right: 314px;
       top: 58px; bottom: 148px;
       z-index: 15;
-      display: none;
+      display: block;
     }
     .map-bg {
       position: absolute; inset: 0;
@@ -634,7 +634,7 @@
     .more-menu { position:absolute; top:38px; right:0; width:190px; padding:6px; background:#0c1733; border:1px solid var(--c-border); border-radius:var(--r-md); box-shadow:var(--sh-lg); display:none; }
     .more-menu.open { display:grid; gap:2px; }
     .more-menu a { padding:9px 10px; border-radius:6px; color:var(--c-text-2); font-size:13px; text-decoration:none; }
-    .more-menu a:hover, .more-menu a:focus-visible { background:rgba(94,96,232,.14); color:#fff; }
+    .more-menu a:hover, .more-menu a:focus-visible { background:rgba(94,96,232,.14); color:var(--c-text); }
     .selection-context { display:flex; gap:6px; padding:8px 12px; background:rgba(94,96,232,.08); border-bottom:1px solid rgba(94,96,232,.25); font-size:12px; }
     .context-label { color:var(--c-text-3); }
     .context-value { color:#c9caff; font-weight:600; }
@@ -645,7 +645,7 @@
     .memory-time { display:block; margin-bottom:2px; color:#9ea1ff; font-family:var(--f-mono); font-size:11px; }
     .log-resize-controls { display:flex; gap:4px; margin-left:auto; }
     .log-size-btn { border:1px solid transparent; background:transparent; color:var(--c-text-2); border-radius:5px; padding:4px 8px; cursor:pointer; font-size:12px; }
-    .log-size-btn:hover, .log-size-btn.active { color:#fff; background:rgba(94,96,232,.18); border-color:rgba(94,96,232,.38); }
+    .log-size-btn:hover, .log-size-btn.active { color:var(--c-text); background:rgba(94,96,232,.18); border-color:rgba(94,96,232,.38); }
     .sim-eventlog { transition:height 180ms ease; }
     .sim-screen.log-expanded .sim-eventlog { height:42vh; }
     .sim-screen.log-collapsed .sim-eventlog { height:42px; }
@@ -691,7 +691,7 @@
 </head>
 <body>
 
-<div class="sim-screen" id="sim-screen">
+<div class="sim-screen left-collapsed" id="sim-screen">
 
   <!-- ── Background ── -->
   <div class="sim-map"></div>
@@ -727,8 +727,8 @@
       </div>
       <div style="margin-left:auto; display:flex; gap:var(--s-3); align-items:center;">
         <div class="view-toggle-group">
-          <button class="view-toggle-btn" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
-          <button class="view-toggle-btn active" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
+          <button class="view-toggle-btn active" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
+          <button class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
         </div>
         <a class="btn btn-outline topbar-action" href="16-guide.html">사용법</a>
         <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage-simulations.html">내 기록</a></div></div>
@@ -736,7 +736,7 @@
     </div>
   </div>
 
-  <button class="panel-toggle panel-toggle--left" onclick="toggleSidePanel('left')" aria-label="Agent 목록 접기" aria-expanded="true" id="left-panel-toggle">☰</button>
+  <button class="panel-toggle panel-toggle--left" onclick="toggleSidePanel('left')" aria-label="Agent 목록 펼치기" aria-expanded="false" id="left-panel-toggle">☰</button>
   <button class="panel-toggle panel-toggle--right" onclick="toggleSidePanel('right')" aria-label="Agent 상세 접기" aria-expanded="true" id="right-panel-toggle">ⓘ</button>
 
   <!-- ── Left Panel: Agent 목록 ── -->
