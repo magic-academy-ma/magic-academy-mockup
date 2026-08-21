@@ -13,7 +13,7 @@
     .screen { width: 1440px; min-height: 900px; display: flex; flex-direction: column; position: relative; overflow-x: hidden; }
     .bg-map { position: fixed; inset: 0; background-image: url('../assets/concept/academy-night-background.png'); background-size: cover; filter: brightness(0.12) saturate(0.3) blur(8px); transform: scale(1.04); pointer-events: none; z-index: 0; }
     .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 30% 30%, rgba(11,24,56,0.7) 0%, rgba(6,13,32,0.97) 80%); pointer-events: none; z-index: 0; }
-    .topbar { height: 52px; padding: 0 var(--s-6); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--c-border); background: rgba(6,13,32,0.94); backdrop-filter: blur(16px); z-index: 30; flex-shrink: 0; position: sticky; top: 0; }
+    .topbar { height: var(--topbar-h); padding: 0 var(--s-6); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--c-border); background: rgba(6,13,32,0.94); backdrop-filter: blur(16px); z-index: 30; flex-shrink: 0; position: sticky; top: 0; }
     .topbar__left { display: flex; align-items: center; gap: var(--s-4); }
     .topbar__brand { font-family: var(--f-serif-en); font-size: var(--t-md); font-weight: 600; color: var(--c-text); letter-spacing: 0.04em; }
     .content { flex: 1; z-index: 10; padding: var(--s-6); display: flex; flex-direction: column; gap: var(--s-6); max-width: 1440px; }
@@ -76,10 +76,10 @@
                 <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);font-weight:600;margin-bottom:10px;text-transform:uppercase;letter-spacing:0.06em;">[ 공유 구성 ]</div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--s-3);">
                   <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">시뮬레이션 시드</div><div style="font-family:var(--f-mono);font-size:13px;color:var(--c-cream);font-weight:700;">#SEED-8842</div></div>
-                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">캠페인</div><div style="font-size:12px;color:#fff;">첫 학기, 다섯 명의 마법사</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">캠페인</div><div style="font-size:12px;color:var(--c-text);">첫 학기, 다섯 명의 마법사</div></div>
                   <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">User Persona</div><div style="font-size:12px;color:var(--c-char-ria-light);">Ria (INFP)</div></div>
                   <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">Magic Layer</div><div style="font-family:var(--f-mono);font-size:12px;color:var(--c-success);">ON</div></div>
-                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">완료 Tick</div><div style="font-family:var(--f-mono);font-size:12px;color:#fff;">10 / 10</div></div>
+                  <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">완료 Tick</div><div style="font-family:var(--f-mono);font-size:12px;color:var(--c-text);">10 / 10</div></div>
                   <div><div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:4px;">최종 판정</div><div style="font-family:var(--f-mono);font-size:12px;color:var(--c-inspector);">COMPLETED</div></div>
                 </div>
               </div>
@@ -106,13 +106,13 @@
               <!-- JSON 내보내기 -->
               <div>
                 <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-bottom:6px;text-transform:uppercase;">JSON 내보내기 (페르소나 + 시드)</div>
-                <div style="background:rgba(3,6,18,0.8);border:1px solid rgba(70,100,180,0.25);border-radius:var(--r-sm);padding:var(--s-3);font-family:var(--f-mono);font-size:10px;color:#b8c7e6;position:relative;">
+                <div style="background:rgba(3,6,18,0.8);border:1px solid rgba(70,100,180,0.25);border-radius:var(--r-sm);padding:var(--s-3);font-family:var(--f-mono);font-size:10px;color:var(--c-text-2);position:relative;">
                   <pre style="margin:0;overflow-x:auto;">{
-  <span style="color:#5e60e8;">"seed"</span>: <span style="color:#d4b26f;">"SEED-8842"</span>,
-  <span style="color:#5e60e8;">"campaign"</span>: <span style="color:#d4b26f;">"마법사의 첫 학기"</span>,
-  <span style="color:#5e60e8;">"persona"</span>: <span style="color:#d4b26f;">"Ria_INFP"</span>,
-  <span style="color:#5e60e8;">"magic_layer"</span>: <span style="color:#38b277;">true</span>,
-  <span style="color:#5e60e8;">"big_five"</span>: { <span style="color:#5e60e8;">"O"</span>:<span style="color:#38b277;">82</span>, <span style="color:#5e60e8;">"C"</span>:<span style="color:#38b277;">45</span>, <span style="color:#5e60e8;">"E"</span>:<span style="color:#38b277;">38</span>, <span style="color:#5e60e8;">"A"</span>:<span style="color:#38b277;">75</span>, <span style="color:#5e60e8;">"N"</span>:<span style="color:#38b277;">62</span> }
+  <span style="color:var(--c-primary);">"seed"</span>: <span style="color:var(--c-gold);">"SEED-8842"</span>,
+  <span style="color:var(--c-primary);">"campaign"</span>: <span style="color:var(--c-gold);">"마법사의 첫 학기"</span>,
+  <span style="color:var(--c-primary);">"persona"</span>: <span style="color:var(--c-gold);">"Ria_INFP"</span>,
+  <span style="color:var(--c-primary);">"magic_layer"</span>: <span style="color:var(--c-success);">true</span>,
+  <span style="color:var(--c-primary);">"big_five"</span>: { <span style="color:var(--c-primary);">"O"</span>:<span style="color:var(--c-success);">82</span>, <span style="color:var(--c-primary);">"C"</span>:<span style="color:var(--c-success);">45</span>, <span style="color:var(--c-primary);">"E"</span>:<span style="color:var(--c-success);">38</span>, <span style="color:var(--c-primary);">"A"</span>:<span style="color:var(--c-success);">75</span>, <span style="color:var(--c-primary);">"N"</span>:<span style="color:var(--c-success);">62</span> }
 }</pre>
                   <button onclick="copyJSON()" style="position:absolute;top:8px;right:8px;font-family:var(--f-mono);font-size:9px;color:var(--c-inspector);background:rgba(52,179,199,0.1);border:1px solid rgba(52,179,199,0.3);border-radius:var(--r-sm);padding:2px 8px;cursor:pointer;">JSON 복사</button>
                 </div>
@@ -184,13 +184,13 @@
                 <span class="preset-tag" style="background:rgba(212,178,111,0.2);color:var(--c-cream);border:1px solid rgba(212,178,111,0.35);">추천</span>
                 <span class="preset-tag" style="background:rgba(219,76,76,0.15);color:var(--c-critical);border:1px solid rgba(219,76,76,0.3);">고강도</span>
               </div>
-              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">천재 라이벌 시나리오</div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:var(--c-text);">천재 라이벌 시나리오</div>
               <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-2241</div>
             </div>
           </div>
           <div style="font-size:11px;color:var(--c-text-2);line-height:1.6;">Adel(ISTJ)과 Kai(ENTJ)가 학점 1위를 두고 10 Tick 내내 치열하게 경쟁. Magic Layer ON 상태에서 마법 대결까지 발생하는 고긴장 시나리오.</div>
           <div style="display:flex;gap:6px;flex-wrap:wrap;">
-            <span class="preset-tag" style="background:rgba(94,96,232,0.15);color:#7375f5;border:1px solid rgba(94,96,232,0.3);">Adel ISTJ</span>
+            <span class="preset-tag" style="background:rgba(94,96,232,0.15);color:var(--c-primary-hover);border:1px solid rgba(94,96,232,0.3);">Adel ISTJ</span>
             <span class="preset-tag" style="background:rgba(154,28,28,0.15);color:var(--c-char-kai-light);border:1px solid rgba(154,28,28,0.3);">Kai ENTJ</span>
             <span class="preset-tag" style="background:rgba(52,179,199,0.1);color:var(--c-inspector);border:1px solid rgba(52,179,199,0.3);">Magic ON</span>
           </div>
@@ -208,7 +208,7 @@
               <div style="display:flex;gap:6px;margin-bottom:4px;">
                 <span class="preset-tag" style="background:rgba(56,178,119,0.15);color:var(--c-success);border:1px solid rgba(56,178,119,0.3);">입문</span>
               </div>
-              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">평화로운 일상 시나리오</div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:var(--c-text);">평화로운 일상 시나리오</div>
               <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-0100</div>
             </div>
           </div>
@@ -232,7 +232,7 @@
                 <span class="preset-tag" style="background:rgba(219,76,76,0.2);color:var(--c-critical);border:1px solid rgba(219,76,76,0.4);">HARD</span>
                 <span class="preset-tag" style="background:rgba(219,76,76,0.1);color:var(--c-critical);border:1px solid rgba(219,76,76,0.2);">카오스</span>
               </div>
-              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">파멸의 마법 폭주</div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:var(--c-text);">파멸의 마법 폭주</div>
               <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-6666</div>
             </div>
           </div>
@@ -256,7 +256,7 @@
               <div style="display:flex;gap:6px;margin-bottom:4px;">
                 <span class="preset-tag" style="background:rgba(56,178,119,0.15);color:var(--c-success);border:1px solid rgba(56,178,119,0.3);">스토리</span>
               </div>
-              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">Ria의 성장 이야기</div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:var(--c-text);">Ria의 성장 이야기</div>
               <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-5577</div>
             </div>
           </div>
@@ -279,7 +279,7 @@
               <div style="display:flex;gap:6px;margin-bottom:4px;">
                 <span class="preset-tag" style="background:rgba(212,178,111,0.1);color:var(--c-cream);border:1px solid rgba(212,178,111,0.3);">신규</span>
               </div>
-              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:#fff;">교수와의 금지된 실험</div>
+              <div style="font-family:var(--f-serif-ko);font-size:14px;font-weight:700;color:var(--c-text);">교수와의 금지된 실험</div>
               <div style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-3);margin-top:2px;">Seed #SEED-9001</div>
             </div>
           </div>
