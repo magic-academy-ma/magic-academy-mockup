@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>관계 그래프 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -101,6 +102,19 @@
     .scope-chip { font-size:12px; }
     .rel-modal__title, .rel-detail, .history-event__text { font-size:14px; }
     button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .sim-screen { min-width: 0; min-height: 100vh; height: auto; transform: none !important; }
+      .topbar { position: relative; }
+      .rel-modal { position: relative; padding: 64px 10px 10px; align-items: flex-start; }
+      .rel-modal__inner { width: 100%; height: calc(100vh - 84px); min-height: 620px; }
+      .rel-modal__header { flex-wrap: wrap; padding: 12px; gap: 8px; }
+      .rel-filter-chips { order: 2; width: 100%; margin-left: 0; overflow-x: auto; }
+      .scope-bar { overflow-x: auto; }
+      .rel-modal__footer { padding: 10px 12px; overflow-x: auto; }
+      .rel-detail { display: none; }
+      .history-panel { width: min(320px, 88vw); }
+    }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
     @media (max-width:900px) { .rel-modal { inset:70px 8px 8px; } .rel-modal__header { flex-wrap:wrap; gap:8px; } .rel-filter-chips { width:100%; overflow-x:auto; } .scope-bar { overflow-x:auto; } .rel-modal__body { overflow:auto; } .graph-svg { min-width:760px; } .rel-detail { min-width:280px; } }
   </style>
@@ -387,9 +401,8 @@
   function filterEdges(type, btn) {
     document.querySelectorAll('.rel-filter-chips .chip').forEach(c => c.classList.remove('active'));
     btn.classList.add('active');
-    document.querySelectorAll('[data-type]').forEach(e => {
-      e.style.opacity = (type === 'all' || e.dataset.type === type) ? '1' : '0.06';
-    });
+    currentEdgeType = type;
+    applyGraphFilters();
   }
 
   function openHistory(a, b) {
