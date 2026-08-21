@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>시뮬레이션 메인 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -15,7 +16,7 @@
     /* ── Background (blurred atmospheric) ─── */
     .sim-map {
       position: absolute; inset: 0;
-      background-image: url('../assets/concept/concept_v1.1.png');
+      background-image: url('../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
       filter: blur(8px) brightness(0.22) saturate(0.5);
       transform: scale(1.03);
@@ -539,7 +540,7 @@
     }
     .map-bg {
       position: absolute; inset: 0;
-      background-image: url('../assets/concept/concept_v1.1.png');
+      background-image: url('../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
       filter: brightness(0.48) saturate(0.72);
       border-radius: var(--r-lg);
@@ -669,6 +670,7 @@
     button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
     @media (max-width: 900px) {
+      .sim-screen { min-height:0; transform:none !important; }
       .topbar-main { padding:0 10px; gap:8px; flex-wrap:wrap; height:auto; min-height:58px; }
       .topbar__brand, .topbar__sep, .topbar__time { display:none; }
       .topbar-main > div:last-child { margin-left:0 !important; }
@@ -729,7 +731,7 @@
           <button class="view-toggle-btn active" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
         </div>
         <a class="btn btn-outline topbar-action" href="16-guide.html">사용법</a>
-        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage.html">내 기록</a></div></div>
+        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage-simulations.html">내 기록</a></div></div>
       </div>
     </div>
   </div>
@@ -920,7 +922,7 @@
 
     <!-- 중앙 광장 — Bottom Left -->
     <div class="zone-card" data-zone="central" onclick="selectZone('central')">
-      <div class="zone-card__bg" style="background-image:url('../assets/concept/concept_v1.1.png');"></div>
+      <div class="zone-card__bg" style="background-image:url('../assets/concept/academy-night-background.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Central Square</div>
         <div class="zone-card__name">중앙 광장</div>
@@ -1017,7 +1019,7 @@
           <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m1"><span><span class="memory-time">시간 09 · 오전 9:12</span>마법 생물을 관찰했다</span></a>
           <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m2"><span><span class="memory-time">시간 08 · 오전 9:04</span>Ria와 복도에서 대화했다</span></a>
         </div>
-        <a class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=adel" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
+        <a id="all-memories-link" class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=leo" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
       </div>
       <div class="divider"></div>
       <button class="btn btn-outline btn-sm" onclick="openEventDrawer()" style="width:100%; padding:9px 0;">
@@ -1246,7 +1248,8 @@
     document.getElementById('selected-stress-bar').style.width = `${data.stress}%`;
     document.getElementById('selected-major').textContent = data.major;
     document.getElementById('selected-year').textContent = data.year;
-    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${key}&memory=m${index + 1}"><span><span class="memory-time">시간 ${String(9-index).padStart(2,'0')} · 오전 9:${String(12-index*4).padStart(2,'0')}</span>${m}</span></a>`).join('');
+    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}"><span><span class="memory-time">시간 ${String(9-index).padStart(2,'0')} · 오전 9:${String(12-index*4).padStart(2,'0')}</span>${m}</span></a>`).join('');
+    document.getElementById('all-memories-link').href = `04-inspector.html?tab=memory&agent=${agentId}`;
   }
 
   function openEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }

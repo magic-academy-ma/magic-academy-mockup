@@ -2,6 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>사건 원인 보기 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,7 +15,7 @@
 
     .bg-map {
       position: absolute; inset: 0;
-      background-image: url('../assets/concept/concept_v1.1.png');
+      background-image: url('../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
       filter: brightness(0.18) saturate(0.5) blur(8px);
       transform: scale(1.04);
@@ -141,6 +142,20 @@
     #pane-user .gauge-row, #pane-user .weight-label, #pane-user .weight-score, #pane-user .rel-dim-row, #pane-memory .mem-entry__text { font-size:13px; }
     .tab-btn { font-size:13px; padding:7px 15px; }
     button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .screen { width: 100%; height: auto; min-height: 100vh; overflow: visible; transform: none !important; }
+      .topbar { height: auto; min-height: 52px; padding: 8px 12px; align-items: flex-start; gap: 8px; }
+      .topbar__left { flex-wrap: wrap; gap: 8px; }
+      .topbar__brand, .topbar__left > div:nth-child(2), .topbar > div:last-child { display: none !important; }
+      .inspector-tab-nav { width: 100%; overflow-x: auto; }
+      .tab-btn { flex: 1; min-width: max-content; }
+      .inspector-content { height: auto; overflow: visible; padding: 12px; }
+      .tab-pane.active { display: grid; height: auto; }
+      .user-view-grid, .dev-view-grid, .memory-view-grid { grid-template-columns: 1fr; }
+      .info-card { min-height: 280px; }
+      .info-card__body { overflow: visible; }
+    }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
   </style>
 </head>
@@ -435,10 +450,10 @@
         </div>
         <div class="info-card__body">
           <div style="display:flex; gap:8px; padding:var(--s-2); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
-            <div style="width:32px; height:40px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1px solid var(--c-char-adel-ring); flex-shrink:0;"></div>
+            <div id="memory-agent-avatar" style="width:32px; height:40px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1px solid var(--c-char-adel-ring); flex-shrink:0;"></div>
             <div>
-              <div style="font-family:var(--f-serif-ko); font-size:13px; font-weight:700; color:#fff;">Adel</div>
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">ISTJ · 기억 10개</div>
+              <div id="memory-agent-name" style="font-family:var(--f-serif-ko); font-size:13px; font-weight:700; color:#fff;">Adel</div>
+              <div id="memory-agent-meta" style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">ISTJ · 기억 10개</div>
             </div>
           </div>
 
@@ -618,6 +633,19 @@
   }
   const inspectorParams = new URLSearchParams(window.location.search);
   if (inspectorParams.get('tab') === 'memory') switchTab('memory');
+  const agentProfiles = {
+    adel: { name:'Adel', mbti:'ISTJ', portrait:'Adel_ISTJ.png' },
+    leo: { name:'Leo', mbti:'ESTP', portrait:'Leo_ESTP.png' },
+    ria: { name:'Ria', mbti:'INFP', portrait:'Ria_INFP.png' },
+    kai: { name:'Kai', mbti:'ENTJ', portrait:'Kai_ENTJ.png' },
+    sera: { name:'Sera', mbti:'ESFJ', portrait:'Sera_ESFJ.png' },
+  };
+  const requestedAgent = agentProfiles[inspectorParams.get('agent')];
+  if (requestedAgent) {
+    document.getElementById('memory-agent-name').textContent = requestedAgent.name;
+    document.getElementById('memory-agent-meta').textContent = `${requestedAgent.mbti} · 기억 10개`;
+    document.getElementById('memory-agent-avatar').style.backgroundImage = `url('../assets/character/${requestedAgent.portrait}')`;
+  }
   const requestedMemory = inspectorParams.get('memory');
   if (requestedMemory) {
     const requestedEntry = document.querySelector(`[onclick*="'${requestedMemory}'"]`);
