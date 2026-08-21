@@ -24,12 +24,20 @@
       background: rgba(6, 13, 32, 0.94);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
-      border-right: 1px solid var(--c-border);
       padding: var(--s-8) var(--s-7);
       display: flex;
       flex-direction: column;
       z-index: 20;
-      box-shadow: 12px 0 40px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+    /* soft blend into campus instead of a hard edge line */
+    .onboarding-panel::after {
+      content: '';
+      position: absolute;
+      top: 0; right: -140px; bottom: 0;
+      width: 140px;
+      pointer-events: none;
+      background: linear-gradient(90deg, rgba(6, 13, 32, 0.94) 0%, rgba(6, 13, 32, 0.45) 45%, rgba(6, 13, 32, 0) 100%);
     }
     .onboarding__brand {
       font-family: var(--f-serif-en);
@@ -84,6 +92,46 @@
       color: var(--c-text-2);
       line-height: 1.7;
       margin: 0;
+    }
+
+    /* ── Chat-style character dialogue ── */
+    .chat-thread { display: flex; flex-direction: column; gap: 14px; }
+    .chat-msg { display: flex; gap: 12px; align-items: flex-start; }
+    .chat-avatar {
+      width: 56px; height: 56px; border-radius: 50%; flex-shrink: 0;
+      background-size: cover; background-position: center;
+      border: 2px solid var(--chat-ring, var(--c-border-hi));
+      box-shadow: 0 0 16px var(--chat-ring, transparent);
+    }
+    .chat-avatar--glyph {
+      display: flex; align-items: center; justify-content: center;
+      background: var(--c-inspector-muted); color: var(--c-inspector);
+      font-family: var(--f-mono); font-size: 20px; font-weight: 700;
+    }
+    .chat-bubble {
+      position: relative;
+      background: rgba(11, 24, 56, 0.9);
+      border: 1px solid var(--c-border);
+      border-radius: 4px var(--r-md) var(--r-md) var(--r-md);
+      padding: 12px 14px;
+    }
+    .chat-bubble::before {
+      content: '';
+      position: absolute; left: -6px; top: 14px;
+      width: 10px; height: 10px;
+      background: rgba(11, 24, 56, 0.9);
+      border-left: 1px solid var(--c-border);
+      border-bottom: 1px solid var(--c-border);
+      transform: rotate(45deg);
+    }
+    .chat-name { font-family: var(--f-mono); font-size: 11px; font-weight: 700; margin-bottom: 4px; }
+    .chat-text { font-family: var(--f-serif-ko); font-size: 14px; line-height: 1.6; color: var(--c-text); }
+    .chat-reply {
+      margin-left: 68px;
+      background: rgba(6, 13, 32, 0.6);
+      border: 1px solid var(--c-border);
+      border-radius: var(--r-md);
+      padding: 12px 14px;
     }
 
     .onboarding__cta {
@@ -295,27 +343,26 @@
           <span class="ob-badge-text">Multi-Agent Simulation</span>
         </div>
 
-        <h1 class="onboarding__title">마법학교가<br>살아 움직인다.</h1>
+        <div class="chat-thread" style="margin-top: var(--s-5);">
+          <div class="chat-msg">
+            <div class="chat-avatar" style="--chat-ring: var(--c-cream); background-image:url('../assets/character/Leo_ESTP.png');"></div>
+            <div class="chat-bubble">
+              <div class="chat-name" style="color: var(--c-cream);">Leo · ESTP</div>
+              <div class="chat-text">안녕! 여긴 마법학교야.<br>우리는 너의 지시 없이도, 알아서 관계 맺고 갈등하고 사건을 만들어.</div>
+            </div>
+          </div>
 
-        <div class="gold-divider" style="margin: var(--s-6) 0;">
-          <div class="gold-divider__dot"></div>
-        </div>
-
-        <p class="onboarding__desc">
-          학생들은 관계를 맺고, 갈등하며,<br>
-          때로는 마법 사건을 일으킨다.
-        </p>
-
-        <!-- 5 Agents Mini Badges -->
-        <div style="display:flex; align-items:center; gap:var(--s-2); margin-top:var(--s-6);">
-          <div style="width:30px; height:30px; border-radius:50%; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi);"></div>
-          <div style="width:30px; height:30px; border-radius:50%; background-image:url('../assets/character/Leo_ESTP.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
-          <div style="width:30px; height:30px; border-radius:50%; background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
-          <div style="width:30px; height:30px; border-radius:50%; background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
-          <div style="width:30px; height:30px; border-radius:50%; background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
-          <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2); margin-left:var(--s-2);">
-            5 Students &middot; Autonomous
-          </span>
+          <div class="chat-reply">
+            <div style="display:flex; align-items:center; gap:var(--s-2);">
+              <div style="width:26px; height:26px; border-radius:50%; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi);"></div>
+              <div style="width:26px; height:26px; border-radius:50%; background-image:url('../assets/character/Ria_INFP.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
+              <div style="width:26px; height:26px; border-radius:50%; background-image:url('../assets/character/Kai_ENTJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
+              <div style="width:26px; height:26px; border-radius:50%; background-image:url('../assets/character/Sera_ESFJ.png'); background-size:cover; border:1.5px solid var(--c-border-hi); margin-left:-8px;"></div>
+              <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2); margin-left:var(--s-2);">
+                5 Students &middot; Autonomous
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -332,29 +379,28 @@
           <span class="ob-badge-text" style="color:var(--c-primary);">Agent Intelligence</span>
         </div>
 
-        <h1 class="onboarding__title">학생들은<br>스스로 결정한다.</h1>
-
-        <div class="gold-divider" style="margin: var(--s-6) 0;">
-          <div class="gold-divider__dot"></div>
-        </div>
-
-        <p class="onboarding__desc">
-          수업을 듣고, 대화를 나누고, 갈등한다.<br>
-          당신은 지시하지 않고 지켜본다.
-        </p>
-
-        <div style="margin-top: var(--s-5); display: flex; flex-direction: column; gap: var(--s-3);">
-          <div style="display:flex; align-items:center; gap: var(--s-3);">
-            <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
-            <span style="font-size: var(--t-sm); color: var(--c-text-2);">스트레스·피로도·만족도 내부 상태 보유</span>
+        <div class="chat-thread" style="margin-top: var(--s-5);">
+          <div class="chat-msg">
+            <div class="chat-avatar" style="--chat-ring: var(--c-critical); background-image:url('../assets/character/Adel_ISTJ.png');"></div>
+            <div class="chat-bubble" style="border-color: var(--c-critical-ring);">
+              <div class="chat-name" style="color: var(--c-critical);">Adel · ISTJ</div>
+              <div class="chat-text">결계의 순환이 불규칙해...<br>규율은 지켜야 하는데, 피로가 너무 누적됐어.</div>
+            </div>
           </div>
-          <div style="display:flex; align-items:center; gap: var(--s-3);">
-            <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
-            <span style="font-size: var(--t-sm); color: var(--c-text-2);">기억 검색(pgvector) 기반 의사결정</span>
-          </div>
-          <div style="display:flex; align-items:center; gap: var(--s-3);">
-            <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
-            <span style="font-size: var(--t-sm); color: var(--c-text-2);">Tick 단위 자율 이동 및 상호작용</span>
+
+          <div class="chat-reply" style="display:flex; flex-direction:column; gap: var(--s-3);">
+            <div style="display:flex; align-items:center; gap: var(--s-3);">
+              <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+              <span style="font-size: var(--t-sm); color: var(--c-text-2);">스트레스·피로도·만족도 내부 상태 보유</span>
+            </div>
+            <div style="display:flex; align-items:center; gap: var(--s-3);">
+              <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+              <span style="font-size: var(--t-sm); color: var(--c-text-2);">기억 검색(pgvector) 기반 의사결정</span>
+            </div>
+            <div style="display:flex; align-items:center; gap: var(--s-3);">
+              <div style="width:6px; height:6px; border-radius:50%; background:var(--c-primary); flex-shrink:0;"></div>
+              <span style="font-size: var(--t-sm); color: var(--c-text-2);">Tick 단위 자율 이동 및 상호작용</span>
+            </div>
           </div>
         </div>
       </div>
@@ -372,19 +418,19 @@
           <span class="ob-badge-text" style="color: var(--c-inspector);">Causal Observatory</span>
         </div>
 
-        <h1 class="onboarding__title">원인은<br>명확하게.</h1>
+        <h1 class="onboarding__title" style="font-size:26px; margin: 10px 0 var(--s-4);">원인은<br>명확하게.</h1>
 
-        <div class="gold-divider" style="margin: var(--s-4) 0;">
-          <div class="gold-divider__dot"></div>
-        </div>
-
-        <p class="onboarding__desc" style="font-size:13px; margin-bottom:var(--s-3);">
-          Magic Event가 발생하면,<br>
-          Inspector가 1문장 서사와 정밀 인과를 보여줍니다.
-        </p>
+        <div class="chat-thread">
+          <div class="chat-msg">
+            <div class="chat-avatar chat-avatar--glyph" style="--chat-ring: var(--c-inspector);">◎</div>
+            <div class="chat-bubble" style="border-color: var(--c-inspector-ring);">
+              <div class="chat-name" style="color: var(--c-inspector);">Inspector</div>
+              <div class="chat-text" style="font-size:13px;">Magic Event가 발생하면,<br>1문장 서사와 정밀 인과를 함께 보여드릴게요.</div>
+            </div>
+          </div>
 
         <!-- 2-Layer Scenario Example Card -->
-        <div style="background:rgba(11,24,56,0.9); border:1px solid var(--c-border); border-radius:var(--r-md); padding:var(--s-3); display:flex; flex-direction:column; gap:6px;">
+        <div class="chat-reply" style="display:flex; flex-direction:column; gap:6px;">
           <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600; display:flex; justify-content:space-between;">
             <span>시나리오 예시</span>
             <span style="color:var(--c-critical);">TICK 10 · 실종 사건</span>
@@ -401,6 +447,7 @@
             <div>2. Memory: <strong style="color:var(--c-inspector);">결계 균열 목격 (유사도 0.892)</strong></div>
             <div>3. State Commit: <strong style="color:var(--c-cream);">MISSING · 4 TICKS</strong></div>
           </div>
+        </div>
         </div>
       </div>
 
