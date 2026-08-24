@@ -262,7 +262,7 @@
     <div class="topbar__left">
       <span class="topbar__brand">Magic Academy</span>
       <div class="topbar__sep"></div>
-      <span class="topbar__title">타임라인 리플레이 — 대표 캠페인: 첫 학기, 다섯 명의 마법사</span>
+      <span class="topbar__title">타임라인 리플레이 — 대표 캠페인: 다섯 학생과 한 명의 교수</span>
     </div>
     <div class="topbar__right">
       <a href="03-simulation.html" class="btn-nav">← 시뮬레이션</a>
@@ -353,18 +353,6 @@
           <div class="event-chip__dot" style="background:var(--c-critical);"></div>
           T07 · 학생 실종
         </div>
-        <div class="event-chip" data-tick="8" onclick="setTick(8)">
-          <div class="event-chip__dot" style="background:var(--c-cream);"></div>
-          T08 · 수색 작전
-        </div>
-        <div class="event-chip" data-tick="9" onclick="setTick(9)">
-          <div class="event-chip__dot" style="background:var(--c-cream);"></div>
-          T09 · 진실 폭로
-        </div>
-        <div class="event-chip" data-tick="10" onclick="setTick(10)">
-          <div class="event-chip__dot" style="background:var(--c-success);"></div>
-          T10 · 사건 종결
-        </div>
       </div>
 
       <!-- Timeline bar -->
@@ -385,33 +373,28 @@
               <div style="position:relative; height:4px; margin: 0 4px;">
                 <div class="timeline-rail">
                   <div class="timeline-fill" id="timeline-fill"></div>
-                  <div class="timeline-thumb" id="timeline-thumb" style="left:33.3%;"></div>
+                  <div class="timeline-thumb" id="timeline-thumb" style="left:50%;"></div>
                 </div>
                 <!-- markers above rail -->
                 <div class="tick-marker" style="left:0%;" onclick="setTick(1)">T01</div>
-                <div class="tick-marker has-event" style="left:11.1%;" onclick="setTick(2)">
+                <div class="tick-marker has-event" style="left:16.7%;" onclick="setTick(2)">
                   <span class="pin-icon">📌</span>T02
                 </div>
-                <div class="tick-marker" style="left:22.2%;" onclick="setTick(3)">T03</div>
-                <div class="tick-marker has-event" style="left:33.3%; color:var(--c-inspector);" onclick="setTick(4)">
+                <div class="tick-marker" style="left:33.3%;" onclick="setTick(3)">T03</div>
+                <div class="tick-marker has-event" style="left:50%; color:var(--c-inspector);" onclick="setTick(4)">
                   <span class="pin-icon">⚡</span>T04
                 </div>
-                <div class="tick-marker" style="left:44.4%;" onclick="setTick(5)">T05</div>
-                <div class="tick-marker has-event" style="left:55.5%;" onclick="setTick(6)">
+                <div class="tick-marker" style="left:66.7%;" onclick="setTick(5)">T05</div>
+                <div class="tick-marker has-event" style="left:83.3%;" onclick="setTick(6)">
                   <span class="pin-icon">📌</span>T06
                 </div>
-                <div class="tick-marker has-critical" style="left:66.6%;" onclick="setTick(7)">
+                <div class="tick-marker has-critical" style="left:100%;" onclick="setTick(7)">
                   <span class="pin-icon">⚠</span>T07
-                </div>
-                <div class="tick-marker" style="left:77.7%;" onclick="setTick(8)">T08</div>
-                <div class="tick-marker" style="left:88.8%;" onclick="setTick(9)">T09</div>
-                <div class="tick-marker has-event" style="left:100%;" onclick="setTick(10)">
-                  <span class="pin-icon">🏁</span>T10
                 </div>
               </div>
             </div>
           </div>
-          <span style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-2); flex-shrink:0;" id="tick-progress-label">04 / 10 TICK</span>
+          <span style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-2); flex-shrink:0;" id="tick-progress-label">04 / 07 TICK</span>
         </div>
       </div>
     </div>
@@ -521,10 +504,10 @@
 
   function renderTick(tick) {
     currentTick = tick;
-    const pct = ((tick - 1) / 9) * 100;
+    const pct = ((tick - 1) / 6) * 100;
     document.getElementById('timeline-thumb').style.left = pct + '%';
     document.getElementById('timeline-fill').style.width = pct + '%';
-    document.getElementById('tick-progress-label').textContent = `${pad(tick)} / 10 TICK`;
+    document.getElementById('tick-progress-label').textContent = `${pad(tick)} / 07 TICK`;
     document.getElementById('tick-badge-label').textContent = `TICK ${pad(tick)}`;
     document.getElementById('rpanel-tick-label').textContent = `TICK ${pad(tick)}`;
 
@@ -541,7 +524,7 @@
   }
 
   function stepTick(delta) {
-    const next = Math.min(10, Math.max(1, currentTick + delta));
+    const next = Math.min(7, Math.max(1, currentTick + delta));
     renderTick(next);
   }
 
@@ -557,7 +540,7 @@
   function startPlayback() {
     stopPlayback();
     playTimer = setInterval(() => {
-      const next = currentTick >= 10 ? 1 : currentTick + 1;
+      const next = currentTick >= 7 ? 1 : currentTick + 1;
       renderTick(next);
     }, 1600 / playSpeed);
   }

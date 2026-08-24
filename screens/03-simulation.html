@@ -715,8 +715,8 @@
     @keyframes event-drop { from { opacity:0; transform:translateY(-18px); } to { opacity:1; transform:translateY(0); } }
     .event-slim-banner__badge { background:transparent; }
     .event-slim-banner__desc { font-size:13px; }
-    .event-drawer { position:fixed; top:58px; right:12px; bottom:12px; width:420px; z-index:45; background:rgba(8,16,38,.98); border:1px solid rgba(118,121,255,.46); border-radius:var(--r-lg); box-shadow:var(--sh-lg); transform:translateX(calc(100% + 24px)); transition:transform 220ms ease; display:flex; flex-direction:column; }
-    .event-drawer.open { transform:translateX(0); }
+    .event-drawer, .settings-drawer { position:fixed; top:58px; right:12px; bottom:12px; width:420px; z-index:45; background:rgba(8,16,38,.98); border:1px solid rgba(118,121,255,.46); border-radius:var(--r-lg); box-shadow:var(--sh-lg); transform:translateX(calc(100% + 24px)); transition:transform 220ms ease; display:flex; flex-direction:column; }
+    .event-drawer.open, .settings-drawer.open { transform:translateX(0); }
     .event-drawer__header { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid var(--c-border); }
     .event-drawer__body { padding:18px; overflow:auto; display:grid; gap:16px; font-size:14px; line-height:1.65; }
     .cause-card { padding:14px; border:1px solid var(--c-border); background:rgba(94,96,232,.08); border-radius:10px; }
@@ -724,7 +724,18 @@
     .cause-list { margin:0; padding-left:20px; color:var(--c-text-2); }
     .event-chip { display:inline-flex; align-items:center; gap:6px; color:var(--c-critical); font-size:12px; }
     .event-chip::before { content:'!'; width:18px; height:18px; display:grid; place-items:center; border:1px solid currentColor; border-radius:50%; font-weight:700; }
-    button:focus-visible, a:focus-visible, input:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    .settings-section { display:grid; gap:12px; padding:14px; border:1px solid var(--c-border); border-radius:10px; background:rgba(94,96,232,.08); }
+    .settings-section__head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .settings-section__head strong { color:var(--c-text); }
+    .settings-status { font-family:var(--f-mono); font-size:10px; color:var(--c-success); letter-spacing:.06em; }
+    .settings-status.locked { color:var(--c-text-3); }
+    .settings-field { display:grid; grid-template-columns:110px 1fr; align-items:center; gap:12px; font-size:13px; }
+    .settings-field label { color:var(--c-text-2); }
+    .settings-field select { width:100%; border:1px solid var(--c-border); border-radius:7px; background:#0c1733; color:var(--c-text); padding:9px 10px; font:inherit; }
+    .settings-readonly { color:var(--c-text); text-align:right; }
+    .settings-note { margin:0; color:var(--c-text-2); font-size:12px; line-height:1.6; }
+    .settings-feedback { min-height:36px; padding:10px 12px; border:1px solid rgba(72,187,120,.38); border-radius:8px; background:rgba(72,187,120,.08); color:var(--c-success); font-size:12px; line-height:1.5; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
     @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
     @media (max-width: 900px) {
       .sim-screen { min-height:0; transform:none !important; }
@@ -741,7 +752,7 @@
       .panel-toggle { top:112px; }
       .sim-screen:not(.left-open-mobile) .sim-left { transform:translateX(calc(-100% - 20px)); }
       .sim-screen:not(.right-open-mobile) .sim-right { transform:translateX(calc(100% + 20px)); }
-      .event-drawer { width:calc(100vw - 16px); right:8px; }
+      .event-drawer, .settings-drawer { width:calc(100vw - 16px); right:8px; }
       .sim-eventlog { left:8px; right:8px; }
     }
   </style>
@@ -765,7 +776,7 @@
       <div class="brand-mark" aria-hidden="true">M</div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="topbar__sep"></div>
-      <div class="topbar__tick">시간 10</div>
+      <div class="topbar__tick">TICK 4 / 7</div>
       <div class="topbar__time">1일차 · 오전 9:20</div>
       <div class="topbar__sep"></div>
       <div class="topbar__controls">
@@ -788,7 +799,7 @@
           <button class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
         </div>
         <a class="btn btn-outline topbar-action" href="16-guide.html">사용법</a>
-        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage-simulations.html">내 기록</a></div></div>
+        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="#experiment-settings" onclick="openSettingsDrawer(); return false;">실험 조건</a><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage-simulations.html">내 기록</a></div></div>
       </div>
     </div>
   </div>
@@ -817,7 +828,7 @@
         <div class="agent-list-portrait char-adel-sm" style="border-color:var(--c-critical);"></div>
         <div class="agent-list-info">
           <div class="agent-list-name" style="color:var(--c-critical);">Adel</div>
-          <div class="agent-list-loc" style="color:var(--c-critical);">실종 · 시간 10</div>
+          <div class="agent-list-loc" style="color:var(--c-critical);">실종 · TICK 4</div>
         </div>
         <div class="agent-list-status missing"></div>
       </div>
@@ -1073,8 +1084,8 @@
       <div>
         <div class="sim-right__section-title">최근 기억</div>
         <div id="selected-memories">
-          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m1"><span><span class="memory-time">시간 09 · 오전 9:12</span>마법 생물을 관찰했다</span></a>
-          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m2"><span><span class="memory-time">시간 08 · 오전 9:04</span>Ria와 복도에서 대화했다</span></a>
+          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m1"><span><span class="memory-time">TICK 03 · 오전</span>마법 생물을 관찰했다</span></a>
+          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m2"><span><span class="memory-time">TICK 02 · 오후</span>Ria와 복도에서 대화했다</span></a>
         </div>
         <a id="all-memories-link" class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=leo" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
       </div>
@@ -1098,34 +1109,55 @@
     </div>
     <div class="sim-eventlog__list" id="log-container">
       <div class="log-item log-item--critical" data-type="system" onclick="openEventDrawer()">
-        <span class="log-item__tick">T10</span>
+        <span class="log-item__tick">T04</span>
         <span class="log-item__tag tag-critical">중요</span>
         <span class="log-item__text"><strong>[학생 실종]</strong> Adel의 스트레스가 한계를 넘어 도서관 결계 구역을 이탈했습니다.</span>
       </div>
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('ria-kai')">
-        <span class="log-item__tick">T09</span>
+        <span class="log-item__tick">T03</span>
         <span class="log-item__tag tag-dialogue">대화</span>
         <span class="log-item__text">Ria ↔ Kai: "고대 룬의 결계 파동이 평소보다 불안정해 보여..."</span>
         <span class="log-item__meta">+3 친밀도</span>
       </div>
       <div class="log-item log-item--event" data-type="system">
-        <span class="log-item__tick">T09</span>
+        <span class="log-item__tick">T03</span>
         <span class="log-item__tag tag-system">사건</span>
         <span class="log-item__text">Leo가 강의동 B 마법생물학 수업에 정상 출석하여 마력 집중을 시도했다</span>
       </div>
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('leo-adel')">
-        <span class="log-item__tick">T08</span>
+        <span class="log-item__tick">T02</span>
         <span class="log-item__tag tag-dialogue">대화</span>
         <span class="log-item__text">Leo ↔ Adel: "규칙만 따지다간 실습 시간 다 지나가겠어" vs "안전 수칙은 필수야"</span>
         <span class="log-item__meta" style="color:var(--c-critical);">+5 긴장도</span>
       </div>
     </div>
-    <div class="log-summary"><strong>시간 08–10 요약</strong><br>Adel은 Leo와의 갈등 이후 스트레스와 피로가 한계를 넘어 도서관 결계 구역을 이탈했습니다. 같은 시간 Ria와 Kai는 결계 이상을 대화로 공유했고, Leo는 수업에 참석했습니다.</div>
+    <div class="log-summary"><strong>Tick 2–4 요약</strong><br>Adel은 Leo와의 갈등 이후 스트레스와 피로가 한계를 넘어 도서관 결계 구역을 이탈했습니다. 같은 Tick에 Ria와 Kai는 결계 이상을 대화로 공유했고, Leo는 수업에 참석했습니다.</div>
   </div>
 
 </div><!-- /sim-screen -->
 
-<aside class="event-drawer" id="event-drawer" aria-hidden="true" aria-label="사건 원인 보기"><div class="event-drawer__header"><div><div class="event-chip">중요 사건</div><h2 style="margin:5px 0 0;font-size:20px;">학생 실종</h2></div><button class="control-btn" onclick="closeEventDrawer()" aria-label="사건 원인 닫기">×</button></div><div class="event-drawer__body"><div class="cause-card"><strong>무슨 일이 일어났나요?</strong>Adel이 도서관 3층 결계 구역을 벗어나 현재 위치를 확인할 수 없습니다.</div><div class="cause-card"><strong>가장 큰 원인</strong>높은 스트레스와 피로가 겹친 상태에서 Leo와의 갈등이 마지막 계기가 됐습니다.</div><div><strong style="display:block;margin-bottom:8px;">결정에 영향을 준 요인</strong><ol class="cause-list"><li>스트레스 92 — 안전 범위 초과</li><li>피로도 85 — 판단 여력 감소</li><li>Leo와의 긴장도 +18</li></ol></div><div class="cause-card"><strong>관련 기억 · 시간 09 · 오전 9:12</strong>“Leo가 규칙을 무시하려 해 심한 말다툼을 벌였다.”</div><div class="cause-card"><strong>이후 예상</strong>휴식을 취하면 시간 14 전후에 복귀할 가능성이 있습니다.</div><button class="btn btn-outline" onclick="document.getElementById('technical-detail').hidden = !document.getElementById('technical-detail').hidden">기술 정보 보기</button><div id="technical-detail" hidden class="cause-card">정책 평가 점수 1.00 · 상태 변경 완료 · 예상 지속 시간 4</div></div></aside>
+<aside class="event-drawer" id="event-drawer" aria-hidden="true" aria-label="사건 원인 보기"><div class="event-drawer__header"><div><div class="event-chip">중요 사건</div><h2 style="margin:5px 0 0;font-size:20px;">학생 실종</h2></div><button class="control-btn" onclick="closeEventDrawer()" aria-label="사건 원인 닫기">×</button></div><div class="event-drawer__body"><div class="cause-card"><strong>무슨 일이 일어났나요?</strong>Adel이 도서관 3층 결계 구역을 벗어나 현재 위치를 확인할 수 없습니다.</div><div class="cause-card"><strong>가장 큰 원인</strong>높은 스트레스와 피로가 겹친 상태에서 Leo와의 갈등이 마지막 계기가 됐습니다.</div><div><strong style="display:block;margin-bottom:8px;">결정에 영향을 준 요인</strong><ol class="cause-list"><li>스트레스 92 — 안전 범위 초과</li><li>피로도 85 — 판단 여력 감소</li><li>Leo와의 긴장도 +18</li></ol></div><div class="cause-card"><strong>관련 기억 · TICK 03 · 오전</strong>“Leo가 규칙을 무시하려 해 심한 말다툼을 벌였다.”</div><div class="cause-card"><strong>이후 예상</strong>휴식 조건이 충족되면 대표 캠페인 종료 전 복귀할 수 있습니다.</div><button class="btn btn-outline" onclick="document.getElementById('technical-detail').hidden = !document.getElementById('technical-detail').hidden">기술 정보 보기</button><div id="technical-detail" hidden class="cause-card">정책 평가 점수 1.00 · 상태 변경 완료 · 예상 지속 시간 2 Tick</div></div></aside>
+
+<aside class="settings-drawer" id="settings-drawer" aria-hidden="true" aria-label="실험 조건">
+  <div class="event-drawer__header"><div><div class="event-chip" style="color:var(--c-inspector);">실험 조건</div><h2 style="margin:5px 0 0;font-size:20px;">시뮬레이션 파라미터</h2></div><button class="control-btn" onclick="closeSettingsDrawer()" aria-label="실험 조건 닫기">×</button></div>
+  <div class="event-drawer__body">
+    <section class="settings-section">
+      <div class="settings-section__head"><strong>일반 Event</strong><span class="settings-status">실행 중 변경 가능</span></div>
+      <div class="settings-field"><label for="event-frequency">발생 빈도</label><select id="event-frequency"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+      <div class="settings-field"><label for="event-impact">영향도</label><select id="event-impact"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+      <p class="settings-note">변경값은 현재 Tick에 영향을 주지 않고 다음 Tick의 World Snapshot부터 적용됩니다.</p>
+      <button class="btn btn-primary" type="button" onclick="applyEventSettings()">다음 Tick부터 적용</button>
+    </section>
+    <div class="settings-feedback" id="settings-feedback" role="status">현재 적용: 빈도 Medium · 영향도 Medium</div>
+    <section class="settings-section">
+      <div class="settings-section__head"><strong>Magic Layer</strong><span class="settings-status locked">시작 후 잠김</span></div>
+      <div class="settings-field"><label>Magic</label><span class="settings-readonly">ON</span></div>
+      <div class="settings-field"><label>발생 빈도</label><span class="settings-readonly">Medium</span></div>
+      <div class="settings-field"><label>영향도</label><span class="settings-readonly">High</span></div>
+      <p class="settings-note">Magic 설정과 Persona는 Draft에서만 변경할 수 있으며 시뮬레이션 시작 시 고정됩니다.</p>
+    </section>
+  </div>
+</aside>
 
 <!-- ── Zone Fullscreen Slide ── -->
 <div class="zone-fullscreen" id="zone-fullscreen">
@@ -1150,7 +1182,7 @@
   <div class="dialogue-modal__content">
     <div class="dialogue-modal__header">
       <div class="dialogue-modal__title-group">
-        <span class="dialogue-modal__tick" id="modal-tick">시간 09</span>
+        <span class="dialogue-modal__tick" id="modal-tick">TICK 03</span>
         <span class="dialogue-modal__title" id="modal-title">에이전트 대화 상세 기록</span>
       </div>
       <div class="dialogue-modal__close" onclick="closeDialogueViewer()">&times;</div>
@@ -1174,7 +1206,7 @@
       memories: ['마법 생물을 관찰했다', 'Ria와 복도에서 대화했다', '수업에 참석했다', '도서관에서 자료를 찾았다']
     },
     adel: {
-      name: 'Adel', isPersona: false, mbti: 'ISTJ · 방어마법학과 2학년', loc: '실종 · 시간 10 (도서관 3층)',
+      name: 'Adel', isPersona: false, mbti: 'ISTJ · 방어마법학과 2학년', loc: '실종 · TICK 04 (도서관 3층)',
       portrait: '../assets/character/Adel_ISTJ.png',
       mood: 22, hunger: 50, fatigue: 85, stress: 92, major: '방어마법학과', year: '2학년',
       memories: ['도서관 3층 결계 균열 목격', 'Leo와 복도에서 규칙 문제로 언쟁', '방어 마법진 과열 감지']
@@ -1207,7 +1239,7 @@
 
   const dialogueLogs = {
     'ria-kai': {
-      tick: '시간 09', location: '중앙 광장 분수대 앞',
+      tick: 'TICK 03', location: '중앙 광장 분수대 앞',
       p1: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       p2: { name: 'Kai', mbti: 'ENTJ', portrait: '../assets/character/Kai_ENTJ.png', color: 'var(--c-kai)' },
       turns: [
@@ -1223,7 +1255,7 @@
       ]
     },
     'leo-adel': {
-      tick: '시간 08', location: '강의동 B 복도',
+      tick: 'TICK 02', location: '강의동 B 복도',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Adel', mbti: 'ISTJ', portrait: '../assets/character/Adel_ISTJ.png', color: 'var(--c-adel)' },
       turns: [
@@ -1239,7 +1271,7 @@
       ]
     },
     'leo-ria': {
-      tick: '시간 08', location: '강의동 B 앞 정원',
+      tick: 'TICK 02', location: '강의동 B 앞 정원',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       turns: [
@@ -1317,12 +1349,15 @@
     document.getElementById('selected-stress-bar').style.width = `${data.stress}%`;
     document.getElementById('selected-major').textContent = data.major;
     document.getElementById('selected-year').textContent = data.year;
-    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}"><span><span class="memory-time">시간 ${String(9-index).padStart(2,'0')} · 오전 9:${String(12-index*4).padStart(2,'0')}</span>${m}</span></a>`).join('');
+    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}"><span><span class="memory-time">TICK ${String(Math.max(1, 3-index)).padStart(2,'0')} · ${index === 0 ? '오전' : '오후'}</span>${m}</span></a>`).join('');
     document.getElementById('all-memories-link').href = `04-inspector.html?tab=memory&agent=${agentId}`;
   }
 
   function openEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
   function closeEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+  function openSettingsDrawer() { closeEventDrawer(); const drawer = document.getElementById('settings-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); document.getElementById('more-menu').classList.remove('open'); document.getElementById('more-button').setAttribute('aria-expanded','false'); }
+  function closeSettingsDrawer() { const drawer = document.getElementById('settings-drawer'); drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+  function applyEventSettings() { const frequency = document.getElementById('event-frequency').selectedOptions[0].text; const impact = document.getElementById('event-impact').selectedOptions[0].text; document.getElementById('settings-feedback').textContent = `변경 예정: 빈도 ${frequency} · 영향도 ${impact} — 현재 Tick 4에는 영향을 주지 않고 Tick 5부터 적용됩니다.`; }
   function setLogSize(size, button) { const screen = document.getElementById('sim-screen'); screen.classList.remove('log-collapsed','log-expanded'); if (size !== 'default') screen.classList.add(`log-${size}`); document.querySelectorAll('.log-resize-controls .log-size-btn').forEach(btn => btn.classList.toggle('active', btn === button)); }
   function toggleSidePanel(side) { const screen = document.getElementById('sim-screen'); const mobileClass = `${side}-open-mobile`; const collapsedClass = `${side}-collapsed`; if (window.innerWidth <= 900) { screen.classList.toggle(mobileClass); } else { screen.classList.toggle(collapsedClass); } const button = document.getElementById(`${side}-panel-toggle`); const expanded = window.innerWidth <= 900 ? screen.classList.contains(mobileClass) : !screen.classList.contains(collapsedClass); button.setAttribute('aria-expanded', String(expanded)); button.setAttribute('aria-label', `${side === 'left' ? 'Agent 목록' : 'Agent 상세'} ${expanded ? '접기' : '펼치기'}`); }
   function toggleLogSummary(button) { const log = document.querySelector('.sim-eventlog'); const active = log.classList.toggle('summary-mode'); button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); button.textContent = active ? '전체 보기' : '요약 보기'; }
@@ -1479,7 +1514,7 @@
   document.getElementById('agent-search').addEventListener('input', event => { const query = event.target.value.trim().toLowerCase(); document.querySelectorAll('.agent-list-item').forEach(item => { const name = item.querySelector('.agent-list-name').textContent.toLowerCase(); item.hidden = query !== '' && !name.includes(query); }); });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { closeDialogueViewer(); closeEventDrawer(); }
+    if (e.key === 'Escape') { closeDialogueViewer(); closeEventDrawer(); closeSettingsDrawer(); }
   });
 
   /* Initial state */

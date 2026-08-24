@@ -22,7 +22,7 @@
 | **08** | **Main / Hub** | [`screens/08-main.html`](screens/08-main.html) | 대시보드 허브, 최근 관찰 기록, 새 시뮬레이션 시작 |
 | **09** | **Save Modal** | [`screens/09-save-modal.html`](screens/09-save-modal.html) | 시뮬레이션 상태 스냅샷 저장 모달 |
 | **10** | **My Page** | [`screens/10-mypage.html`](screens/10-mypage.html) | 사용자 프로필, 저장된 시뮬레이션 목록, 관찰 통계 |
-| **11** | **Timeline Replay** | [`screens/11-replay.html`](screens/11-replay.html) | [FR-16] 1~10 Tick 타임라인 스크러버, 재생/배속 제어, 주요 사건 핀, 분기 생성 CTA |
+| **11** | **Timeline Replay** | [`screens/11-replay.html`](screens/11-replay.html) | [FR-16] 1~7 Tick 타임라인 스크러버, 재생/배속 제어, 주요 사건 핀, 분기 생성 CTA |
 | **12** | **Branch Tree** | [`screens/12-branch-tree.html`](screens/12-branch-tree.html) | [FR-17] What-If 시나리오 분기 트리, Git Graph 형태 인터랙티브 노드, 분기 생성 모달 |
 | **13** | **Magic Comparison** | [`screens/13-magic-comparison.html`](screens/13-magic-comparison.html) | [FR-12, FR-20, FR-21] Magic ON vs OFF 2열 Side-by-Side 비교, 관계 변화 델타 그래프 |
 | **14** | **Ending Summary** | [`screens/14-ending-summary.html`](screens/14-ending-summary.html) | [FR-18, FR-21] 캠페인 결말 리포트, 캐릭터별 후일담 카드 6종, Radar 차트, 하단 액션 바 |
