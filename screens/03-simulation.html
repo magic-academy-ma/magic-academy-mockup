@@ -120,7 +120,7 @@
     .char-ria-sm  { background-image: url('../assets/character/Ria_INFP.png'); }
     .char-kai-sm  { background-image: url('../assets/character/Kai_ENTJ.png'); }
     .char-sera-sm { background-image: url('../assets/character/Sera_ESFJ.png'); }
-    .char-prof-sm { background-image: url('../assets/character/professor.png'); }
+    .char-prof-sm { background-image: url('../assets/character/professor_orion.png'); }
     .agent-list-info { flex: 1; min-width: 0; }
     .agent-list-name {
       display: flex; align-items: center; gap: var(--s-2);
@@ -318,7 +318,7 @@
     .zone-agent-prof {
       width: 40px; height: 40px; border-radius: 50%;
       border: 2px solid rgba(215, 198, 167, 0.4);
-      background-image: url('../assets/character/professor.png');
+      background-image: url('../assets/character/professor_orion.png');
       background-size: cover; background-position: center top;
       flex-shrink: 0; cursor: pointer;
       transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
@@ -684,7 +684,7 @@
       transition:border-color var(--tr-fast), color var(--tr-fast);
     }
     .night-skip-btn:hover { border-color:var(--c-border-hi); color:var(--c-text); }
-    .brand-mark { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:rgba(94,96,232,.18); border:1px solid rgba(148,151,255,.42); color:#b8baff; font-family:var(--f-serif-en); font-size:18px; font-weight:700; }
+    .brand-mark { width:30px; height:30px; border-radius:9px; background:url('../assets/concept/logo.png') center/cover; border:1px solid rgba(212,178,111,.42); box-shadow:0 0 12px rgba(212,178,111,.14); }
     .topbar__brand { font-size:16px; }
     .topbar__time { font-size:13px; color:var(--c-text-2); }
     .topbar-action { min-width:auto; padding:6px 10px; font-size:13px; }
@@ -763,7 +763,7 @@
           <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
-      <div class="brand-mark" aria-hidden="true">M</div>
+      <div class="brand-mark" aria-hidden="true"></div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="topbar__sep"></div>
       <div class="topbar__tick">시간 10</div>
@@ -1200,7 +1200,7 @@
     },
     aldric: {
       name: 'Prof. Orion', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
-      portrait: '../assets/character/professor.png', isProf: true,
+      portrait: '../assets/character/professor_orion.png', isProf: true,
       mood: 90, hunger: 10, fatigue: 35, stress: 15, major: '기초마법 및 결계학', year: '전임 교수',
       memories: ['강의동 A 기초 마법학 특강', '결계 유지 보고서 검토']
     }
