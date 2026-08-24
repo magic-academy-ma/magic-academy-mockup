@@ -119,6 +119,7 @@
     .char-ria-sm  { background-image: url('../assets/character/Ria_INFP.png'); }
     .char-kai-sm  { background-image: url('../assets/character/Kai_ENTJ.png'); }
     .char-sera-sm { background-image: url('../assets/character/Sera_ESFJ.png'); }
+    .char-prof-sm { background-image: url('../assets/character/professor.png'); }
     .agent-list-info { flex: 1; min-width: 0; }
     .agent-list-name {
       display: flex; align-items: center; gap: var(--s-2);
@@ -789,9 +790,9 @@
         <div class="agent-list-status"></div>
       </div>
       <div class="agent-list-item" data-agent="aldric" style="border-top:1px solid rgba(70,100,180,0.18); margin-top:4px; padding-top:8px;">
-        <div class="agent-list-portrait" style="background:#1a2850; display:flex; align-items:center; justify-content:center; font-family:var(--f-serif-en); font-weight:700; font-size:11px; color:var(--c-cream);">PA</div>
+        <div class="agent-list-portrait char-prof-sm"></div>
         <div class="agent-list-info">
-          <div class="agent-list-name">Prof. Aldric <span style="font-family:var(--f-mono); font-size:9px; color:var(--c-cream); border:1px solid var(--c-cream-ring); border-radius:2px; padding:0 3px;">PROF</span></div>
+          <div class="agent-list-name">Prof. Orion <span style="font-family:var(--f-mono); font-size:9px; color:var(--c-cream); border:1px solid var(--c-cream-ring); border-radius:2px; padding:0 3px;">PROF</span></div>
           <div class="agent-list-loc">강의동 A · 강의 진행</div>
         </div>
         <div class="agent-list-status"></div>
@@ -922,7 +923,7 @@
 
     <!-- 중앙 광장 — Bottom Left -->
     <div class="zone-card" data-zone="central" onclick="selectZone('central')">
-      <div class="zone-card__bg" style="background-image:url('../assets/concept/academy-night-background.png');"></div>
+      <div class="zone-card__bg" style="background-image:url('../assets/central-square.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Central Square</div>
         <div class="zone-card__name">중앙 광장</div>
@@ -1123,8 +1124,8 @@
       memories: ['도서관에서 약초학 문헌 대출', '동아리 방 정리', 'Adel의 피로 상태 염려']
     },
     aldric: {
-      name: 'Prof. Aldric', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
-      portrait: '', isProf: true,
+      name: 'Prof. Orion', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
+      portrait: '../assets/character/professor.png',
       mood: 90, hunger: 10, fatigue: 35, stress: 15, major: '기초마법 및 결계학', year: '전임 교수',
       memories: ['강의동 A 기초 마법학 특강', '결계 유지 보고서 검토']
     }
