@@ -123,7 +123,7 @@
 <div class="sim-screen">
   <div class="sim-map"></div>
   <div class="topbar">
-    <a href="03-simulation.html" class="control-btn">
+    <a href="03-simulation.html?tick=10" id="relationship-back-control" class="control-btn">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </a>
     <div class="topbar__brand">Magic Academy</div>
@@ -149,7 +149,7 @@
           <button class="chip chip-tension" onclick="filterEdges('tension',this)">긴장·라이벌</button>
           <button class="chip chip-dep" onclick="filterEdges('dep',this)">의존</button>
         </div>
-        <button onclick="window.location.href='03-simulation.html'" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--c-border);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;">
+        <button onclick="returnFromRelationship()" style="width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,0.08);border:1px solid var(--c-border);cursor:pointer;display:flex;align-items:center;justify-content:center;margin-left:4px;">
           <svg width="10" height="10" viewBox="0 0 14 14" fill="none"><path d="M3 3L11 11M11 3L3 11" stroke="#a4b5d6" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
       </div>
@@ -303,7 +303,7 @@
             <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">72</span></div>
             <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">25</span></div>
           </div>
-          <button class="btn btn-outline btn-sm" onclick="window.location.href='03-simulation.html?event=missing'" style="font-size:12px;">사건 원인 보기</button>
+          <button class="btn btn-outline btn-sm" onclick="openMissingEvent()" style="font-size:12px;">사건 원인 보기</button>
         </div>
       </div>
     </div>
@@ -312,6 +312,13 @@
 
 <script src="../js/magic-academy.js"></script>
 <script>
+  const relationshipParams = new URLSearchParams(window.location.search);
+  const relationshipTick = relationshipParams.get('tick') || '10';
+  const relationshipAgent = relationshipParams.get('agent');
+  const relationshipReturn = `03-simulation.html?tick=${encodeURIComponent(relationshipTick)}${relationshipAgent ? `&agent=${encodeURIComponent(relationshipAgent)}` : ''}`;
+  document.getElementById('relationship-back-control').href = relationshipReturn;
+  function returnFromRelationship() { window.location.href = relationshipReturn; }
+  function openMissingEvent() { window.location.href = `${relationshipReturn}&event=missing`; }
   const relData = {
     'adel-leo':  { rel:'긴장', tension:72, trust:25, favor:-8, color:'var(--c-critical)' },
     'adel-ria':  { rel:'우호', tension:12, trust:85, favor:72, color:'#5CE67A' },
@@ -440,7 +447,7 @@
           <div class="rel-stat-row"><span class="rel-stat-key">긴장도</span><span class="rel-stat-val">${d.tension}</span></div>
           <div class="rel-stat-row"><span class="rel-stat-key">신뢰도</span><span class="rel-stat-val">${d.trust}</span></div>
         </div>
-        <button class="btn btn-outline btn-sm" onclick="window.location.href='03-simulation.html?event=missing'" style="font-size:12px;">사건 원인 보기</button>`;
+        <button class="btn btn-outline btn-sm" onclick="openMissingEvent()" style="font-size:12px;">사건 원인 보기</button>`;
     }
   }
 

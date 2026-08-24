@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <link rel="stylesheet" href="../css/context-dialogs.css">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; overflow: hidden; background: var(--c-bg); font-family: var(--f-sans); color: var(--c-text); }
@@ -478,12 +479,12 @@
       </div>
       <div class="action-nav">
         <div style="font-family:var(--f-mono);font-size:9px;color:var(--c-text-3);letter-spacing:0.1em;text-transform:uppercase;margin-bottom:var(--s-1);">다음 액션</div>
-        <a href="11-replay.html" class="action-btn primary">
+        <a href="11-replay.html?from=ending" class="action-btn primary">
           <span class="action-btn__icon">⏮</span>전체 리플레이 복기하기
         </a>
-        <a href="09-save-modal.html" class="action-btn ghost">
+        <button type="button" onclick="MagicAcademyDialogs.openSave()" class="action-btn ghost">
           <span class="action-btn__icon">💾</span>결과 스냅샷 저장
-        </a>
+        </button>
         <a href="08-main.html" class="action-btn ghost">
           <span class="action-btn__icon">⌂</span>메인 허브로 이동
         </a>
@@ -491,5 +492,7 @@
     </div>
   </div>
 </div>
+<script src="../js/context-dialogs.js"></script>
+<script>MagicAcademyDialogs.init({ guide: false });</script>
 </body>
 </html>

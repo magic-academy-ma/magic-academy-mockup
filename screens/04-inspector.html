@@ -169,7 +169,7 @@
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar__left">
-      <a href="03-simulation.html" class="btn btn-ghost btn-sm" style="padding:4px 10px; gap:4px; font-size:13px;">
+      <a href="03-simulation.html" id="inspector-back-link" class="btn btn-ghost btn-sm" style="padding:4px 10px; gap:4px; font-size:13px;">
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         시뮬레이션 복귀
       </a>
@@ -188,8 +188,8 @@
     <div style="display:flex; align-items:center; gap:var(--s-3);">
       <span style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-2);">시간 10 &middot; 오후 2:02</span>
       <div style="width:1px; height:16px; background:var(--c-border);"></div>
-      <a href="05-relationship.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:13px;">관계망 그래프</a>
-      <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding:4px 12px; font-size:13px;">시뮬레이션 뷰 &rarr;</a>
+      <a href="05-relationship.html?from=simulation&amp;tick=10" id="inspector-relationship-link" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:13px;">관계망 그래프</a>
+      <a href="03-simulation.html" id="inspector-main-link" class="btn btn-primary btn-sm" style="padding:4px 12px; font-size:13px;">시뮬레이션 뷰 &rarr;</a>
     </div>
   </div>
 
@@ -634,6 +634,15 @@
       </div>`;
   }
   const inspectorParams = new URLSearchParams(window.location.search);
+  const inspectorAgent = inspectorParams.get('agent');
+  const inspectorTick = inspectorParams.get('tick') || '10';
+  const inspectorReturn = inspectorParams.get('from') === 'mypage'
+    ? '10-mypage-personas.html'
+    : `03-simulation.html?tick=${encodeURIComponent(inspectorTick)}${inspectorAgent ? `&agent=${encodeURIComponent(inspectorAgent)}` : ''}`;
+  document.getElementById('inspector-back-link').href = inspectorReturn;
+  document.getElementById('inspector-main-link').href = inspectorReturn;
+  document.getElementById('inspector-back-link').lastChild.textContent = inspectorParams.get('from') === 'mypage' ? ' Persona 기록 복귀' : ' 시뮬레이션 복귀';
+  document.getElementById('inspector-relationship-link').href = `05-relationship.html?from=simulation&tick=${encodeURIComponent(inspectorTick)}${inspectorAgent ? `&agent=${encodeURIComponent(inspectorAgent)}` : ''}`;
   if (inspectorParams.get('tab') === 'memory') switchTab('memory');
   const agentProfiles = {
     adel: { name:'Adel', mbti:'ISTJ', portrait:'Adel_ISTJ.png' },

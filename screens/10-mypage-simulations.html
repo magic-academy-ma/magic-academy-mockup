@@ -24,4 +24,4 @@
       </div></section>
     </main>
   </div>
-</div><script src="../js/mypage.js"></script></body></html>
+</div><script src="../js/mypage.js"></script><script>document.querySelectorAll('a[href^="11-replay.html"]').forEach(link => { const url = new URL(link.href); url.searchParams.set('from','mypage'); link.href = `${url.pathname.split('/').pop()}?${url.searchParams}`; });</script></body></html>
