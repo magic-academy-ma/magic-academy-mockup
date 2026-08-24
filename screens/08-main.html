@@ -75,12 +75,16 @@
       z-index: 10;
     }
     .main-nav__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
       font-family: var(--f-serif-en);
       font-size: var(--t-base);
       font-weight: 600;
       color: var(--c-text);
       letter-spacing: 0.04em;
     }
+    .main-nav__brand img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; }
     .main-nav__links {
       display: flex; gap: var(--s-5); margin-left: var(--s-4);
     }
@@ -233,7 +237,7 @@
 
     <!-- Top Nav -->
     <div class="main-nav">
-      <a href="../landing.html" class="main-nav__brand">Magic Academy</a>
+      <a href="../landing.html" class="main-nav__brand"><img src="../assets/concept/logo.png" alt="">Magic Academy</a>
       <div class="main-nav__links">
         <span class="nav-link active">홈</span>
         <span class="nav-link account-only" onclick="window.location.href='10-mypage.html'">마이페이지</span>
