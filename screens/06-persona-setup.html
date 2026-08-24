@@ -264,13 +264,14 @@
       <div class="setup-bg-streak" style="top: 78%; width: 200px; --streak-rotate: 3deg; animation: setup-streak-slide 5.8s 3.0s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
     </div>
     <div class="setup-nav">
-      <a href="02-persona-select.html" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
+      <a href="02-persona-select.html" id="setup-back-link" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <span class="setup-nav__brand">Persona 초기 설정</span>
       <span id="nav-char-name" style="font-size:var(--t-sm); color:var(--c-text-2); margin-left:var(--s-2);">— Leo</span>
       <div style="margin-left:auto; display:flex; gap:var(--s-2);">
-        <button class="btn btn-ghost btn-sm" onclick="openImportModal()">↑ 가져오기</button>
+        <button class="btn btn-ghost btn-sm" onclick="window.location.href='15-share-import.html?from=setup'">공유·가져오기</button>
+        <button class="btn btn-ghost btn-sm" onclick="openImportModal()">↑ JSON 가져오기</button>
         <button class="btn btn-outline btn-sm" onclick="exportPreset()">↓ 내보내기</button>
       </div>
     </div>
@@ -407,7 +408,7 @@
     <div class="setup-footer">
       <span style="font-size:var(--t-sm); color:var(--c-text-2);">시뮬레이션 시작 후에는 성격 및 파라미터 설정이 잠깁니다</span>
       <div style="display:flex; gap:var(--s-3);">
-        <button class="btn btn-outline" onclick="window.location.href='02-persona-select.html'">Persona 변경</button>
+        <button class="btn btn-outline" onclick="returnToPersona()">Persona 변경</button>
         <button class="btn btn-primary" onclick="window.location.href='03-simulation.html'">시뮬레이션 시작 →</button>
       </div>
     </div>
@@ -447,6 +448,11 @@
   };
 
   const urlParams = new URLSearchParams(window.location.search);
+  const setupFromMain = urlParams.get('from') === 'main';
+  const setupMode = urlParams.get('mode') === 'demo';
+  const setupReturnQuery = `${setupFromMain ? 'from=main' : ''}${setupMode ? `${setupFromMain ? '&' : ''}mode=demo` : ''}`;
+  if (setupReturnQuery) document.getElementById('setup-back-link').href = `02-persona-select.html?${setupReturnQuery}`;
+  function returnToPersona() { window.location.href = document.getElementById('setup-back-link').href; }
   const charParam = urlParams.get('char') || 'leo';
   const charInfo = CHAR_DATA[charParam] || CHAR_DATA.leo;
 

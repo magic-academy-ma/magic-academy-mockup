@@ -171,7 +171,7 @@
 
   <!-- Main Body -->
   <div class="page-body">
-    <a href="01-onboarding.html" class="btn btn-ghost btn-sm back-link" aria-label="온보딩으로 돌아가기">← 이전</a>
+    <a href="01-onboarding.html" id="persona-back-link" class="btn btn-ghost btn-sm back-link" aria-label="이전 화면으로 돌아가기">← 이전</a>
     <div class="page-title">
       <div class="page-step">PERSONA 선택 · 2 / 3</div>
       <div class="page-title__main">관찰할 Persona를 선택하세요</div>
@@ -284,6 +284,10 @@
 <script src="../js/magic-academy.js"></script>
 <script>
   let currentSelectedId = 'leo';
+  const personaParams = new URLSearchParams(window.location.search);
+  const personaFromMain = personaParams.get('from') === 'main';
+  const personaMode = personaParams.get('mode') === 'demo' ? '&mode=demo' : '';
+  if (personaFromMain) document.getElementById('persona-back-link').href = `08-main.html${personaMode ? '?mode=demo' : ''}`;
 
   function selectPersona(el, name, mbti, major, imgPath) {
     document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
@@ -297,7 +301,7 @@
   }
 
   function startWithPersona() {
-    window.location.href = `06-persona-setup.html?char=${currentSelectedId}`;
+    window.location.href = `06-persona-setup.html?char=${currentSelectedId}${personaFromMain ? '&from=main' : ''}${personaMode}`;
   }
 </script>
 </body>
