@@ -238,9 +238,9 @@
       padding: 10px;
     }
     .zone-card {
-      background: rgba(10, 17, 40, 0.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(10, 17, 40, 0.52);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--c-border);
       border-radius: var(--r-lg);
       cursor: pointer;
@@ -250,20 +250,20 @@
     }
     .zone-card:hover {
       border-color: var(--c-border-hi);
-      background: rgba(18, 28, 62, 0.85);
+      background: rgba(18, 28, 62, 0.58);
     }
     .zone-card.active {
       border-color: var(--c-primary);
-      background: rgba(94, 96, 232, 0.12);
+      background: rgba(94, 96, 232, 0.16);
       box-shadow: 0 0 28px rgba(94, 96, 232, 0.18), inset 0 0 30px rgba(94, 96, 232, 0.05);
     }
     .zone-card__bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      opacity: 0.09; transition: opacity var(--tr-fast);
+      opacity: 0.34; transition: opacity var(--tr-fast);
     }
-    .zone-card:hover .zone-card__bg { opacity: 0.17; }
-    .zone-card.active .zone-card__bg { opacity: 0.20; }
+    .zone-card:hover .zone-card__bg { opacity: 0.44; }
+    .zone-card.active .zone-card__bg { opacity: 0.42; }
     .zone-card__content {
       position: relative; z-index: 1;
       padding: var(--s-4);
@@ -317,10 +317,9 @@
     .zone-agent-prof {
       width: 40px; height: 40px; border-radius: 50%;
       border: 2px solid rgba(215, 198, 167, 0.4);
-      background: rgba(26, 40, 80, 0.9);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--f-serif-en); font-size: 9px; font-weight: 700;
-      color: var(--c-cream); flex-shrink: 0; cursor: pointer;
+      background-image: url('../assets/character/professor.png');
+      background-size: cover; background-position: center top;
+      flex-shrink: 0; cursor: pointer;
       transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
     }
     .zone-agent-prof:hover {
@@ -510,6 +509,63 @@
     .delta-badge--pos { background:rgba(56,178,119,0.15); color:#5ce67a; border:1px solid rgba(56,178,119,0.3); }
     .delta-badge--neg { background:var(--c-critical-muted); color:var(--c-critical); border:1px solid var(--c-critical-ring); }
 
+    /* ── Zone Fullscreen Slide ─── */
+    .zone-fullscreen {
+      position: fixed; inset: 0; z-index: 90;
+      display: none; align-items: flex-end; justify-content: center;
+    }
+    .zone-fullscreen.open { display: flex; }
+    .zone-fullscreen__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      filter: brightness(0.55) saturate(0.85);
+      transition: background-image 260ms ease;
+    }
+    .zone-fullscreen__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(6,13,32,0.55) 0%, rgba(6,13,32,0.25) 35%, rgba(6,13,32,0.92) 100%);
+    }
+    .zone-fullscreen__close {
+      position: absolute; top: 24px; left: 24px; z-index: 2;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--c-border-hi); background: rgba(8,16,38,0.85);
+      color: var(--c-text); font-size: 20px; cursor: pointer; display: grid; place-items: center;
+    }
+    .zone-fullscreen__close:hover { background: rgba(18,28,62,0.95); }
+    .zone-fullscreen__nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid var(--c-border-hi); background: rgba(8,16,38,0.7);
+      color: var(--c-text); font-size: 20px; cursor: pointer; display: grid; place-items: center;
+    }
+    .zone-fullscreen__nav:hover { background: rgba(94,96,232,0.35); border-color: var(--c-primary); }
+    .zone-fullscreen__nav--prev { left: 24px; }
+    .zone-fullscreen__nav--next { right: 24px; }
+    .zone-fullscreen__panel {
+      position: relative; z-index: 2;
+      width: 100%; max-width: 900px; margin-bottom: 56px;
+      padding: var(--s-6); box-sizing: border-box;
+    }
+    .zone-fullscreen__tag {
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(212,178,111,0.85);
+    }
+    .zone-fullscreen__name {
+      font-family: var(--f-serif-ko); font-size: 32px; font-weight: 700; color: var(--c-text);
+      margin: 4px 0 14px;
+    }
+    .zone-fullscreen__agents { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-5); flex-wrap: wrap; }
+    .zone-fullscreen__agent {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(10,17,40,0.7); border: 1px solid var(--c-border); border-radius: 999px;
+      padding: 5px 14px 5px 5px; cursor: pointer; transition: border-color var(--tr-fast);
+    }
+    .zone-fullscreen__agent:hover { border-color: var(--c-border-hi); }
+    .zone-fullscreen__agent-dot { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center top; border: 1.5px solid var(--c-border-hi); flex-shrink: 0; }
+    .zone-fullscreen__agent-name { font-family: var(--f-mono); font-size: 12px; color: var(--c-text-2); }
+    .zone-fullscreen__empty { font-family: var(--f-mono); font-size: 12px; color: var(--c-text-3); margin-bottom: var(--s-5); }
+    .zone-fullscreen__actions { display: flex; gap: var(--s-3); }
+
     /* ── View Toggle ─── */
     .view-toggle-group {
       display: flex; align-items: center; gap: 2px;
@@ -636,11 +692,11 @@
     .more-menu.open { display:grid; gap:2px; }
     .more-menu a { padding:9px 10px; border-radius:6px; color:var(--c-text-2); font-size:13px; text-decoration:none; }
     .more-menu a:hover, .more-menu a:focus-visible { background:rgba(94,96,232,.14); color:var(--c-text); }
-    .selection-context { display:flex; gap:6px; padding:8px 12px; background:rgba(94,96,232,.08); border-bottom:1px solid rgba(94,96,232,.25); font-size:12px; }
-    .context-label { color:var(--c-text-3); }
-    .context-value { color:#c9caff; font-weight:600; }
-    .event-context { margin-left:auto; display:flex; align-items:center; gap:5px; color:var(--c-text-2); }
-    .event-context::before { content:'!'; width:17px; height:17px; display:grid; place-items:center; border:1px solid var(--c-critical); border-radius:50%; color:var(--c-critical); font-size:11px; font-weight:700; }
+    .selection-context { display:flex; gap:6px; padding:8px 46px 8px 12px; background:rgba(94,96,232,.08); border-bottom:1px solid rgba(94,96,232,.25); font-size:12px; }
+    .context-label { color:var(--c-text-3); flex-shrink:0; }
+    .context-value { color:#c9caff; font-weight:600; flex-shrink:0; }
+    .event-context { margin-left:auto; display:flex; align-items:center; gap:5px; color:var(--c-text-2); min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .event-context::before { content:'!'; width:17px; height:17px; flex-shrink:0; display:grid; place-items:center; border:1px solid var(--c-critical); border-radius:50%; color:var(--c-critical); font-size:11px; font-weight:700; }
     .sim-left__search input, .agent-list-name, .agent-list-loc, .sim-right__body, .memory-item { font-size:14px; }
     .sim-right__section-title, .sim-left__count { font-size:12px; }
     .memory-time { display:block; margin-bottom:2px; color:#9ea1ff; font-family:var(--f-mono); font-size:11px; }
@@ -808,7 +864,7 @@
     <!-- 강의동 A & B — upper left -->
     <div class="map-zone-pin active" id="map-pin-classroom"
          style="left: 28%; top: 36%;"
-         data-zone="classroom" onclick="selectZone('classroom'); selectMapPin('classroom')">
+         data-zone="classroom" onclick="openZoneFullscreen('classroom')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm selected" data-agent="leo"
              style="background-image:url('../assets/character/Leo_ESTP.png');"
@@ -826,7 +882,7 @@
     <!-- 도서관 — upper right -->
     <div class="map-zone-pin" id="map-pin-library"
          style="left: 66%; top: 32%;"
-         data-zone="library" onclick="selectZone('library'); selectMapPin('library')">
+         data-zone="library" onclick="openZoneFullscreen('library')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm" data-agent="sera"
              style="background-image:url('../assets/character/Sera_ESFJ.png');"
@@ -847,7 +903,7 @@
     <!-- 중앙 광장 — center -->
     <div class="map-zone-pin" id="map-pin-central"
          style="left: 47%; top: 62%;"
-         data-zone="central" onclick="selectZone('central'); selectMapPin('central')">
+         data-zone="central" onclick="openZoneFullscreen('central')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm" data-agent="ria"
              style="background-image:url('../assets/character/Ria_INFP.png');"
@@ -868,7 +924,7 @@
     <!-- 기숙사 / 연구실 — lower right -->
     <div class="map-zone-pin" id="map-pin-dormlab"
          style="left: 74%; top: 68%;"
-         data-zone="dormlab" onclick="selectZone('dormlab'); selectMapPin('dormlab')">
+         data-zone="dormlab" onclick="openZoneFullscreen('dormlab')">
       <div class="map-zone-pin__ring" style="opacity:0.55;">
         <span class="map-zone-pin__icon">🏠</span>
       </div>
@@ -883,7 +939,7 @@
   <div class="zone-map-panel" id="zone-map-panel">
 
     <!-- 강의동 A & B — Top Left -->
-    <div class="zone-card" data-zone="classroom" onclick="selectZone('classroom')">
+    <div class="zone-card" data-zone="classroom" onclick="openZoneFullscreen('classroom')">
       <div class="zone-card__bg" style="background-image:url('../assets/classroom.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Classroom</div>
@@ -892,7 +948,7 @@
         <div class="zone-card__agents">
           <div class="zone-agent-prof" data-agent="aldric"
                onclick="event.stopPropagation(); selectAgent('aldric')"
-               title="Prof. Aldric · 강의동 A · 강의 진행">PA</div>
+               title="Prof. Aldric · 강의동 A · 강의 진행"></div>
           <div class="zone-agent-dot selected" data-agent="leo"
                style="background-image:url('../assets/character/Leo_ESTP.png');"
                onclick="event.stopPropagation(); selectAgent('leo')"
@@ -902,7 +958,7 @@
     </div>
 
     <!-- 도서관 — Top Right -->
-    <div class="zone-card" data-zone="library" onclick="selectZone('library')">
+    <div class="zone-card" data-zone="library" onclick="openZoneFullscreen('library')">
       <div class="zone-card__bg" style="background-image:url('../assets/library.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Library</div>
@@ -922,7 +978,7 @@
     </div>
 
     <!-- 중앙 광장 — Bottom Left -->
-    <div class="zone-card" data-zone="central" onclick="selectZone('central')">
+    <div class="zone-card" data-zone="central" onclick="openZoneFullscreen('central')">
       <div class="zone-card__bg" style="background-image:url('../assets/central-square.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Central Square</div>
@@ -942,7 +998,7 @@
     </div>
 
     <!-- 기숙사 / 연구실 — Bottom Right -->
-    <div class="zone-card" data-zone="dormlab" onclick="selectZone('dormlab')">
+    <div class="zone-card" data-zone="dormlab" onclick="openZoneFullscreen('dormlab')">
       <div class="zone-card__bg" style="background-image:url('../assets/dormitory.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Dormitory · Lab</div>
@@ -1071,6 +1127,24 @@
 
 <aside class="event-drawer" id="event-drawer" aria-hidden="true" aria-label="사건 원인 보기"><div class="event-drawer__header"><div><div class="event-chip">중요 사건</div><h2 style="margin:5px 0 0;font-size:20px;">학생 실종</h2></div><button class="control-btn" onclick="closeEventDrawer()" aria-label="사건 원인 닫기">×</button></div><div class="event-drawer__body"><div class="cause-card"><strong>무슨 일이 일어났나요?</strong>Adel이 도서관 3층 결계 구역을 벗어나 현재 위치를 확인할 수 없습니다.</div><div class="cause-card"><strong>가장 큰 원인</strong>높은 스트레스와 피로가 겹친 상태에서 Leo와의 갈등이 마지막 계기가 됐습니다.</div><div><strong style="display:block;margin-bottom:8px;">결정에 영향을 준 요인</strong><ol class="cause-list"><li>스트레스 92 — 안전 범위 초과</li><li>피로도 85 — 판단 여력 감소</li><li>Leo와의 긴장도 +18</li></ol></div><div class="cause-card"><strong>관련 기억 · 시간 09 · 오전 9:12</strong>“Leo가 규칙을 무시하려 해 심한 말다툼을 벌였다.”</div><div class="cause-card"><strong>이후 예상</strong>휴식을 취하면 시간 14 전후에 복귀할 가능성이 있습니다.</div><button class="btn btn-outline" onclick="document.getElementById('technical-detail').hidden = !document.getElementById('technical-detail').hidden">기술 정보 보기</button><div id="technical-detail" hidden class="cause-card">정책 평가 점수 1.00 · 상태 변경 완료 · 예상 지속 시간 4</div></div></aside>
 
+<!-- ── Zone Fullscreen Slide ── -->
+<div class="zone-fullscreen" id="zone-fullscreen">
+  <div class="zone-fullscreen__bg" id="zfs-bg"></div>
+  <div class="zone-fullscreen__scrim"></div>
+  <button class="zone-fullscreen__close" onclick="closeZoneFullscreen()" aria-label="닫기">&times;</button>
+  <button class="zone-fullscreen__nav zone-fullscreen__nav--prev" onclick="slideZoneFullscreen(-1)" aria-label="이전 장소">&#8592;</button>
+  <button class="zone-fullscreen__nav zone-fullscreen__nav--next" onclick="slideZoneFullscreen(1)" aria-label="다음 장소">&#8594;</button>
+  <div class="zone-fullscreen__panel">
+    <div class="zone-fullscreen__tag" id="zfs-tag">Classroom</div>
+    <div class="zone-fullscreen__name" id="zfs-name">강의동 A &amp; B</div>
+    <div class="zone-fullscreen__agents" id="zfs-agents"></div>
+    <div class="zone-fullscreen__actions">
+      <button class="btn btn-primary" id="zfs-dialogue-btn" onclick="openZoneDialogue()">대화창 보기</button>
+      <button class="btn btn-outline" onclick="closeZoneFullscreen()">전체 뷰로 돌아가기</button>
+    </div>
+  </div>
+</div>
+
 <!-- ── Dialogue Viewer Modal ── -->
 <div class="dialogue-modal" id="dialogue-modal" onclick="closeDialogueOnBackdrop(event)">
   <div class="dialogue-modal__content">
@@ -1125,7 +1199,7 @@
     },
     aldric: {
       name: 'Prof. Orion', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
-      portrait: '../assets/character/professor.png',
+      portrait: '../assets/character/professor.png', isProf: true,
       mood: 90, hunger: 10, fatigue: 35, stress: 15, major: '기초마법 및 결계학', year: '전임 교수',
       memories: ['강의동 A 기초 마법학 특강', '결계 유지 보고서 검토']
     }
@@ -1221,15 +1295,9 @@
     );
 
     const portraitEl = document.getElementById('selected-portrait');
-    if (data.isProf) {
-      portraitEl.style.backgroundImage = 'none';
-      portraitEl.style.background = '#1a2850';
-      portraitEl.innerHTML = '<div style="font-family:var(--f-serif-en);font-weight:700;font-size:14px;color:var(--c-cream);display:flex;height:100%;align-items:center;justify-content:center;">PA</div>';
-    } else {
-      portraitEl.innerHTML = '';
-      portraitEl.style.background = '';
-      portraitEl.style.backgroundImage = `url('${data.portrait}')`;
-    }
+    portraitEl.innerHTML = '';
+    portraitEl.style.background = '';
+    portraitEl.style.backgroundImage = `url('${data.portrait}')`;
 
     document.getElementById('context-agent').textContent = data.name;
     document.getElementById('selected-name').innerHTML =
@@ -1282,6 +1350,63 @@
       item.style.opacity = inZone ? '1' : '0.28';
       item.style.pointerEvents = inZone ? '' : 'none';
     });
+  }
+
+  /* ── Zone Fullscreen Slide ── */
+  const zoneOrder = ['classroom', 'library', 'central', 'dormlab'];
+  const zoneInfo = {
+    classroom: { tag: 'Classroom', name: '강의동 A &amp; B', bg: '../assets/classroom.png', agents: ['aldric', 'leo'], dialogue: 'leo-adel' },
+    library:   { tag: 'Library', name: '도서관', bg: '../assets/library.png', agents: ['sera', 'adel'], dialogue: null },
+    central:   { tag: 'Central Square', name: '중앙 광장', bg: '../assets/concept/academy-night-background.png', agents: ['ria', 'kai'], dialogue: 'ria-kai' },
+    dormlab:   { tag: 'Dormitory · Lab', name: '기숙사 / 연구실', bg: '../assets/dormitory.png', agents: [], dialogue: null }
+  };
+  let currentFullscreenZone = null;
+
+  function renderZoneFullscreen(zoneId) {
+    const info = zoneInfo[zoneId];
+    currentFullscreenZone = zoneId;
+    document.getElementById('zfs-bg').style.backgroundImage = `url('${info.bg}')`;
+    document.getElementById('zfs-tag').textContent = info.tag;
+    document.getElementById('zfs-name').innerHTML = info.name;
+    const agentsEl = document.getElementById('zfs-agents');
+    if (info.agents.length) {
+      agentsEl.innerHTML = info.agents.map(id => {
+        const a = charData[id];
+        return `<div class="zone-fullscreen__agent" onclick="closeZoneFullscreen(); selectAgent('${id}')">
+          <div class="zone-fullscreen__agent-dot" style="background-image:url('${a.portrait}');"></div>
+          <span class="zone-fullscreen__agent-name">${a.name}</span>
+        </div>`;
+      }).join('');
+    } else {
+      agentsEl.innerHTML = '<div class="zone-fullscreen__empty">에이전트 없음</div>';
+    }
+    const dialogueBtn = document.getElementById('zfs-dialogue-btn');
+    dialogueBtn.style.display = info.dialogue ? 'inline-flex' : 'none';
+  }
+
+  function openZoneFullscreen(zoneId) {
+    selectZone(zoneId);
+    selectMapPin(zoneId);
+    renderZoneFullscreen(zoneId);
+    document.getElementById('zone-fullscreen').classList.add('open');
+  }
+
+  function closeZoneFullscreen() {
+    document.getElementById('zone-fullscreen').classList.remove('open');
+  }
+
+  function slideZoneFullscreen(delta) {
+    const idx = zoneOrder.indexOf(currentFullscreenZone);
+    const next = zoneOrder[(idx + delta + zoneOrder.length) % zoneOrder.length];
+    renderZoneFullscreen(next);
+  }
+
+  function openZoneDialogue() {
+    const info = zoneInfo[currentFullscreenZone];
+    if (info && info.dialogue) {
+      closeZoneFullscreen();
+      openDialogueViewer(info.dialogue);
+    }
   }
 
   /* ── Log Filter ── */

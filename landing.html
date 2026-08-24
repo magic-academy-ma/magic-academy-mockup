@@ -1,4 +1,48 @@
 <!DOCTYPE html>
-<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Magic Academy — 살아 움직이는 마법 사회</title><link rel="stylesheet" href="css/magic-academy-v2.css"><style>
-*{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{margin:0;background:var(--c-bg);color:var(--c-text)}.page{height:100vh;display:flex;flex-direction:column;background:linear-gradient(90deg,rgba(6,13,32,.98) 20%,rgba(6,13,32,.55)),url('assets/concept/academy-night-background.png') center/cover fixed}.nav{height:68px;flex:0 0 auto;display:flex;align-items:center;padding:0 clamp(20px,6vw,88px);border-bottom:1px solid var(--c-border);background:rgba(6,13,32,.72);backdrop-filter:blur(14px)}.brand{font:700 22px var(--f-serif-en)}.nav-actions{margin-left:auto;display:flex;gap:10px}.hero{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,680px) 1fr;align-items:center;padding:clamp(16px,4vw,64px);overflow:hidden}.eyebrow{font:600 12px var(--f-mono);color:var(--c-primary);letter-spacing:.15em}.hero h1{font:600 clamp(28px,4.2vw,56px)/1.1 var(--f-serif-ko);margin:14px 0}.hero p{max-width:590px;color:var(--c-text-2);font-size:16px;line-height:1.7}.actions{display:flex;gap:12px;margin-top:24px}.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}.proof article{padding:14px;background:rgba(10,17,38,.76);border:1px solid var(--c-border);border-radius:12px}.proof strong{display:block;margin-bottom:6px}.proof span{font-size:12.5px;color:var(--c-text-2);line-height:1.45}@media(max-width:800px){.hero{display:block;padding:72px 20px}.nav{padding:0 16px}.proof{grid-template-columns:1fr}.actions{flex-direction:column}.actions a{justify-content:center}.nav-actions .btn-ghost{display:none}}
-</style></head><body><div class="page"><header class="nav"><a class="brand" href="landing.html">Magic Academy</a><div class="nav-actions"><a class="btn btn-ghost" href="screens/08-main.html">둘러보기</a><a class="btn btn-primary" href="screens/07-login.html">로그인</a></div></header><main class="hero"><section><div class="eyebrow">MULTI-AGENT SOCIAL SIMULATION</div><h1>마법 사회의 선택과 관계를 관찰하세요</h1><p>각자의 성격과 기억을 가진 에이전트가 사건 속에서 관계를 만들고 변화합니다. 무엇이 행동을 만들었는지 Inspector로 추적하고, 마지막에는 모든 인물에게 남은 영향을 확인하세요.</p><div class="actions"><a class="btn btn-primary btn-lg" href="screens/01-onboarding.html">새 관찰 시작하기</a><a class="btn btn-outline btn-lg" href="screens/08-main.html">최근 기록 보기</a></div><div class="proof"><article><strong>기억에서 행동까지</strong><span>Memory Stream과 의사결정 원인을 한 흐름에서 살펴봅니다.</span></article><article><strong>관계가 만드는 사건</strong><span>친밀도·신뢰·긴장이 사건 전개에 미치는 영향을 관찰합니다.</span></article><article><strong>모두에게 남은 결말</strong><span>사건 이후 각 에이전트의 상태와 관계 변화를 비교합니다.</span></article></div></section></main></div></body></html>
+<html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Magic Academy — 살아 움직이는 마법 사회</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap"><link rel="stylesheet" href="css/magic-academy-v2.css"><style>
+*{box-sizing:border-box}html,body{height:100%;overflow:hidden}body{margin:0;background:var(--c-bg);color:var(--c-text)}
+.page{height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;background:radial-gradient(circle at 78% 15%,rgba(109,90,230,.16),transparent 55%),linear-gradient(90deg,rgba(6,13,32,.98) 20%,rgba(6,13,32,.5)),url('assets/concept/academy-night-background.png') center/cover fixed}
+.streaks{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:0}
+.streak{position:absolute;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(235,205,145,.9) 18%,rgba(212,178,111,.6) 42%,rgba(212,178,111,.18) 70%,transparent 100%);box-shadow:0 0 4px rgba(235,205,145,.75),0 0 16px rgba(212,178,111,.3);filter:blur(.4px);opacity:0;will-change:transform,opacity}
+@keyframes streak-slide{0%{opacity:0;transform:translateX(-420px) rotate(var(--r,0deg))}12%{opacity:0}28%{opacity:1}72%{opacity:.7}88%{opacity:0}100%{opacity:0;transform:translateX(1300px) rotate(var(--r,0deg))}}
+.nav{height:68px;flex:0 0 auto;display:flex;align-items:center;padding:0 clamp(20px,6vw,88px);border-bottom:1px solid var(--c-border);background:rgba(6,13,32,.72);backdrop-filter:blur(14px);position:relative;z-index:2}
+.brand{font:700 22px var(--f-serif-en);background:linear-gradient(120deg,#fff,var(--c-gold,#d4b26f));-webkit-background-clip:text;background-clip:text;color:transparent}
+.nav-actions{margin-left:auto;display:flex;gap:10px}
+.hero{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,680px) 1fr;align-items:center;padding:clamp(16px,4vw,64px);overflow:hidden;position:relative;z-index:1}
+.eyebrow{font:600 12px var(--f-mono);color:var(--c-primary);letter-spacing:.15em;display:flex;align-items:center;gap:8px}
+.eyebrow::before{content:'';width:22px;height:1px;background:var(--c-primary)}
+.hero h1{font:600 clamp(28px,4.2vw,58px)/1.14 var(--f-serif-ko);margin:16px 0;text-shadow:0 2px 24px rgba(109,90,230,.35)}
+.hero p{max-width:590px;color:var(--c-text-2);font-size:16px;line-height:1.7}
+.actions{display:flex;gap:12px;margin-top:26px}
+.actions .btn-primary{box-shadow:0 8px 28px rgba(109,90,230,.45)}
+.cast{display:flex;gap:10px;margin-top:30px}
+.cast-avatar{width:40px;height:40px;border-radius:50%;background-size:cover;background-position:center top;border:2px solid;box-shadow:0 0 12px rgba(0,0,0,.4);transition:transform .2s ease}
+.cast-avatar:hover{transform:translateY(-3px)}
+.cast-label{align-self:center;margin-left:6px;font-family:var(--f-mono);font-size:11px;color:var(--c-text-3);letter-spacing:.06em}
+.proof{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:28px}
+.proof article{padding:14px;background:rgba(10,17,38,.76);border:1px solid var(--c-border);border-left:2px solid var(--c-gold,#d4b26f);border-radius:12px;backdrop-filter:blur(6px)}
+.proof strong{display:block;margin-bottom:6px}
+.proof span{font-size:12.5px;color:var(--c-text-2);line-height:1.45}
+@media(max-width:800px){.hero{display:block;padding:72px 20px}.nav{padding:0 16px}.proof{grid-template-columns:1fr}.actions{flex-direction:column}.actions a{justify-content:center}.nav-actions .btn-ghost{display:none}}
+</style></head><body><div class="page">
+<div class="streaks">
+  <div class="streak" style="top:12%;width:320px;--r:-3deg;animation:streak-slide 6.4s .2s cubic-bezier(.25,.46,.45,.94) infinite"></div>
+  <div class="streak" style="top:38%;width:240px;--r:2deg;animation:streak-slide 5.6s 1.8s cubic-bezier(.25,.46,.45,.94) infinite"></div>
+  <div class="streak" style="top:64%;width:280px;--r:-2deg;animation:streak-slide 7.1s 1s cubic-bezier(.25,.46,.45,.94) infinite"></div>
+</div>
+<header class="nav"><a class="brand" href="landing.html">Magic Academy</a><div class="nav-actions"><a class="btn btn-ghost" href="screens/08-main.html">둘러보기</a><a class="btn btn-primary" href="screens/07-login.html">로그인</a></div></header>
+<main class="hero"><section>
+<div class="eyebrow">MULTI-AGENT SOCIAL SIMULATION</div>
+<h1>마법 사회의 선택과 관계를 관찰하세요</h1>
+<p>각자의 성격과 기억을 가진 에이전트가 사건 속에서 관계를 만들고 변화합니다. 무엇이 행동을 만들었는지 Inspector로 추적하고, 마지막에는 모든 인물에게 남은 영향을 확인하세요.</p>
+<div class="actions"><a class="btn btn-primary btn-lg" href="screens/01-onboarding.html">새 관찰 시작하기</a><a class="btn btn-outline btn-lg" href="screens/08-main.html">최근 기록 보기</a></div>
+<div class="cast">
+  <div class="cast-avatar" style="background-image:url('assets/character/Adel_ISTJ.png');border-color:var(--c-char-adel-ring);"></div>
+  <div class="cast-avatar" style="background-image:url('assets/character/Leo_ESTP.png');border-color:var(--c-char-leo-ring);"></div>
+  <div class="cast-avatar" style="background-image:url('assets/character/Ria_INFP.png');border-color:var(--c-char-ria-ring);"></div>
+  <div class="cast-avatar" style="background-image:url('assets/character/Kai_ENTJ.png');background-position:center 15%;border-color:var(--c-char-kai-ring);"></div>
+  <div class="cast-avatar" style="background-image:url('assets/character/Sera_ESFJ.png');background-position:center 15%;border-color:var(--c-char-sera-ring);"></div>
+  <span class="cast-label">5명의 마법사, 각자의 시점으로</span>
+</div>
+<div class="proof"><article><strong>기억에서 행동까지</strong><span>Memory Stream과 의사결정 원인을 한 흐름에서 살펴봅니다.</span></article><article><strong>관계가 만드는 사건</strong><span>친밀도·신뢰·긴장이 사건 전개에 미치는 영향을 관찰합니다.</span></article><article><strong>모두에게 남은 결말</strong><span>사건 이후 각 에이전트의 상태와 관계 변화를 비교합니다.</span></article></div>
+</section></main></div></body></html>
