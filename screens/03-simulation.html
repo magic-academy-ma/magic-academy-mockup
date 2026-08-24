@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <link rel="stylesheet" href="../css/context-dialogs.css">
   <style>
     body { margin: 0; overflow: hidden; background: var(--c-bg); }
 
@@ -119,7 +120,7 @@
     .char-ria-sm  { background-image: url('../assets/character/Ria_INFP.png'); }
     .char-kai-sm  { background-image: url('../assets/character/Kai_ENTJ.png'); }
     .char-sera-sm { background-image: url('../assets/character/Sera_ESFJ.png'); }
-    .char-prof-sm { background-image: url('../assets/character/professor.png'); }
+    .char-prof-sm { background-image: url('../assets/character/professor_orion.png'); }
     .agent-list-info { flex: 1; min-width: 0; }
     .agent-list-name {
       display: flex; align-items: center; gap: var(--s-2);
@@ -317,7 +318,7 @@
     .zone-agent-prof {
       width: 40px; height: 40px; border-radius: 50%;
       border: 2px solid rgba(215, 198, 167, 0.4);
-      background-image: url('../assets/character/professor.png');
+      background-image: url('../assets/character/professor_orion.png');
       background-size: cover; background-position: center top;
       flex-shrink: 0; cursor: pointer;
       transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
@@ -683,15 +684,15 @@
       transition:border-color var(--tr-fast), color var(--tr-fast);
     }
     .night-skip-btn:hover { border-color:var(--c-border-hi); color:var(--c-text); }
-    .brand-mark { width:30px; height:30px; border-radius:9px; display:grid; place-items:center; background:rgba(94,96,232,.18); border:1px solid rgba(148,151,255,.42); color:#b8baff; font-family:var(--f-serif-en); font-size:18px; font-weight:700; }
+    .brand-mark { width:30px; height:30px; border-radius:9px; background:url('../assets/concept/logo.png') center/cover; border:1px solid rgba(212,178,111,.42); box-shadow:0 0 12px rgba(212,178,111,.14); }
     .topbar__brand { font-size:16px; }
     .topbar__time { font-size:13px; color:var(--c-text-2); }
     .topbar-action { min-width:auto; padding:6px 10px; font-size:13px; }
     .more-wrap { position:relative; }
     .more-menu { position:absolute; top:38px; right:0; width:190px; padding:6px; background:#0c1733; border:1px solid var(--c-border); border-radius:var(--r-md); box-shadow:var(--sh-lg); display:none; }
     .more-menu.open { display:grid; gap:2px; }
-    .more-menu a { padding:9px 10px; border-radius:6px; color:var(--c-text-2); font-size:13px; text-decoration:none; }
-    .more-menu a:hover, .more-menu a:focus-visible { background:rgba(94,96,232,.14); color:var(--c-text); }
+    .more-menu a, .more-menu button { width:100%; padding:9px 10px; border:0; border-radius:6px; color:var(--c-text-2); background:transparent; font:inherit; font-size:13px; text-align:left; text-decoration:none; cursor:pointer; }
+    .more-menu a:hover, .more-menu a:focus-visible, .more-menu button:hover, .more-menu button:focus-visible { background:rgba(94,96,232,.14); color:var(--c-text); }
     .selection-context { display:flex; gap:6px; padding:8px 46px 8px 12px; background:rgba(94,96,232,.08); border-bottom:1px solid rgba(94,96,232,.25); font-size:12px; }
     .context-label { color:var(--c-text-3); flex-shrink:0; }
     .context-value { color:#c9caff; font-weight:600; flex-shrink:0; }
@@ -773,7 +774,7 @@
           <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
-      <div class="brand-mark" aria-hidden="true">M</div>
+      <div class="brand-mark" aria-hidden="true"></div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="topbar__sep"></div>
       <div class="topbar__tick">TICK 4 / 7</div>
@@ -798,8 +799,8 @@
           <button class="view-toggle-btn active" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
           <button class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
         </div>
-        <a class="btn btn-outline topbar-action" href="16-guide.html">사용법</a>
-        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="#experiment-settings" onclick="openSettingsDrawer(); return false;">실험 조건</a><a href="05-relationship.html">관계 그래프</a><a href="11-replay.html">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><a href="09-save-modal.html">저장하기</a><a href="10-mypage-simulations.html">내 기록</a></div></div>
+        <button class="btn btn-outline topbar-action" onclick="MagicAcademyDialogs.openGuide()">사용법</button>
+        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="#experiment-settings" onclick="openSettingsDrawer(); return false;">실험 조건</a><a id="relationship-link" href="05-relationship.html?from=simulation&amp;tick=4&amp;agent=leo">관계 그래프</a><a id="replay-link" href="11-replay.html?from=simulation&amp;tick=4&amp;agent=leo">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><button onclick="MagicAcademyDialogs.openSave(); toggleMoreMenu()">저장하기</button><a href="10-mypage-simulations.html">내 기록</a></div></div>
       </div>
     </div>
   </div>
@@ -1087,7 +1088,7 @@
           <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m1"><span><span class="memory-time">TICK 03 · 오전</span>마법 생물을 관찰했다</span></a>
           <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m2"><span><span class="memory-time">TICK 02 · 오후</span>Ria와 복도에서 대화했다</span></a>
         </div>
-        <a id="all-memories-link" class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=leo" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
+        <a id="all-memories-link" class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=leo&amp;from=simulation&amp;tick=4" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
       </div>
       <div class="divider"></div>
       <button class="btn btn-outline btn-sm" onclick="openEventDrawer()" style="width:100%; padding:9px 0;">
@@ -1231,7 +1232,7 @@
     },
     aldric: {
       name: 'Prof. Orion', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
-      portrait: '../assets/character/professor.png', isProf: true,
+      portrait: '../assets/character/professor_orion.png', isProf: true,
       mood: 90, hunger: 10, fatigue: 35, stress: 15, major: '기초마법 및 결계학', year: '전임 교수',
       memories: ['강의동 A 기초 마법학 특강', '결계 유지 보고서 검토']
     }
@@ -1349,8 +1350,10 @@
     document.getElementById('selected-stress-bar').style.width = `${data.stress}%`;
     document.getElementById('selected-major').textContent = data.major;
     document.getElementById('selected-year').textContent = data.year;
-    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}"><span><span class="memory-time">TICK ${String(Math.max(1, 3-index)).padStart(2,'0')} · ${index === 0 ? '오전' : '오후'}</span>${m}</span></a>`).join('');
-    document.getElementById('all-memories-link').href = `04-inspector.html?tab=memory&agent=${agentId}`;
+    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}&from=simulation&tick=4"><span><span class="memory-time">TICK ${String(Math.max(1, 3-index)).padStart(2,'0')} · ${index === 0 ? '오전' : '오후'}</span>${m}</span></a>`).join('');
+    document.getElementById('all-memories-link').href = `04-inspector.html?tab=memory&agent=${agentId}&from=simulation&tick=4`;
+    document.getElementById('relationship-link').href = `05-relationship.html?from=simulation&tick=4&agent=${agentId}`;
+    document.getElementById('replay-link').href = `11-replay.html?from=simulation&tick=4&agent=${agentId}`;
   }
 
   function openEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
@@ -1519,7 +1522,12 @@
 
   /* Initial state */
   selectAgent('leo');
-  if (new URLSearchParams(window.location.search).get('event') === 'missing') { selectAgent('adel'); openEventDrawer(); }
+  const simulationParams = new URLSearchParams(window.location.search);
+  const requestedSimulationAgent = simulationParams.get('agent');
+  if (requestedSimulationAgent && charData[requestedSimulationAgent]) selectAgent(requestedSimulationAgent);
+  if (simulationParams.get('event') === 'missing') { selectAgent('adel'); openEventDrawer(); }
 </script>
+<script src="../js/context-dialogs.js"></script>
+<script>MagicAcademyDialogs.init({ guide: true });</script>
 </body>
 </html>

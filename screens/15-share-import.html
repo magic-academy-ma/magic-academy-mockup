@@ -315,6 +315,11 @@
 </div>
 
 <script>
+  const shareParams = new URLSearchParams(window.location.search);
+  const shareFrom = shareParams.get('from');
+  const shareBackLink = document.querySelector('a[href="08-main.html"]');
+  if (shareBackLink && shareFrom === 'setup') { shareBackLink.href = '06-persona-setup.html'; shareBackLink.lastChild.textContent = ' Persona 설정'; }
+  if (shareBackLink && shareFrom === 'mypage') { shareBackLink.href = '10-mypage-personas.html'; shareBackLink.lastChild.textContent = ' Persona 기록'; }
   function setScope(scope, btn) {
     document.querySelectorAll('.toggle-pill button').forEach(b => b.classList.remove('active'));
     btn.classList.add('active');
@@ -332,7 +337,8 @@
   function importPreset(name) {
     const t = document.getElementById('import-toast');
     t.style.display = 'block';
-    setTimeout(() => { t.style.display = 'none'; window.location.href = '06-persona-setup.html'; }, 2000);
+    const target = name === 'json' ? '06-persona-setup.html?import=json' : `06-persona-setup.html?preset=${encodeURIComponent(name)}`;
+    setTimeout(() => { t.style.display = 'none'; window.location.href = target; }, 2000);
   }
   function parseImport() {
     const v = document.getElementById('json-import-area').value.trim();

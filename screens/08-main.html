@@ -75,12 +75,16 @@
       z-index: 10;
     }
     .main-nav__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
       font-family: var(--f-serif-en);
       font-size: var(--t-base);
       font-weight: 600;
       color: var(--c-text);
       letter-spacing: 0.04em;
     }
+    .main-nav__brand img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; }
     .main-nav__links {
       display: flex; gap: var(--s-5); margin-left: var(--s-4);
     }
@@ -101,6 +105,9 @@
       flex-direction: column;
       gap: var(--s-6);
     }
+    .demo-banner { display:none; align-items:center; justify-content:space-between; gap:var(--s-4); padding:var(--s-3) var(--s-5); background:rgba(52,179,199,.1); border-bottom:1px solid rgba(52,179,199,.35); color:var(--c-text-2); }
+    .demo-mode .demo-banner { display:flex; }
+    .demo-mode .account-only { display:none!important; }
 
     /* Section header */
     .section-header {
@@ -221,7 +228,8 @@
   </style>
 </head>
 <body>
-<div class="screen">
+<div class="screen" id="main-screen">
+  <div class="demo-banner"><span><strong style="color:var(--c-inspector)">데모 모드</strong> · 아래 기록은 기능 체험을 위한 샘플입니다.</span><a class="btn btn-primary btn-sm" href="07-login.html">로그인</a></div>
   <!-- Hero -->
   <div class="hero">
     <div class="hero__bg"></div>
@@ -229,10 +237,10 @@
 
     <!-- Top Nav -->
     <div class="main-nav">
-      <a href="../landing.html" class="main-nav__brand">Magic Academy</a>
+      <a href="../landing.html" class="main-nav__brand"><img src="../assets/concept/logo.png" alt="">Magic Academy</a>
       <div class="main-nav__links">
         <span class="nav-link active">홈</span>
-        <span class="nav-link" onclick="window.location.href='10-mypage.html'">마이페이지</span>
+        <span class="nav-link account-only" onclick="window.location.href='10-mypage.html'">마이페이지</span>
       </div>
       <div style="margin-left:auto; display:flex; align-items:center; gap:var(--s-3);">
         <div style="
@@ -241,7 +249,7 @@
           background-size: cover; background-position: center top;
           border: 2px solid var(--c-primary);
           cursor:pointer;
-        " onclick="window.location.href='10-mypage.html'"></div>
+        " class="account-only" onclick="window.location.href='10-mypage.html'"></div>
       </div>
     </div>
 
@@ -250,12 +258,13 @@
       <div class="hero__title">마법학교가<br>살아 움직인다.</div>
       <div class="hero__sub">Agent들의 상태를 관찰하고, Magic Event의 원인을 추적합니다.</div>
       <div class="hero__cta">
-        <button class="btn btn-primary btn-lg" onclick="window.location.href='01-onboarding.html'">
+        <button class="btn btn-primary btn-lg" onclick="startNewSimulation()">
           새 시뮬레이션 시작
         </button>
         <button class="btn btn-outline btn-lg" onclick="window.location.href='03-simulation.html'">
           이어 관찰하기
         </button>
+        <a href="01-onboarding.html?from=main" style="align-self:center;color:var(--c-text-2);font-size:12px;">세계관 다시 보기</a>
       </div>
     </div>
   </div>
@@ -265,7 +274,7 @@
     <!-- Recent -->
     <div>
       <div class="section-header">
-        <span class="section-title">최근 관찰 기록</span>
+        <span class="section-title" id="recent-title">최근 관찰 기록</span>
         <span class="section-more">전체 보기 →</span>
       </div>
       <div class="saved-grid">
@@ -292,7 +301,7 @@
         </div>
 
         <!-- Recent #2 -->
-        <div class="sim-card" onclick="window.location.href='11-replay.html'">
+        <div class="sim-card" onclick="window.location.href='11-replay.html?from=main'">
           <div class="sim-card__thumb">
             <div class="sim-card__thumb-img" style="filter: brightness(0.5) saturate(0.5);"></div>
             <div class="sim-card__thumb-overlay"></div>
@@ -308,7 +317,7 @@
         </div>
 
         <!-- New Simulation Card -->
-        <div class="sim-card new-card" onclick="window.location.href='01-onboarding.html'">
+        <div class="sim-card new-card" onclick="startNewSimulation()">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none"><path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           <span style="font-size:var(--t-sm);">새 시뮬레이션</span>
         </div>
@@ -317,5 +326,15 @@
   </div>
 </div>
 <script src="../js/magic-academy.js"></script>
+<script>
+  const isDemoMode = new URLSearchParams(window.location.search).get('mode') === 'demo';
+  if (isDemoMode) {
+    document.getElementById('main-screen').classList.add('demo-mode');
+    document.getElementById('recent-title').textContent = '샘플 관찰 기록';
+  }
+  function startNewSimulation() {
+    window.location.href = isDemoMode ? '02-persona-select.html?from=main&mode=demo' : '02-persona-select.html?from=main';
+  }
+</script>
 </body>
 </html>

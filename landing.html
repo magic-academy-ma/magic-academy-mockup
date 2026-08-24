@@ -6,7 +6,8 @@
 .streak{position:absolute;height:1px;background:linear-gradient(90deg,transparent 0%,rgba(235,205,145,.9) 18%,rgba(212,178,111,.6) 42%,rgba(212,178,111,.18) 70%,transparent 100%);box-shadow:0 0 4px rgba(235,205,145,.75),0 0 16px rgba(212,178,111,.3);filter:blur(.4px);opacity:0;will-change:transform,opacity}
 @keyframes streak-slide{0%{opacity:0;transform:translateX(-420px) rotate(var(--r,0deg))}12%{opacity:0}28%{opacity:1}72%{opacity:.7}88%{opacity:0}100%{opacity:0;transform:translateX(1300px) rotate(var(--r,0deg))}}
 .nav{height:68px;flex:0 0 auto;display:flex;align-items:center;padding:0 clamp(20px,6vw,88px);border-bottom:1px solid var(--c-border);background:rgba(6,13,32,.72);backdrop-filter:blur(14px);position:relative;z-index:2}
-.brand{font:700 22px var(--f-serif-en);background:linear-gradient(120deg,#fff,var(--c-gold,#d4b26f));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand{display:flex;align-items:center;gap:10px;font:700 22px var(--f-serif-en);background:linear-gradient(120deg,#fff,var(--c-gold,#d4b26f));-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand img{width:38px;height:38px;border-radius:9px;object-fit:cover;box-shadow:0 0 18px rgba(212,178,111,.18)}
 .nav-actions{margin-left:auto;display:flex;gap:10px}
 .hero{flex:1 1 auto;min-height:0;display:grid;grid-template-columns:minmax(0,680px) 1fr;align-items:center;padding:clamp(16px,4vw,64px);overflow:hidden;position:relative;z-index:1}
 .eyebrow{font:600 12px var(--f-mono);color:var(--c-primary);letter-spacing:.15em;display:flex;align-items:center;gap:8px}
@@ -30,12 +31,12 @@
   <div class="streak" style="top:38%;width:240px;--r:2deg;animation:streak-slide 5.6s 1.8s cubic-bezier(.25,.46,.45,.94) infinite"></div>
   <div class="streak" style="top:64%;width:280px;--r:-2deg;animation:streak-slide 7.1s 1s cubic-bezier(.25,.46,.45,.94) infinite"></div>
 </div>
-<header class="nav"><a class="brand" href="landing.html">Magic Academy</a><div class="nav-actions"><a class="btn btn-ghost" href="screens/08-main.html">둘러보기</a><a class="btn btn-primary" href="screens/07-login.html">로그인</a></div></header>
+<header class="nav"><a class="brand" href="landing.html"><img src="assets/concept/logo.png" alt="">Magic Academy</a><div class="nav-actions"><a class="btn btn-ghost" href="screens/08-main.html?mode=demo">데모 둘러보기</a><a class="btn btn-primary" href="screens/07-login.html">로그인</a></div></header>
 <main class="hero"><section>
 <div class="eyebrow">MULTI-AGENT SOCIAL SIMULATION</div>
 <h1>마법 사회의 선택과 관계를 관찰하세요</h1>
 <p>각자의 성격과 기억을 가진 에이전트가 사건 속에서 관계를 만들고 변화합니다. 무엇이 행동을 만들었는지 Inspector로 추적하고, 마지막에는 모든 인물에게 남은 영향을 확인하세요.</p>
-<div class="actions"><a class="btn btn-primary btn-lg" href="screens/01-onboarding.html">새 관찰 시작하기</a><a class="btn btn-outline btn-lg" href="screens/08-main.html">최근 기록 보기</a></div>
+<div class="actions"><a class="btn btn-primary btn-lg" href="screens/01-onboarding.html">새 관찰 시작하기</a><a class="btn btn-outline btn-lg" href="screens/07-login.html?next=records">최근 기록 보기</a></div>
 <div class="cast">
   <div class="cast-avatar" style="background-image:url('assets/character/Adel_ISTJ.png');border-color:var(--c-char-adel-ring);"></div>
   <div class="cast-avatar" style="background-image:url('assets/character/Leo_ESTP.png');border-color:var(--c-char-leo-ring);"></div>

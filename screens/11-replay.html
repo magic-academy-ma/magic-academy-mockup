@@ -265,7 +265,7 @@
       <span class="topbar__title">타임라인 리플레이 — 대표 캠페인: 다섯 학생과 한 명의 교수</span>
     </div>
     <div class="topbar__right">
-      <a href="03-simulation.html" class="btn-nav">← 시뮬레이션</a>
+      <a href="03-simulation.html" id="replay-back-link" class="btn-nav">← 시뮬레이션으로</a>
     </div>
   </div>
 
@@ -499,6 +499,19 @@
   let isPlaying = true;
   let playSpeed = 1;
   let playTimer = null;
+  const replayParams = new URLSearchParams(window.location.search);
+  const replayTick = replayParams.get('tick');
+  const replayAgent = replayParams.get('agent');
+  const simulationReturn = `03-simulation.html${replayTick || replayAgent ? `?${new URLSearchParams({ ...(replayTick ? { tick: replayTick } : {}), ...(replayAgent ? { agent: replayAgent } : {}) })}` : ''}`;
+  const replayOrigins = {
+    ending: ['14-ending-summary.html', '← 엔딩 요약으로'],
+    main: ['08-main.html', '← 메인으로'],
+    mypage: ['10-mypage-simulations.html', '← 내 기록으로'],
+    simulation: [simulationReturn, '← 시뮬레이션으로']
+  };
+  const replayOrigin = replayOrigins[replayParams.get('from')] || replayOrigins.simulation;
+  document.getElementById('replay-back-link').href = replayOrigin[0];
+  document.getElementById('replay-back-link').textContent = replayOrigin[1];
 
   function pad(n) { return String(n).padStart(2, '0'); }
 
