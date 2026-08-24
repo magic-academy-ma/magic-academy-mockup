@@ -55,11 +55,42 @@
     /* ── Right form panel ────────────────────────────────── */
     .setup-form-panel {
       flex: 1; display: flex; flex-direction: column; overflow: hidden;
+      position: relative;
       background:
-        radial-gradient(circle at 80% 20%, rgba(109, 90, 230, 0.06), transparent 50%),
-        linear-gradient(rgba(6, 13, 32, .62), rgba(6, 13, 32, .62)),
+        radial-gradient(circle at 80% 20%, rgba(109, 90, 230, 0.12), transparent 55%),
+        linear-gradient(rgba(6, 13, 32, .48), rgba(6, 13, 32, .52)),
         url('../assets/concept/academy-night-background.png') center / cover fixed;
     }
+
+    /* Ambient gold streak decoration (matches onboarding cinematic style) */
+    .setup-form-panel__streaks {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .setup-bg-streak {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(235, 205, 145, 0.9) 18%,
+        rgba(212, 178, 111, 0.6) 42%,
+        rgba(212, 178, 111, 0.18) 70%,
+        transparent 100%
+      );
+      box-shadow: 0 0 4px rgba(235, 205, 145, 0.75), 0 0 16px rgba(212, 178, 111, 0.3);
+      filter: blur(0.4px);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    @keyframes setup-streak-slide {
+      0%   { opacity: 0; transform: translateX(-380px) rotate(var(--streak-rotate, 0deg)); }
+      12%  { opacity: 0; }
+      28%  { opacity: 1; }
+      72%  { opacity: 0.7; }
+      88%  { opacity: 0; }
+      100% { opacity: 0; transform: translateX(1100px) rotate(var(--streak-rotate, 0deg)); }
+    }
+    .setup-nav, .setup-form-body { position: relative; z-index: 1; }
 
     .setup-nav {
       display: flex; align-items: center; gap: var(--s-4);
@@ -226,6 +257,12 @@
 
   <!-- ── Right Form ─────────────────────────────────────────── -->
   <div class="setup-form-panel">
+    <div class="setup-form-panel__streaks">
+      <div class="setup-bg-streak" style="top: 10%; width: 320px; --streak-rotate: -3deg; animation: setup-streak-slide 6.2s 0.3s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 32%; width: 220px; --streak-rotate: 2deg; animation: setup-streak-slide 5.4s 2.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 58%; width: 280px; --streak-rotate: -2deg; animation: setup-streak-slide 7.0s 1.2s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 78%; width: 200px; --streak-rotate: 3deg; animation: setup-streak-slide 5.8s 3.0s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+    </div>
     <div class="setup-nav">
       <a href="02-persona-select.html" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>

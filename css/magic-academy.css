@@ -938,22 +938,20 @@ ul, ol { list-style: none; }
   overflow: hidden;
   border: 2px solid var(--c-border-hi);
   background-color: var(--c-surface-hi);
-  background-size: 132px 165px;
+  background-size: cover;
   background-repeat: no-repeat;
   transition: border-color var(--tr-fast), transform var(--tr-fast), box-shadow var(--tr-fast);
 }
 
-/* Inherit same character sprite positions */
-.graph-node__portrait.char-adel { background-position: 0px -8px; }
-.graph-node__portrait.char-leo  { background-position: -52px -8px; background-size: 156px 195px; }
-.graph-node__portrait.char-ria  { background-position: -104px -8px; background-size: 156px 195px; }
+/* Individual character portrait images, cropped to top-center */
+.graph-node__portrait.char-adel { background-position: center top; }
+.graph-node__portrait.char-leo  { background-position: center top; }
+.graph-node__portrait.char-ria  { background-position: center top; }
 .graph-node__portrait.char-kai  {
-  background-size: 104px 130px;
-  background-position: 0px -64px;
+  background-position: center top;
 }
 .graph-node__portrait.char-sera {
-  background-size: 104px 130px;
-  background-position: -52px -64px;
+  background-position: center top;
 }
 
 .graph-node.selected .graph-node__portrait {

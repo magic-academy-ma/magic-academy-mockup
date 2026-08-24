@@ -20,7 +20,11 @@
     }
     .hero__bg {
       position: absolute; inset: 0;
-      background: var(--c-bg);
+      background:
+        radial-gradient(circle at 75% 15%, rgba(109, 90, 230, 0.14), transparent 55%),
+        linear-gradient(to bottom, rgba(6,13,32,.35), rgba(6,13,32,.55)),
+        url('../assets/concept/academy-night-background.png') center / cover;
+      transform: scale(1.03);
     }
     .hero__overlay {
       position: absolute; inset: 0;
@@ -164,6 +168,20 @@
       background-size: cover;
       background-position: center;
       filter: brightness(0.7) saturate(0.85);
+      transition: transform var(--tr-normal);
+    }
+    .sim-card:hover .sim-card__thumb-img { transform: scale(1.08); }
+    .sim-card__thumb-preview {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(6,13,32,0.35);
+      opacity: 0; transition: opacity var(--tr-fast);
+    }
+    .sim-card:hover .sim-card__thumb-preview { opacity: 1; }
+    .sim-card__thumb-preview span {
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
+      color: #fff; border: 1px solid rgba(255,255,255,0.6); border-radius: var(--r-sm);
+      padding: 4px 10px; backdrop-filter: blur(4px); background: rgba(6,13,32,0.4);
     }
     .sim-card__thumb-overlay {
       position: absolute; inset: 0;
@@ -186,7 +204,8 @@
     }
     .sim-card__agent-dot {
       width: 20px; height: 20px; border-radius: 50%;
-      background-image: url('../assets/character.png');
+      background-size: cover;
+      background-position: center top;
       background-repeat: no-repeat;
       border: 1.5px solid var(--c-surface);
       margin-left: -4px;
@@ -210,7 +229,7 @@
 
     <!-- Top Nav -->
     <div class="main-nav">
-      <a href="../index.html" class="main-nav__brand">Magic Academy</a>
+      <a href="../landing.html" class="main-nav__brand">Magic Academy</a>
       <div class="main-nav__links">
         <span class="nav-link active">홈</span>
         <span class="nav-link" onclick="window.location.href='10-mypage.html'">마이페이지</span>
@@ -218,8 +237,8 @@
       <div style="margin-left:auto; display:flex; align-items:center; gap:var(--s-3);">
         <div style="
           width:28px; height:28px; border-radius:50%;
-          background-image: url('../assets/character.png');
-          background-size: 84px 105px; background-position: -44px -5px;
+          background-image: url('../assets/character/Leo_ESTP.png');
+          background-size: cover; background-position: center top;
           border: 2px solid var(--c-primary);
           cursor:pointer;
         " onclick="window.location.href='10-mypage.html'"></div>
@@ -258,27 +277,29 @@
             <div class="sim-card__thumb-status">
               <span class="chip chip-critical">MISSING</span>
             </div>
+            <div class="sim-card__thumb-preview"><span>▶ 이어서 관찰하기</span></div>
           </div>
           <div class="sim-card__body">
             <div class="sim-card__name">첫 번째 시뮬레이션</div>
             <div class="sim-card__meta">TICK 10 · LEO 시점</div>
             <div class="sim-card__agents">
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:0 -4px;"></div>
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:-20px -4px;"></div>
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:-40px -4px;"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Adel_ISTJ.png');"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Ria_INFP.png');"></div>
               <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-2);margin-left:var(--s-2);display:flex;align-items:center;">+2</span>
             </div>
           </div>
         </div>
 
         <!-- Recent #2 -->
-        <div class="sim-card">
+        <div class="sim-card" onclick="window.location.href='11-replay.html'">
           <div class="sim-card__thumb">
             <div class="sim-card__thumb-img" style="filter: brightness(0.5) saturate(0.5);"></div>
             <div class="sim-card__thumb-overlay"></div>
             <div class="sim-card__thumb-status">
               <span class="chip chip-active">SAVED</span>
             </div>
+            <div class="sim-card__thumb-preview"><span>▶ 리플레이 보기</span></div>
           </div>
           <div class="sim-card__body">
             <div class="sim-card__name">Leo의 마법 생물 사건</div>
