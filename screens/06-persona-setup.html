@@ -29,7 +29,7 @@
     }
     .setup-portrait-panel__overlay {
       position: absolute; inset: 0;
-      background: linear-gradient(to bottom, transparent 30%, rgba(7, 17, 40, 0.75) 65%, #071128 95%);
+      background: linear-gradient(to bottom, transparent 30%, rgba(6, 13, 32, 0.75) 65%, #060D20 95%);
     }
     .setup-portrait-panel__info {
       position: absolute;
@@ -55,8 +55,42 @@
     /* ── Right form panel ────────────────────────────────── */
     .setup-form-panel {
       flex: 1; display: flex; flex-direction: column; overflow: hidden;
-      background: radial-gradient(circle at 80% 20%, rgba(109, 90, 230, 0.06), transparent 50%), var(--c-bg);
+      position: relative;
+      background:
+        radial-gradient(circle at 80% 20%, rgba(94, 96, 232, 0.12), transparent 55%),
+        linear-gradient(rgba(6, 13, 32, .48), rgba(6, 13, 32, .52)),
+        url('../assets/concept/academy-night-background.png') center / cover fixed;
     }
+
+    /* Ambient gold streak decoration (matches onboarding cinematic style) */
+    .setup-form-panel__streaks {
+      position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 0;
+    }
+    .setup-bg-streak {
+      position: absolute;
+      height: 1px;
+      background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(235, 205, 145, 0.9) 18%,
+        rgba(212, 178, 111, 0.6) 42%,
+        rgba(212, 178, 111, 0.18) 70%,
+        transparent 100%
+      );
+      box-shadow: 0 0 4px rgba(235, 205, 145, 0.75), 0 0 16px rgba(212, 178, 111, 0.3);
+      filter: blur(0.4px);
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+    @keyframes setup-streak-slide {
+      0%   { opacity: 0; transform: translateX(-380px) rotate(var(--streak-rotate, 0deg)); }
+      12%  { opacity: 0; }
+      28%  { opacity: 1; }
+      72%  { opacity: 0.7; }
+      88%  { opacity: 0; }
+      100% { opacity: 0; transform: translateX(1100px) rotate(var(--streak-rotate, 0deg)); }
+    }
+    .setup-nav, .setup-form-body { position: relative; z-index: 1; }
 
     .setup-nav {
       display: flex; align-items: center; gap: var(--s-4);
@@ -124,10 +158,10 @@
     }
     .mbti-btn.selected {
       border-color: var(--c-primary);
-      background: rgba(109, 90, 230, 0.2);
+      background: rgba(94, 96, 232, 0.2);
       color: #ffffff;
       font-weight: 600;
-      box-shadow: 0 0 14px rgba(109, 90, 230, 0.35);
+      box-shadow: 0 0 14px rgba(94, 96, 232, 0.35);
     }
     .mbti-hint {
       font-size: var(--t-xs); color: var(--c-text-2); margin-top: var(--s-1);
@@ -223,14 +257,21 @@
 
   <!-- ── Right Form ─────────────────────────────────────────── -->
   <div class="setup-form-panel">
+    <div class="setup-form-panel__streaks">
+      <div class="setup-bg-streak" style="top: 10%; width: 320px; --streak-rotate: -3deg; animation: setup-streak-slide 6.2s 0.3s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 32%; width: 220px; --streak-rotate: 2deg; animation: setup-streak-slide 5.4s 2.1s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 58%; width: 280px; --streak-rotate: -2deg; animation: setup-streak-slide 7.0s 1.2s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+      <div class="setup-bg-streak" style="top: 78%; width: 200px; --streak-rotate: 3deg; animation: setup-streak-slide 5.8s 3.0s cubic-bezier(0.25,0.46,0.45,0.94) infinite;"></div>
+    </div>
     <div class="setup-nav">
-      <a href="02-persona-select.html" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
+      <a href="02-persona-select.html" id="setup-back-link" class="btn btn-ghost btn-sm" style="padding:var(--s-2);">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </a>
       <span class="setup-nav__brand">Persona 초기 설정</span>
       <span id="nav-char-name" style="font-size:var(--t-sm); color:var(--c-text-2); margin-left:var(--s-2);">— Leo</span>
       <div style="margin-left:auto; display:flex; gap:var(--s-2);">
-        <button class="btn btn-ghost btn-sm" onclick="openImportModal()">↑ 가져오기</button>
+        <button class="btn btn-ghost btn-sm" onclick="window.location.href='15-share-import.html?from=setup'">공유·가져오기</button>
+        <button class="btn btn-ghost btn-sm" onclick="openImportModal()">↑ JSON 가져오기</button>
         <button class="btn btn-outline btn-sm" onclick="exportPreset()">↓ 내보내기</button>
       </div>
     </div>
@@ -365,9 +406,9 @@
     </div><!-- /form-body -->
 
     <div class="setup-footer">
-      <span style="font-size:var(--t-sm); color:var(--c-text-2);">시뮬레이션 시작 후에는 성격 및 파라미터 설정이 잠깁니다</span>
+      <span style="font-size:var(--t-sm); color:var(--c-text-2);">시작 후 Persona와 Magic 설정은 잠깁니다. 일반 Event 설정은 실행 중 변경할 수 있으며 다음 Tick부터 적용됩니다.</span>
       <div style="display:flex; gap:var(--s-3);">
-        <button class="btn btn-outline" onclick="window.location.href='02-persona-select.html'">Persona 변경</button>
+        <button class="btn btn-outline" onclick="returnToPersona()">Persona 변경</button>
         <button class="btn btn-primary" onclick="window.location.href='03-simulation.html'">시뮬레이션 시작 →</button>
       </div>
     </div>
@@ -407,6 +448,11 @@
   };
 
   const urlParams = new URLSearchParams(window.location.search);
+  const setupFromMain = urlParams.get('from') === 'main';
+  const setupMode = urlParams.get('mode') === 'demo';
+  const setupReturnQuery = `${setupFromMain ? 'from=main' : ''}${setupMode ? `${setupFromMain ? '&' : ''}mode=demo` : ''}`;
+  if (setupReturnQuery) document.getElementById('setup-back-link').href = `02-persona-select.html?${setupReturnQuery}`;
+  function returnToPersona() { window.location.href = document.getElementById('setup-back-link').href; }
   const charParam = urlParams.get('char') || 'leo';
   const charInfo = CHAR_DATA[charParam] || CHAR_DATA.leo;
 

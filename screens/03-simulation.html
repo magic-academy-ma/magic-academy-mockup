@@ -2,11 +2,13 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>시뮬레이션 메인 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
   <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <link rel="stylesheet" href="../css/context-dialogs.css">
   <style>
     body { margin: 0; overflow: hidden; background: var(--c-bg); }
 
@@ -17,7 +19,7 @@
       position: absolute; inset: 0;
       background-image: url('../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
-      filter: blur(8px) brightness(0.22) saturate(0.5);
+      filter: brightness(0) saturate(0);
       transform: scale(1.03);
     }
     .sim-vignette {
@@ -102,7 +104,7 @@
     }
     .agent-list-item:hover { background: rgba(22, 35, 71, 0.6); }
     .agent-list-item.selected {
-      background: rgba(109, 90, 230, 0.2);
+      background: rgba(94, 96, 232, 0.2);
       border-left: 3px solid var(--c-primary);
     }
     .agent-list-item.missing { opacity: 0.85; }
@@ -118,6 +120,7 @@
     .char-ria-sm  { background-image: url('../assets/character/Ria_INFP.png'); }
     .char-kai-sm  { background-image: url('../assets/character/Kai_ENTJ.png'); }
     .char-sera-sm { background-image: url('../assets/character/Sera_ESFJ.png'); }
+    .char-prof-sm { background-image: url('../assets/character/professor_orion.png'); }
     .agent-list-info { flex: 1; min-width: 0; }
     .agent-list-name {
       display: flex; align-items: center; gap: var(--s-2);
@@ -158,6 +161,14 @@
       z-index: 20;
       display: flex; flex-direction: column; overflow: hidden;
     }
+    .panel-toggle { position:absolute; top:68px; z-index:25; width:34px; height:34px; border:1px solid var(--c-border); border-radius:9px; background:rgba(8,16,38,.92); color:var(--c-text); cursor:pointer; }
+    .panel-toggle--left { left:20px; }
+    .panel-toggle--right { right:20px; }
+    .sim-screen.left-collapsed .sim-left { transform:translateX(calc(-100% - 20px)); }
+    .sim-screen.right-collapsed .sim-right { transform:translateX(calc(100% + 20px)); }
+    .sim-left, .sim-right { transition:transform 180ms ease; }
+    .sim-screen.left-collapsed .zone-map-panel, .sim-screen.left-collapsed .map-view-panel, .sim-screen.left-collapsed .event-slim-banner { left:12px; }
+    .sim-screen.right-collapsed .zone-map-panel, .sim-screen.right-collapsed .map-view-panel, .sim-screen.right-collapsed .event-slim-banner { right:12px; }
     .sim-right__header {
       padding: var(--s-3) var(--s-4);
       border-bottom: 1px solid var(--c-border);
@@ -189,7 +200,7 @@
       display: flex; align-items: center;
     }
     .sim-right__body {
-      flex: 1; overflow-y: auto;
+      flex: 1; overflow-y: hidden;
       padding: var(--s-3) var(--s-4);
       display: flex; flex-direction: column; gap: var(--s-3);
     }
@@ -209,7 +220,9 @@
       font-size: 11px; color: var(--c-text-2); padding: 3px 0;
       border-bottom: 1px solid rgba(70, 100, 180, 0.15);
       display: flex; gap: var(--s-2); align-items: flex-start; line-height: 1.4;
+      text-decoration: none; border-radius: 4px;
     }
+    .memory-item:hover { color:var(--c-text); background:rgba(94,96,232,.1); }
     .memory-item:last-child { border-bottom: none; }
     .memory-item::before { content: '◆'; font-size: 7px; color: var(--c-primary); flex-shrink: 0; margin-top: 3px; }
 
@@ -219,16 +232,16 @@
       left: 254px; right: 314px;
       top: 58px; bottom: 148px;
       z-index: 15;
-      display: grid;
+      display: none;
       grid-template-columns: 1fr 1fr;
       grid-template-rows: 1fr 1fr;
       gap: 10px;
       padding: 10px;
     }
     .zone-card {
-      background: rgba(10, 17, 40, 0.78);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+      background: rgba(10, 17, 40, 0.52);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
       border: 1px solid var(--c-border);
       border-radius: var(--r-lg);
       cursor: pointer;
@@ -238,20 +251,20 @@
     }
     .zone-card:hover {
       border-color: var(--c-border-hi);
-      background: rgba(18, 28, 62, 0.85);
+      background: rgba(18, 28, 62, 0.58);
     }
     .zone-card.active {
       border-color: var(--c-primary);
-      background: rgba(94, 96, 232, 0.12);
+      background: rgba(94, 96, 232, 0.16);
       box-shadow: 0 0 28px rgba(94, 96, 232, 0.18), inset 0 0 30px rgba(94, 96, 232, 0.05);
     }
     .zone-card__bg {
       position: absolute; inset: 0;
       background-size: cover; background-position: center;
-      opacity: 0.09; transition: opacity var(--tr-fast);
+      opacity: 0.34; transition: opacity var(--tr-fast);
     }
-    .zone-card:hover .zone-card__bg { opacity: 0.17; }
-    .zone-card.active .zone-card__bg { opacity: 0.20; }
+    .zone-card:hover .zone-card__bg { opacity: 0.44; }
+    .zone-card.active .zone-card__bg { opacity: 0.42; }
     .zone-card__content {
       position: relative; z-index: 1;
       padding: var(--s-4);
@@ -304,21 +317,20 @@
     }
     .zone-agent-prof {
       width: 40px; height: 40px; border-radius: 50%;
-      border: 2px solid rgba(215, 198, 167, 0.4);
-      background: rgba(26, 40, 80, 0.9);
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--f-serif-en); font-size: 9px; font-weight: 700;
-      color: var(--c-cream); flex-shrink: 0; cursor: pointer;
+      border: 2px solid rgba(212, 178, 111, 0.4);
+      background-image: url('../assets/character/professor_orion.png');
+      background-size: cover; background-position: center top;
+      flex-shrink: 0; cursor: pointer;
       transition: border-color var(--tr-fast), box-shadow var(--tr-fast), transform var(--tr-fast);
     }
     .zone-agent-prof:hover {
       transform: scale(1.14);
       border-color: var(--c-cream);
-      box-shadow: 0 0 14px rgba(215, 198, 167, 0.4);
+      box-shadow: 0 0 14px rgba(212, 178, 111, 0.4);
     }
     .zone-agent-prof.selected {
       border-color: var(--c-cream);
-      box-shadow: 0 0 16px rgba(215, 198, 167, 0.5);
+      box-shadow: 0 0 16px rgba(212, 178, 111, 0.5);
     }
     .zone-card__empty {
       font-family: var(--f-mono); font-size: 9px;
@@ -386,6 +398,9 @@
     .log-item--critical .log-item__text { color:var(--c-critical); font-weight:500; }
     .log-item--event .log-item__text { color:var(--c-cream); }
     .log-item__meta { font-family:var(--f-mono); font-size:10px; color:var(--c-success); flex-shrink:0; }
+    .log-summary { display:none; flex:1; padding:12px 16px; overflow:auto; color:var(--c-text-2); font-size:13px; line-height:1.6; }
+    .sim-eventlog.summary-mode .sim-eventlog__list { display:none; }
+    .sim-eventlog.summary-mode .log-summary { display:block; }
 
     /* ── Compact Slim Event Banner ─── */
     .event-slim-banner {
@@ -446,7 +461,7 @@
       border-radius:var(--r-sm); color:var(--c-text-2); cursor:pointer;
       transition:background var(--tr-fast), color var(--tr-fast);
     }
-    .dialogue-modal__close:hover { background:var(--c-surface-hi); color:#fff; }
+    .dialogue-modal__close:hover { background:var(--c-surface-hi); color:var(--c-text); }
     .dialogue-modal__participants {
       display:flex; align-items:center; justify-content:space-around;
       padding:var(--s-3) var(--s-6); background:rgba(14,28,64,0.5);
@@ -495,6 +510,63 @@
     .delta-badge--pos { background:rgba(56,178,119,0.15); color:#5ce67a; border:1px solid rgba(56,178,119,0.3); }
     .delta-badge--neg { background:var(--c-critical-muted); color:var(--c-critical); border:1px solid var(--c-critical-ring); }
 
+    /* ── Zone Fullscreen Slide ─── */
+    .zone-fullscreen {
+      position: fixed; inset: 0; z-index: 90;
+      display: none; align-items: flex-end; justify-content: center;
+    }
+    .zone-fullscreen.open { display: flex; }
+    .zone-fullscreen__bg {
+      position: absolute; inset: 0;
+      background-size: cover; background-position: center;
+      filter: brightness(0.55) saturate(0.85);
+      transition: background-image 260ms ease;
+    }
+    .zone-fullscreen__scrim {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, rgba(6,13,32,0.55) 0%, rgba(6,13,32,0.25) 35%, rgba(6,13,32,0.92) 100%);
+    }
+    .zone-fullscreen__close {
+      position: absolute; top: 24px; left: 24px; z-index: 2;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--c-border-hi); background: rgba(8,16,38,0.85);
+      color: var(--c-text); font-size: 20px; cursor: pointer; display: grid; place-items: center;
+    }
+    .zone-fullscreen__close:hover { background: rgba(18,28,62,0.95); }
+    .zone-fullscreen__nav {
+      position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+      width: 48px; height: 48px; border-radius: 50%;
+      border: 1px solid var(--c-border-hi); background: rgba(8,16,38,0.7);
+      color: var(--c-text); font-size: 20px; cursor: pointer; display: grid; place-items: center;
+    }
+    .zone-fullscreen__nav:hover { background: rgba(94,96,232,0.35); border-color: var(--c-primary); }
+    .zone-fullscreen__nav--prev { left: 24px; }
+    .zone-fullscreen__nav--next { right: 24px; }
+    .zone-fullscreen__panel {
+      position: relative; z-index: 2;
+      width: 100%; max-width: 900px; margin-bottom: 56px;
+      padding: var(--s-6); box-sizing: border-box;
+    }
+    .zone-fullscreen__tag {
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase;
+      color: rgba(212,178,111,0.85);
+    }
+    .zone-fullscreen__name {
+      font-family: var(--f-serif-ko); font-size: 32px; font-weight: 700; color: var(--c-text);
+      margin: 4px 0 14px;
+    }
+    .zone-fullscreen__agents { display: flex; gap: var(--s-3); align-items: center; margin-bottom: var(--s-5); flex-wrap: wrap; }
+    .zone-fullscreen__agent {
+      display: flex; align-items: center; gap: 8px;
+      background: rgba(10,17,40,0.7); border: 1px solid var(--c-border); border-radius: 999px;
+      padding: 5px 14px 5px 5px; cursor: pointer; transition: border-color var(--tr-fast);
+    }
+    .zone-fullscreen__agent:hover { border-color: var(--c-border-hi); }
+    .zone-fullscreen__agent-dot { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center top; border: 1.5px solid var(--c-border-hi); flex-shrink: 0; }
+    .zone-fullscreen__agent-name { font-family: var(--f-mono); font-size: 12px; color: var(--c-text-2); }
+    .zone-fullscreen__empty { font-family: var(--f-mono); font-size: 12px; color: var(--c-text-3); margin-bottom: var(--s-5); }
+    .zone-fullscreen__actions { display: flex; gap: var(--s-3); }
+
     /* ── View Toggle ─── */
     .view-toggle-group {
       display: flex; align-items: center; gap: 2px;
@@ -522,7 +594,7 @@
       left: 254px; right: 314px;
       top: 58px; bottom: 148px;
       z-index: 15;
-      display: none;
+      display: block;
     }
     .map-bg {
       position: absolute; inset: 0;
@@ -612,11 +684,83 @@
       transition:border-color var(--tr-fast), color var(--tr-fast);
     }
     .night-skip-btn:hover { border-color:var(--c-border-hi); color:var(--c-text); }
+    .brand-mark { width:30px; height:30px; border-radius:9px; background:url('../assets/concept/logo.png') center/cover; border:1px solid rgba(212,178,111,.42); box-shadow:0 0 12px rgba(212,178,111,.14); }
+    .topbar__brand { font-size:16px; }
+    .topbar__time { font-size:13px; color:var(--c-text-2); }
+    .topbar-action { min-width:auto; padding:6px 10px; font-size:13px; }
+    .more-wrap { position:relative; }
+    .more-menu { position:absolute; top:38px; right:0; width:190px; padding:6px; background:#0c1733; border:1px solid var(--c-border); border-radius:var(--r-md); box-shadow:var(--sh-lg); display:none; }
+    .more-menu.open { display:grid; gap:2px; }
+    .more-menu a, .more-menu button { width:100%; padding:9px 10px; border:0; border-radius:6px; color:var(--c-text-2); background:transparent; font:inherit; font-size:13px; text-align:left; text-decoration:none; cursor:pointer; }
+    .more-menu a:hover, .more-menu a:focus-visible, .more-menu button:hover, .more-menu button:focus-visible { background:rgba(94,96,232,.14); color:var(--c-text); }
+    .selection-context { display:flex; gap:6px; padding:8px 46px 8px 12px; background:rgba(94,96,232,.08); border-bottom:1px solid rgba(94,96,232,.25); font-size:12px; }
+    .context-label { color:var(--c-text-3); flex-shrink:0; }
+    .context-value { color:#c9caff; font-weight:600; flex-shrink:0; }
+    .event-context { margin-left:auto; display:flex; align-items:center; gap:5px; color:var(--c-text-2); min-width:0; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .event-context::before { content:'!'; width:17px; height:17px; flex-shrink:0; display:grid; place-items:center; border:1px solid var(--c-critical); border-radius:50%; color:var(--c-critical); font-size:11px; font-weight:700; }
+    .sim-left__search input, .agent-list-name, .agent-list-loc, .sim-right__body, .memory-item { font-size:14px; }
+    .sim-right__section-title, .sim-left__count { font-size:12px; }
+    .memory-time { display:block; margin-bottom:2px; color:#9ea1ff; font-family:var(--f-mono); font-size:11px; }
+    .log-resize-controls { display:flex; gap:4px; margin-left:auto; }
+    .log-size-btn { border:1px solid transparent; background:transparent; color:var(--c-text-2); border-radius:5px; padding:4px 8px; cursor:pointer; font-size:12px; }
+    .log-size-btn:hover, .log-size-btn.active { color:var(--c-text); background:rgba(94,96,232,.18); border-color:rgba(94,96,232,.38); }
+    .sim-eventlog { transition:height 180ms ease; }
+    .sim-screen.log-expanded .sim-eventlog { height:42vh; }
+    .sim-screen.log-collapsed .sim-eventlog { height:42px; }
+    .sim-screen.log-expanded .sim-left, .sim-screen.log-expanded .sim-right, .sim-screen.log-expanded .zone-map-panel, .sim-screen.log-expanded .map-view-panel { bottom:calc(42vh + 18px); }
+    .sim-screen.log-collapsed .sim-left, .sim-screen.log-collapsed .sim-right, .sim-screen.log-collapsed .zone-map-panel, .sim-screen.log-collapsed .map-view-panel { bottom:60px; }
+    .log-tab-btn { font-size:12px; padding:5px 11px; }
+    .log-tab-btn.active { color:#d9d9ff; background:rgba(94,96,232,.2); border-color:rgba(140,143,255,.48); }
+    .log-item { min-height:32px; height:auto; font-size:13px; }
+    .event-slim-banner { top:64px; animation:event-drop 340ms cubic-bezier(.2,.8,.2,1) both; }
+    @keyframes event-drop { from { opacity:0; transform:translateY(-18px); } to { opacity:1; transform:translateY(0); } }
+    .event-slim-banner__badge { background:transparent; }
+    .event-slim-banner__desc { font-size:13px; }
+    .event-drawer, .settings-drawer { position:fixed; top:58px; right:12px; bottom:12px; width:420px; z-index:45; background:rgba(8,16,38,.98); border:1px solid rgba(118,121,255,.46); border-radius:var(--r-lg); box-shadow:var(--sh-lg); transform:translateX(calc(100% + 24px)); transition:transform 220ms ease; display:flex; flex-direction:column; }
+    .event-drawer.open, .settings-drawer.open { transform:translateX(0); }
+    .event-drawer__header { display:flex; justify-content:space-between; align-items:center; padding:16px 18px; border-bottom:1px solid var(--c-border); }
+    .event-drawer__body { padding:18px; overflow:auto; display:grid; gap:16px; font-size:14px; line-height:1.65; }
+    .cause-card { padding:14px; border:1px solid var(--c-border); background:rgba(94,96,232,.08); border-radius:10px; }
+    .cause-card strong { display:block; margin-bottom:5px; color:#d9d9ff; }
+    .cause-list { margin:0; padding-left:20px; color:var(--c-text-2); }
+    .event-chip { display:inline-flex; align-items:center; gap:6px; color:var(--c-critical); font-size:12px; }
+    .event-chip::before { content:'!'; width:18px; height:18px; display:grid; place-items:center; border:1px solid currentColor; border-radius:50%; font-weight:700; }
+    .settings-section { display:grid; gap:12px; padding:14px; border:1px solid var(--c-border); border-radius:10px; background:rgba(94,96,232,.08); }
+    .settings-section__head { display:flex; justify-content:space-between; align-items:center; gap:12px; }
+    .settings-section__head strong { color:var(--c-text); }
+    .settings-status { font-family:var(--f-mono); font-size:10px; color:var(--c-success); letter-spacing:.06em; }
+    .settings-status.locked { color:var(--c-text-3); }
+    .settings-field { display:grid; grid-template-columns:110px 1fr; align-items:center; gap:12px; font-size:13px; }
+    .settings-field label { color:var(--c-text-2); }
+    .settings-field select { width:100%; border:1px solid var(--c-border); border-radius:7px; background:#0c1733; color:var(--c-text); padding:9px 10px; font:inherit; }
+    .settings-readonly { color:var(--c-text); text-align:right; }
+    .settings-note { margin:0; color:var(--c-text-2); font-size:12px; line-height:1.6; }
+    .settings-feedback { min-height:36px; padding:10px 12px; border:1px solid rgba(72,187,120,.38); border-radius:8px; background:rgba(72,187,120,.08); color:var(--c-success); font-size:12px; line-height:1.5; }
+    button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
+    @media (max-width: 900px) {
+      .sim-screen { min-height:0; transform:none !important; }
+      .topbar-main { padding:0 10px; gap:8px; flex-wrap:wrap; height:auto; min-height:58px; }
+      .topbar__brand, .topbar__sep, .topbar__time { display:none; }
+      .topbar-main > div:last-child { margin-left:0 !important; }
+      .view-toggle-group { display:none; }
+      .sim-left, .sim-right { top:108px; bottom:142px; width:min(82vw,320px); }
+      .zone-map-panel, .map-view-panel, .event-slim-banner { left:8px; right:8px; }
+      .zone-map-panel { top:108px; grid-template-columns:1fr; grid-template-rows:repeat(4,minmax(150px,1fr)); overflow-y:auto; }
+      .event-slim-banner { top:108px; align-items:flex-start; }
+      .event-slim-banner__left { align-items:flex-start; flex-direction:column; gap:2px; }
+      .event-slim-banner__desc { display:none; }
+      .panel-toggle { top:112px; }
+      .sim-screen:not(.left-open-mobile) .sim-left { transform:translateX(calc(-100% - 20px)); }
+      .sim-screen:not(.right-open-mobile) .sim-right { transform:translateX(calc(100% + 20px)); }
+      .event-drawer, .settings-drawer { width:calc(100vw - 16px); right:8px; }
+      .sim-eventlog { left:8px; right:8px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="sim-screen" id="sim-screen">
+<div class="sim-screen left-collapsed" id="sim-screen">
 
   <!-- ── Background ── -->
   <div class="sim-map"></div>
@@ -625,18 +769,19 @@
   <!-- ── Top Bar ── -->
   <div class="topbar">
     <div class="topbar-main">
-      <a href="../index.html" class="control-btn" title="Navigator" style="margin-right:var(--s-2);">
+      <a href="../index.html" class="control-btn" title="메인 화면" aria-label="메인 화면으로 이동">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
+      <div class="brand-mark" aria-hidden="true"></div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="topbar__sep"></div>
-      <div class="topbar__tick">TICK <span>10</span></div>
-      <div style="font-family:var(--f-mono);font-size:var(--t-xs);color:var(--c-text-3);margin-left:var(--s-2);">DAY 01 · 09:20</div>
+      <div class="topbar__tick">TICK 4 / 7</div>
+      <div class="topbar__time">1일차 · 오전 9:20</div>
       <div class="topbar__sep"></div>
       <div class="topbar__controls">
-        <button class="control-btn" title="이전 Tick">
+        <button class="control-btn" title="이전 시간">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M8 2L4 6L8 10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </button>
         <button class="control-btn active" title="일시정지">
@@ -645,45 +790,23 @@
         <button class="control-btn" title="재생">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 2L10 6L3 10V2Z" fill="currentColor"/></svg>
         </button>
-        <button class="control-btn" title="빠르게">
+        <button class="control-btn" title="재생 속도 높이기">
           <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2 3L6 6L2 9V3Z" fill="currentColor"/><path d="M6 3L10 6L6 9V3Z" fill="currentColor"/></svg>
         </button>
       </div>
-      <div class="topbar__sep"></div>
-      <a href="11-replay.html" class="night-skip-btn" title="타임라인 리플레이">
-        <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3v3l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        타임라인 리플레이
-      </a>
-      <div class="topbar__sep"></div>
-      <div style="display:flex; align-items:center; gap:var(--s-2);">
-        <span class="chip chip-event" style="font-size:10px; padding:2px 6px;">MAGIC ON</span>
-        <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3);" title="GenFreq:50 Impact:50 | MagicFreq:60 Impact:70">
-          PARAM · G(50/50) M(60/70)
-        </span>
-      </div>
       <div style="margin-left:auto; display:flex; gap:var(--s-3); align-items:center;">
         <div class="view-toggle-group">
-          <button class="view-toggle-btn" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
-          <button class="view-toggle-btn active" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
+          <button class="view-toggle-btn active" id="btn-map-view" onclick="setView('map')">전체 뷰</button>
+          <button class="view-toggle-btn" id="btn-grid-view" onclick="setView('grid')">4분할 뷰</button>
         </div>
-        <button class="control-btn" title="비교 뷰 (Magic ON vs OFF)" onclick="window.location.href='13-magic-comparison.html'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="1" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/><rect x="8" y="2" width="5" height="10" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
-        </button>
-        <button class="control-btn" title="분기 트리 (What-If)" onclick="window.location.href='12-branch-tree.html'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="1.5" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="1.5" stroke="currentColor" stroke-width="1.2"/><path d="M4.5 7h3a2 2 0 002-2V3M7.5 7a2 2 0 012 2v2" stroke="currentColor" stroke-width="1.2"/></svg>
-        </button>
-        <button class="control-btn" title="관계 그래프" onclick="window.location.href='05-relationship.html'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="3" cy="7" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="3" r="2" stroke="currentColor" stroke-width="1.2"/><circle cx="11" cy="11" r="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 7L9 4M5 7L9 10" stroke="currentColor" stroke-width="1.2"/></svg>
-        </button>
-        <button class="control-btn" title="저장" onclick="window.location.href='09-save-modal.html'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><rect x="2" y="2" width="10" height="10" rx="2" stroke="currentColor" stroke-width="1.2"/><path d="M5 2v4h4V2" stroke="currentColor" stroke-width="1.2"/><rect x="4" y="8" width="6" height="3" rx="1" stroke="currentColor" stroke-width="1.2"/></svg>
-        </button>
-        <button class="control-btn" title="마이페이지" onclick="window.location.href='10-mypage.html'">
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="5" r="2.5" stroke="currentColor" stroke-width="1.2"/><path d="M2 12c0-2.761 2.239-5 5-5s5 2.239 5 5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>
-        </button>
+        <button class="btn btn-outline topbar-action" onclick="MagicAcademyDialogs.openGuide()">사용법</button>
+        <div class="more-wrap"><button class="btn btn-outline topbar-action" onclick="toggleMoreMenu()" aria-expanded="false" id="more-button">더보기</button><div class="more-menu" id="more-menu"><a href="#experiment-settings" onclick="openSettingsDrawer(); return false;">실험 조건</a><a id="relationship-link" href="05-relationship.html?from=simulation&amp;tick=4&amp;agent=leo">관계 그래프</a><a id="replay-link" href="11-replay.html?from=simulation&amp;tick=4&amp;agent=leo">지난 시간 보기</a><a href="14-ending-summary.html">결말 리포트</a><button onclick="MagicAcademyDialogs.openSave(); toggleMoreMenu()">저장하기</button><a href="10-mypage-simulations.html">내 기록</a></div></div>
       </div>
     </div>
   </div>
+
+  <button class="panel-toggle panel-toggle--left" onclick="toggleSidePanel('left')" aria-label="Agent 목록 펼치기" aria-expanded="false" id="left-panel-toggle">☰</button>
+  <button class="panel-toggle panel-toggle--right" onclick="toggleSidePanel('right')" aria-label="Agent 상세 접기" aria-expanded="true" id="right-panel-toggle">ⓘ</button>
 
   <!-- ── Left Panel: Agent 목록 ── -->
   <div class="sim-left">
@@ -691,7 +814,7 @@
       <div class="sim-left__count">AGENTS (6)</div>
     </div>
     <div class="sim-left__search">
-      <input type="text" placeholder="🔍  에이전트 검색...">
+      <input type="search" id="agent-search" placeholder="Agent 이름 검색" aria-label="Agent 이름 검색">
     </div>
     <div class="sim-left__list">
       <div class="agent-list-item selected" data-agent="leo">
@@ -706,7 +829,7 @@
         <div class="agent-list-portrait char-adel-sm" style="border-color:var(--c-critical);"></div>
         <div class="agent-list-info">
           <div class="agent-list-name" style="color:var(--c-critical);">Adel</div>
-          <div class="agent-list-loc" style="color:var(--c-critical);">MISSING · TICK 10</div>
+          <div class="agent-list-loc" style="color:var(--c-critical);">실종 · TICK 4</div>
         </div>
         <div class="agent-list-status missing"></div>
       </div>
@@ -735,9 +858,9 @@
         <div class="agent-list-status"></div>
       </div>
       <div class="agent-list-item" data-agent="aldric" style="border-top:1px solid rgba(70,100,180,0.18); margin-top:4px; padding-top:8px;">
-        <div class="agent-list-portrait" style="background:#1a2850; display:flex; align-items:center; justify-content:center; font-family:var(--f-serif-en); font-weight:700; font-size:11px; color:var(--c-cream);">PA</div>
+        <div class="agent-list-portrait char-prof-sm"></div>
         <div class="agent-list-info">
-          <div class="agent-list-name">Prof. Aldric <span style="font-family:var(--f-mono); font-size:9px; color:var(--c-cream); border:1px solid var(--c-cream-ring); border-radius:2px; padding:0 3px;">PROF</span></div>
+          <div class="agent-list-name">Prof. Orion <span style="font-family:var(--f-mono); font-size:9px; color:var(--c-cream); border:1px solid var(--c-cream-ring); border-radius:2px; padding:0 3px;">PROF</span></div>
           <div class="agent-list-loc">강의동 A · 강의 진행</div>
         </div>
         <div class="agent-list-status"></div>
@@ -753,7 +876,7 @@
     <!-- 강의동 A & B — upper left -->
     <div class="map-zone-pin active" id="map-pin-classroom"
          style="left: 28%; top: 36%;"
-         data-zone="classroom" onclick="selectZone('classroom'); selectMapPin('classroom')">
+         data-zone="classroom" onclick="openZoneFullscreen('classroom')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm selected" data-agent="leo"
              style="background-image:url('../assets/character/Leo_ESTP.png');"
@@ -771,14 +894,14 @@
     <!-- 도서관 — upper right -->
     <div class="map-zone-pin" id="map-pin-library"
          style="left: 66%; top: 32%;"
-         data-zone="library" onclick="selectZone('library'); selectMapPin('library')">
+         data-zone="library" onclick="openZoneFullscreen('library')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm" data-agent="sera"
              style="background-image:url('../assets/character/Sera_ESFJ.png');"
              onclick="event.stopPropagation(); selectAgent('sera')" title="Sera · 도서관 2층 · 자습"></div>
         <div class="map-agent-dot-sm missing" data-agent="adel"
              style="background-image:url('../assets/character/Adel_ISTJ.png');"
-             onclick="event.stopPropagation(); window.location.href='04-inspector.html'" title="Adel · MISSING"></div>
+             onclick="event.stopPropagation(); selectAgent('adel'); openEventDrawer()" title="Adel · 실종 사건 관련 Agent"></div>
       </div>
       <div class="map-zone-pin__ring" style="border-color:rgba(219,76,76,0.45);">
         <span class="map-zone-pin__icon">📚</span>
@@ -792,7 +915,7 @@
     <!-- 중앙 광장 — center -->
     <div class="map-zone-pin" id="map-pin-central"
          style="left: 47%; top: 62%;"
-         data-zone="central" onclick="selectZone('central'); selectMapPin('central')">
+         data-zone="central" onclick="openZoneFullscreen('central')">
       <div class="map-agent-cluster">
         <div class="map-agent-dot-sm" data-agent="ria"
              style="background-image:url('../assets/character/Ria_INFP.png');"
@@ -813,7 +936,7 @@
     <!-- 기숙사 / 연구실 — lower right -->
     <div class="map-zone-pin" id="map-pin-dormlab"
          style="left: 74%; top: 68%;"
-         data-zone="dormlab" onclick="selectZone('dormlab'); selectMapPin('dormlab')">
+         data-zone="dormlab" onclick="openZoneFullscreen('dormlab')">
       <div class="map-zone-pin__ring" style="opacity:0.55;">
         <span class="map-zone-pin__icon">🏠</span>
       </div>
@@ -828,7 +951,7 @@
   <div class="zone-map-panel" id="zone-map-panel">
 
     <!-- 강의동 A & B — Top Left -->
-    <div class="zone-card" data-zone="classroom" onclick="selectZone('classroom')">
+    <div class="zone-card" data-zone="classroom" onclick="openZoneFullscreen('classroom')">
       <div class="zone-card__bg" style="background-image:url('../assets/classroom.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Classroom</div>
@@ -837,7 +960,7 @@
         <div class="zone-card__agents">
           <div class="zone-agent-prof" data-agent="aldric"
                onclick="event.stopPropagation(); selectAgent('aldric')"
-               title="Prof. Aldric · 강의동 A · 강의 진행">PA</div>
+               title="Prof. Aldric · 강의동 A · 강의 진행"></div>
           <div class="zone-agent-dot selected" data-agent="leo"
                style="background-image:url('../assets/character/Leo_ESTP.png');"
                onclick="event.stopPropagation(); selectAgent('leo')"
@@ -847,7 +970,7 @@
     </div>
 
     <!-- 도서관 — Top Right -->
-    <div class="zone-card" data-zone="library" onclick="selectZone('library')">
+    <div class="zone-card" data-zone="library" onclick="openZoneFullscreen('library')">
       <div class="zone-card__bg" style="background-image:url('../assets/library.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Library</div>
@@ -860,15 +983,15 @@
                title="Sera · 도서관 2층 · 자습"></div>
           <div class="zone-agent-dot missing" data-agent="adel"
                style="background-image:url('../assets/character/Adel_ISTJ.png');"
-               onclick="event.stopPropagation(); window.location.href='04-inspector.html'"
-               title="Adel · MISSING — Inspector 열기"></div>
+               onclick="event.stopPropagation(); selectAgent('adel'); openEventDrawer()"
+               title="Adel · 실종 사건 원인 보기"></div>
         </div>
       </div>
     </div>
 
     <!-- 중앙 광장 — Bottom Left -->
-    <div class="zone-card" data-zone="central" onclick="selectZone('central')">
-      <div class="zone-card__bg" style="background-image:url('../assets/concept/academy-night-background.png');"></div>
+    <div class="zone-card" data-zone="central" onclick="openZoneFullscreen('central')">
+      <div class="zone-card__bg" style="background-image:url('../assets/central-square.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Central Square</div>
         <div class="zone-card__name">중앙 광장</div>
@@ -887,7 +1010,7 @@
     </div>
 
     <!-- 기숙사 / 연구실 — Bottom Right -->
-    <div class="zone-card" data-zone="dormlab" onclick="selectZone('dormlab')">
+    <div class="zone-card" data-zone="dormlab" onclick="openZoneFullscreen('dormlab')">
       <div class="zone-card__bg" style="background-image:url('../assets/dormitory.png');"></div>
       <div class="zone-card__content">
         <div class="zone-card__tag">Dormitory · Lab</div>
@@ -901,22 +1024,18 @@
   <!-- ── Compact Event Banner ── -->
   <div class="event-slim-banner" id="event-banner">
     <div class="event-slim-banner__left">
-      <span class="event-slim-banner__badge">MAGIC EVENT #04</span>
+      <span class="event-slim-banner__badge">중요 사건</span>
       <span class="event-slim-banner__title">학생 실종</span>
       <span class="event-slim-banner__desc">Adel (ISTJ) 스트레스 92/90 초과 &middot; 도서관 3층 결계 구역에서 이탈</span>
     </div>
     <div style="display:flex; align-items:center; gap:var(--s-3);">
-      <button class="btn btn-teal btn-sm" onclick="window.location.href='04-inspector.html'" style="padding:4px 12px;">
-        Inspector 인과 역추적 &rarr;
-      </button>
-      <button class="btn btn-outline btn-sm" onclick="window.location.href='14-ending-summary.html'" style="padding:4px 12px; border-color:var(--c-cream-ring); color:var(--c-cream);">
-        결말 리포트 &rarr;
-      </button>
+      <button class="btn btn-primary btn-sm" onclick="openEventDrawer()" style="padding:6px 14px;">사건 원인 보기</button>
     </div>
   </div>
 
   <!-- ── Right Panel: 선택 Agent 상세 ── -->
   <div class="sim-right">
+    <div class="selection-context"><span class="context-label">선택한 Agent</span><span class="context-value" id="context-agent">Leo</span><span class="event-context">확인 중인 사건: 학생 실종</span></div>
     <div class="sim-right__header">
       <div class="sim-right__portrait" id="selected-portrait" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
       <div class="sim-right__header-info">
@@ -964,17 +1083,16 @@
       </div>
       <div class="divider"></div>
       <div>
-        <div class="sim-right__section-title">최근 Memory</div>
+        <div class="sim-right__section-title">최근 기억</div>
         <div id="selected-memories">
-          <div class="memory-item">마법 생물을 관찰했다</div>
-          <div class="memory-item">Ria와 복도에서 대화했다</div>
-          <div class="memory-item">수업에 참석했다</div>
-          <div class="memory-item">도서관에서 자료를 찾았다</div>
+          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m1"><span><span class="memory-time">TICK 03 · 오전</span>마법 생물을 관찰했다</span></a>
+          <a class="memory-item" href="04-inspector.html?tab=memory&amp;agent=leo&amp;memory=m2"><span><span class="memory-time">TICK 02 · 오후</span>Ria와 복도에서 대화했다</span></a>
         </div>
+        <a id="all-memories-link" class="btn btn-outline btn-sm" href="04-inspector.html?tab=memory&amp;agent=leo&amp;from=simulation&amp;tick=4" style="display:block; margin-top:8px; text-align:center;">전체 기억 보기</a>
       </div>
       <div class="divider"></div>
-      <button class="btn btn-outline btn-sm" onclick="window.location.href='04-inspector.html'" style="width:100%; padding:5px 0;">
-        사건 Inspector &rarr;
+      <button class="btn btn-outline btn-sm" onclick="openEventDrawer()" style="width:100%; padding:9px 0;">
+        사건 원인 보기
       </button>
     </div>
   </div>
@@ -984,45 +1102,88 @@
     <div class="sim-eventlog__header">
       <div class="log-tab-group">
         <button class="log-tab-btn active" id="tab-all" onclick="filterLogs('all')">전체 로그</button>
-        <button class="log-tab-btn" id="tab-dialogue" onclick="filterLogs('dialogue')">💬 대화 로그 (Dialogue)</button>
-        <button class="log-tab-btn" id="tab-system" onclick="filterLogs('system')">⚡ 시스템 사건</button>
+        <button class="log-tab-btn" id="tab-dialogue" onclick="filterLogs('dialogue')">대화 기록</button>
+        <button class="log-tab-btn" id="tab-system" onclick="filterLogs('system')">시스템 사건</button>
       </div>
-      <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); margin-left:auto;">LIVE TICK 10 · 4 LOG ENTRIES</span>
+      <div class="log-resize-controls" aria-label="로그 창 크기"><button class="log-size-btn" onclick="setLogSize('collapsed',this)">접기</button><button class="log-size-btn active" onclick="setLogSize('default',this)">기본</button><button class="log-size-btn" onclick="setLogSize('expanded',this)">크게</button></div>
+      <button class="log-size-btn" onclick="toggleLogSummary(this)" aria-pressed="false">요약 보기</button>
     </div>
     <div class="sim-eventlog__list" id="log-container">
-      <div class="log-item log-item--critical" data-type="system" onclick="window.location.href='04-inspector.html'">
-        <span class="log-item__tick">T10</span>
-        <span class="log-item__tag tag-critical">CRITICAL</span>
-        <span class="log-item__text">⚠️ <strong>[학생 실종]</strong> Adel 스트레스 임계값 초과(92/90) &middot; MAGIC EVENT #04 발생 (Inspector 역추적 →)</span>
+      <div class="log-item log-item--critical" data-type="system" onclick="openEventDrawer()">
+        <span class="log-item__tick">T04</span>
+        <span class="log-item__tag tag-critical">중요</span>
+        <span class="log-item__text"><strong>[학생 실종]</strong> Adel의 스트레스가 한계를 넘어 도서관 결계 구역을 이탈했습니다.</span>
       </div>
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('ria-kai')">
-        <span class="log-item__tick">T09</span>
-        <span class="log-item__tag tag-dialogue">DIALOGUE</span>
+        <span class="log-item__tick">T03</span>
+        <span class="log-item__tag tag-dialogue">대화</span>
         <span class="log-item__text">Ria ↔ Kai: "고대 룬의 결계 파동이 평소보다 불안정해 보여..."</span>
         <span class="log-item__meta">+3 친밀도</span>
       </div>
       <div class="log-item log-item--event" data-type="system">
-        <span class="log-item__tick">T09</span>
-        <span class="log-item__tag tag-system">SYSTEM</span>
+        <span class="log-item__tick">T03</span>
+        <span class="log-item__tag tag-system">사건</span>
         <span class="log-item__text">Leo가 강의동 B 마법생물학 수업에 정상 출석하여 마력 집중을 시도했다</span>
       </div>
       <div class="log-item" data-type="dialogue" onclick="openDialogueViewer('leo-adel')">
-        <span class="log-item__tick">T08</span>
-        <span class="log-item__tag tag-dialogue">DIALOGUE</span>
+        <span class="log-item__tick">T02</span>
+        <span class="log-item__tag tag-dialogue">대화</span>
         <span class="log-item__text">Leo ↔ Adel: "규칙만 따지다간 실습 시간 다 지나가겠어" vs "안전 수칙은 필수야"</span>
         <span class="log-item__meta" style="color:var(--c-critical);">+5 긴장도</span>
       </div>
     </div>
+    <div class="log-summary"><strong>Tick 2–4 요약</strong><br>Adel은 Leo와의 갈등 이후 스트레스와 피로가 한계를 넘어 도서관 결계 구역을 이탈했습니다. 같은 Tick에 Ria와 Kai는 결계 이상을 대화로 공유했고, Leo는 수업에 참석했습니다.</div>
   </div>
 
 </div><!-- /sim-screen -->
+
+<aside class="event-drawer" id="event-drawer" aria-hidden="true" aria-label="사건 원인 보기"><div class="event-drawer__header"><div><div class="event-chip">중요 사건</div><h2 style="margin:5px 0 0;font-size:20px;">학생 실종</h2></div><button class="control-btn" onclick="closeEventDrawer()" aria-label="사건 원인 닫기">×</button></div><div class="event-drawer__body"><div class="cause-card"><strong>무슨 일이 일어났나요?</strong>Adel이 도서관 3층 결계 구역을 벗어나 현재 위치를 확인할 수 없습니다.</div><div class="cause-card"><strong>가장 큰 원인</strong>높은 스트레스와 피로가 겹친 상태에서 Leo와의 갈등이 마지막 계기가 됐습니다.</div><div><strong style="display:block;margin-bottom:8px;">결정에 영향을 준 요인</strong><ol class="cause-list"><li>스트레스 92 — 안전 범위 초과</li><li>피로도 85 — 판단 여력 감소</li><li>Leo와의 긴장도 +18</li></ol></div><div class="cause-card"><strong>관련 기억 · TICK 03 · 오전</strong>“Leo가 규칙을 무시하려 해 심한 말다툼을 벌였다.”</div><div class="cause-card"><strong>이후 예상</strong>휴식 조건이 충족되면 대표 캠페인 종료 전 복귀할 수 있습니다.</div><button class="btn btn-outline" onclick="document.getElementById('technical-detail').hidden = !document.getElementById('technical-detail').hidden">기술 정보 보기</button><div id="technical-detail" hidden class="cause-card">정책 평가 점수 1.00 · 상태 변경 완료 · 예상 지속 시간 2 Tick</div></div></aside>
+
+<aside class="settings-drawer" id="settings-drawer" aria-hidden="true" aria-label="실험 조건">
+  <div class="event-drawer__header"><div><div class="event-chip" style="color:var(--c-inspector);">실험 조건</div><h2 style="margin:5px 0 0;font-size:20px;">시뮬레이션 파라미터</h2></div><button class="control-btn" onclick="closeSettingsDrawer()" aria-label="실험 조건 닫기">×</button></div>
+  <div class="event-drawer__body">
+    <section class="settings-section">
+      <div class="settings-section__head"><strong>일반 Event</strong><span class="settings-status">실행 중 변경 가능</span></div>
+      <div class="settings-field"><label for="event-frequency">발생 빈도</label><select id="event-frequency"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+      <div class="settings-field"><label for="event-impact">영향도</label><select id="event-impact"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select></div>
+      <p class="settings-note">변경값은 현재 Tick에 영향을 주지 않고 다음 Tick의 World Snapshot부터 적용됩니다.</p>
+      <button class="btn btn-primary" type="button" onclick="applyEventSettings()">다음 Tick부터 적용</button>
+    </section>
+    <div class="settings-feedback" id="settings-feedback" role="status">현재 적용: 빈도 Medium · 영향도 Medium</div>
+    <section class="settings-section">
+      <div class="settings-section__head"><strong>Magic Layer</strong><span class="settings-status locked">시작 후 잠김</span></div>
+      <div class="settings-field"><label>Magic</label><span class="settings-readonly">ON</span></div>
+      <div class="settings-field"><label>발생 빈도</label><span class="settings-readonly">Medium</span></div>
+      <div class="settings-field"><label>영향도</label><span class="settings-readonly">High</span></div>
+      <p class="settings-note">Magic 설정과 Persona는 Draft에서만 변경할 수 있으며 시뮬레이션 시작 시 고정됩니다.</p>
+    </section>
+  </div>
+</aside>
+
+<!-- ── Zone Fullscreen Slide ── -->
+<div class="zone-fullscreen" id="zone-fullscreen">
+  <div class="zone-fullscreen__bg" id="zfs-bg"></div>
+  <div class="zone-fullscreen__scrim"></div>
+  <button class="zone-fullscreen__close" onclick="closeZoneFullscreen()" aria-label="닫기">&times;</button>
+  <button class="zone-fullscreen__nav zone-fullscreen__nav--prev" onclick="slideZoneFullscreen(-1)" aria-label="이전 장소">&#8592;</button>
+  <button class="zone-fullscreen__nav zone-fullscreen__nav--next" onclick="slideZoneFullscreen(1)" aria-label="다음 장소">&#8594;</button>
+  <div class="zone-fullscreen__panel">
+    <div class="zone-fullscreen__tag" id="zfs-tag">Classroom</div>
+    <div class="zone-fullscreen__name" id="zfs-name">강의동 A &amp; B</div>
+    <div class="zone-fullscreen__agents" id="zfs-agents"></div>
+    <div class="zone-fullscreen__actions">
+      <button class="btn btn-primary" id="zfs-dialogue-btn" onclick="openZoneDialogue()">대화창 보기</button>
+      <button class="btn btn-outline" onclick="closeZoneFullscreen()">전체 뷰로 돌아가기</button>
+    </div>
+  </div>
+</div>
 
 <!-- ── Dialogue Viewer Modal ── -->
 <div class="dialogue-modal" id="dialogue-modal" onclick="closeDialogueOnBackdrop(event)">
   <div class="dialogue-modal__content">
     <div class="dialogue-modal__header">
       <div class="dialogue-modal__title-group">
-        <span class="dialogue-modal__tick" id="modal-tick">TICK 09</span>
+        <span class="dialogue-modal__tick" id="modal-tick">TICK 03</span>
         <span class="dialogue-modal__title" id="modal-title">에이전트 대화 상세 기록</span>
       </div>
       <div class="dialogue-modal__close" onclick="closeDialogueViewer()">&times;</div>
@@ -1046,7 +1207,7 @@
       memories: ['마법 생물을 관찰했다', 'Ria와 복도에서 대화했다', '수업에 참석했다', '도서관에서 자료를 찾았다']
     },
     adel: {
-      name: 'Adel', isPersona: false, mbti: 'ISTJ · 방어마법학과 2학년', loc: '실종 · TICK 10 (도서관 3층)',
+      name: 'Adel', isPersona: false, mbti: 'ISTJ · 방어마법학과 2학년', loc: '실종 · TICK 04 (도서관 3층)',
       portrait: '../assets/character/Adel_ISTJ.png',
       mood: 22, hunger: 50, fatigue: 85, stress: 92, major: '방어마법학과', year: '2학년',
       memories: ['도서관 3층 결계 균열 목격', 'Leo와 복도에서 규칙 문제로 언쟁', '방어 마법진 과열 감지']
@@ -1070,8 +1231,8 @@
       memories: ['도서관에서 약초학 문헌 대출', '동아리 방 정리', 'Adel의 피로 상태 염려']
     },
     aldric: {
-      name: 'Prof. Aldric', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
-      portrait: '', isProf: true,
+      name: 'Prof. Orion', isPersona: false, mbti: '지도교수 · 마법학부', loc: '강의동 A · 강의 진행',
+      portrait: '../assets/character/professor_orion.png', isProf: true,
       mood: 90, hunger: 10, fatigue: 35, stress: 15, major: '기초마법 및 결계학', year: '전임 교수',
       memories: ['강의동 A 기초 마법학 특강', '결계 유지 보고서 검토']
     }
@@ -1079,7 +1240,7 @@
 
   const dialogueLogs = {
     'ria-kai': {
-      tick: 'TICK 09', location: '중앙 광장 분수대 앞',
+      tick: 'TICK 03', location: '중앙 광장 분수대 앞',
       p1: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       p2: { name: 'Kai', mbti: 'ENTJ', portrait: '../assets/character/Kai_ENTJ.png', color: 'var(--c-kai)' },
       turns: [
@@ -1095,7 +1256,7 @@
       ]
     },
     'leo-adel': {
-      tick: 'TICK 08', location: '강의동 B 복도',
+      tick: 'TICK 02', location: '강의동 B 복도',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Adel', mbti: 'ISTJ', portrait: '../assets/character/Adel_ISTJ.png', color: 'var(--c-adel)' },
       turns: [
@@ -1111,7 +1272,7 @@
       ]
     },
     'leo-ria': {
-      tick: 'TICK 08', location: '강의동 B 앞 정원',
+      tick: 'TICK 02', location: '강의동 B 앞 정원',
       p1: { name: 'Leo', mbti: 'ESTP', portrait: '../assets/character/Leo_ESTP.png', color: 'var(--c-leo)' },
       p2: { name: 'Ria', mbti: 'INFP', portrait: '../assets/character/Ria_INFP.png', color: 'var(--c-ria)' },
       turns: [
@@ -1167,16 +1328,11 @@
     );
 
     const portraitEl = document.getElementById('selected-portrait');
-    if (data.isProf) {
-      portraitEl.style.backgroundImage = 'none';
-      portraitEl.style.background = '#1a2850';
-      portraitEl.innerHTML = '<div style="font-family:var(--f-serif-en);font-weight:700;font-size:14px;color:var(--c-cream);display:flex;height:100%;align-items:center;justify-content:center;">PA</div>';
-    } else {
-      portraitEl.innerHTML = '';
-      portraitEl.style.background = '';
-      portraitEl.style.backgroundImage = `url('${data.portrait}')`;
-    }
+    portraitEl.innerHTML = '';
+    portraitEl.style.background = '';
+    portraitEl.style.backgroundImage = `url('${data.portrait}')`;
 
+    document.getElementById('context-agent').textContent = data.name;
     document.getElementById('selected-name').innerHTML =
       `${data.name} ${data.isPersona ? '<span class="persona-tag" style="font-size:var(--t-xs);">PERSONA</span>' : ''}`;
     document.getElementById('selected-mbti').textContent = data.mbti;
@@ -1194,9 +1350,21 @@
     document.getElementById('selected-stress-bar').style.width = `${data.stress}%`;
     document.getElementById('selected-major').textContent = data.major;
     document.getElementById('selected-year').textContent = data.year;
-    document.getElementById('selected-memories').innerHTML =
-      data.memories.map(m => `<div class="memory-item">${m}</div>`).join('');
+    document.getElementById('selected-memories').innerHTML = data.memories.map((m, index) => `<a class="memory-item" href="04-inspector.html?tab=memory&agent=${agentId}&memory=m${index + 1}&from=simulation&tick=4"><span><span class="memory-time">TICK ${String(Math.max(1, 3-index)).padStart(2,'0')} · ${index === 0 ? '오전' : '오후'}</span>${m}</span></a>`).join('');
+    document.getElementById('all-memories-link').href = `04-inspector.html?tab=memory&agent=${agentId}&from=simulation&tick=4`;
+    document.getElementById('relationship-link').href = `05-relationship.html?from=simulation&tick=4&agent=${agentId}`;
+    document.getElementById('replay-link').href = `11-replay.html?from=simulation&tick=4&agent=${agentId}`;
   }
+
+  function openEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); }
+  function closeEventDrawer() { const drawer = document.getElementById('event-drawer'); drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+  function openSettingsDrawer() { closeEventDrawer(); const drawer = document.getElementById('settings-drawer'); drawer.classList.add('open'); drawer.setAttribute('aria-hidden','false'); document.getElementById('more-menu').classList.remove('open'); document.getElementById('more-button').setAttribute('aria-expanded','false'); }
+  function closeSettingsDrawer() { const drawer = document.getElementById('settings-drawer'); drawer.classList.remove('open'); drawer.setAttribute('aria-hidden','true'); }
+  function applyEventSettings() { const frequency = document.getElementById('event-frequency').selectedOptions[0].text; const impact = document.getElementById('event-impact').selectedOptions[0].text; document.getElementById('settings-feedback').textContent = `변경 예정: 빈도 ${frequency} · 영향도 ${impact} — 현재 Tick 4에는 영향을 주지 않고 Tick 5부터 적용됩니다.`; }
+  function setLogSize(size, button) { const screen = document.getElementById('sim-screen'); screen.classList.remove('log-collapsed','log-expanded'); if (size !== 'default') screen.classList.add(`log-${size}`); document.querySelectorAll('.log-resize-controls .log-size-btn').forEach(btn => btn.classList.toggle('active', btn === button)); }
+  function toggleSidePanel(side) { const screen = document.getElementById('sim-screen'); const mobileClass = `${side}-open-mobile`; const collapsedClass = `${side}-collapsed`; if (window.innerWidth <= 900) { screen.classList.toggle(mobileClass); } else { screen.classList.toggle(collapsedClass); } const button = document.getElementById(`${side}-panel-toggle`); const expanded = window.innerWidth <= 900 ? screen.classList.contains(mobileClass) : !screen.classList.contains(collapsedClass); button.setAttribute('aria-expanded', String(expanded)); button.setAttribute('aria-label', `${side === 'left' ? 'Agent 목록' : 'Agent 상세'} ${expanded ? '접기' : '펼치기'}`); }
+  function toggleLogSummary(button) { const log = document.querySelector('.sim-eventlog'); const active = log.classList.toggle('summary-mode'); button.classList.toggle('active', active); button.setAttribute('aria-pressed', String(active)); button.textContent = active ? '전체 보기' : '요약 보기'; }
+  function toggleMoreMenu() { const menu = document.getElementById('more-menu'); const button = document.getElementById('more-button'); const open = menu.classList.toggle('open'); button.setAttribute('aria-expanded', String(open)); }
 
   /* ── Select Zone (toggle; filters agent list) ── */
   let activeZone = null;
@@ -1220,6 +1388,63 @@
       item.style.opacity = inZone ? '1' : '0.28';
       item.style.pointerEvents = inZone ? '' : 'none';
     });
+  }
+
+  /* ── Zone Fullscreen Slide ── */
+  const zoneOrder = ['classroom', 'library', 'central', 'dormlab'];
+  const zoneInfo = {
+    classroom: { tag: 'Classroom', name: '강의동 A &amp; B', bg: '../assets/classroom.png', agents: ['aldric', 'leo'], dialogue: 'leo-adel' },
+    library:   { tag: 'Library', name: '도서관', bg: '../assets/library.png', agents: ['sera', 'adel'], dialogue: null },
+    central:   { tag: 'Central Square', name: '중앙 광장', bg: '../assets/concept/academy-night-background.png', agents: ['ria', 'kai'], dialogue: 'ria-kai' },
+    dormlab:   { tag: 'Dormitory · Lab', name: '기숙사 / 연구실', bg: '../assets/dormitory.png', agents: [], dialogue: null }
+  };
+  let currentFullscreenZone = null;
+
+  function renderZoneFullscreen(zoneId) {
+    const info = zoneInfo[zoneId];
+    currentFullscreenZone = zoneId;
+    document.getElementById('zfs-bg').style.backgroundImage = `url('${info.bg}')`;
+    document.getElementById('zfs-tag').textContent = info.tag;
+    document.getElementById('zfs-name').innerHTML = info.name;
+    const agentsEl = document.getElementById('zfs-agents');
+    if (info.agents.length) {
+      agentsEl.innerHTML = info.agents.map(id => {
+        const a = charData[id];
+        return `<div class="zone-fullscreen__agent" onclick="closeZoneFullscreen(); selectAgent('${id}')">
+          <div class="zone-fullscreen__agent-dot" style="background-image:url('${a.portrait}');"></div>
+          <span class="zone-fullscreen__agent-name">${a.name}</span>
+        </div>`;
+      }).join('');
+    } else {
+      agentsEl.innerHTML = '<div class="zone-fullscreen__empty">에이전트 없음</div>';
+    }
+    const dialogueBtn = document.getElementById('zfs-dialogue-btn');
+    dialogueBtn.style.display = info.dialogue ? 'inline-flex' : 'none';
+  }
+
+  function openZoneFullscreen(zoneId) {
+    selectZone(zoneId);
+    selectMapPin(zoneId);
+    renderZoneFullscreen(zoneId);
+    document.getElementById('zone-fullscreen').classList.add('open');
+  }
+
+  function closeZoneFullscreen() {
+    document.getElementById('zone-fullscreen').classList.remove('open');
+  }
+
+  function slideZoneFullscreen(delta) {
+    const idx = zoneOrder.indexOf(currentFullscreenZone);
+    const next = zoneOrder[(idx + delta + zoneOrder.length) % zoneOrder.length];
+    renderZoneFullscreen(next);
+  }
+
+  function openZoneDialogue() {
+    const info = zoneInfo[currentFullscreenZone];
+    if (info && info.dialogue) {
+      closeZoneFullscreen();
+      openDialogueViewer(info.dialogue);
+    }
   }
 
   /* ── Log Filter ── */
@@ -1289,13 +1514,20 @@
   document.querySelectorAll('.agent-list-item').forEach(item =>
     item.addEventListener('click', () => { if (item.dataset.agent) selectAgent(item.dataset.agent); })
   );
+  document.getElementById('agent-search').addEventListener('input', event => { const query = event.target.value.trim().toLowerCase(); document.querySelectorAll('.agent-list-item').forEach(item => { const name = item.querySelector('.agent-list-name').textContent.toLowerCase(); item.hidden = query !== '' && !name.includes(query); }); });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeDialogueViewer();
+    if (e.key === 'Escape') { closeDialogueViewer(); closeEventDrawer(); closeSettingsDrawer(); }
   });
 
   /* Initial state */
   selectAgent('leo');
+  const simulationParams = new URLSearchParams(window.location.search);
+  const requestedSimulationAgent = simulationParams.get('agent');
+  if (requestedSimulationAgent && charData[requestedSimulationAgent]) selectAgent(requestedSimulationAgent);
+  if (simulationParams.get('event') === 'missing') { selectAgent('adel'); openEventDrawer(); }
 </script>
+<script src="../js/context-dialogs.js"></script>
+<script>MagicAcademyDialogs.init({ guide: true });</script>
 </body>
 </html>

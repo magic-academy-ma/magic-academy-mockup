@@ -25,45 +25,6 @@
       pointer-events: none;
     }
 
-    /* Top nav */
-    .page-nav {
-      position: relative;
-      display: flex;
-      align-items: center;
-      gap: var(--s-4);
-      padding: var(--s-4) var(--s-8);
-      border-bottom: 1px solid var(--c-border);
-      flex-shrink: 0;
-    }
-    .page-nav__brand {
-      font-family: var(--f-serif-en);
-      font-size: var(--t-base);
-      font-weight: 600;
-      color: var(--c-text);
-      letter-spacing: 0.04em;
-    }
-    .page-nav__steps {
-      display: flex;
-      align-items: center;
-      gap: var(--s-3);
-      margin-left: auto;
-    }
-    .step {
-      display: flex; align-items: center; gap: var(--s-2);
-      font-family: var(--f-mono); font-size: var(--t-xs);
-      color: var(--c-text-3); letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    .step.done { color: var(--c-text-2); }
-    .step.active { color: var(--c-primary); }
-    .step-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: var(--c-border-hi);
-    }
-    .step.done .step-dot { background: var(--c-text-3); }
-    .step.active .step-dot { background: var(--c-primary); animation: ring-pulse 2s ease infinite; }
-    .step-line { width: 24px; height: 1px; background: var(--c-border-hi); }
-
     /* Main content */
     .page-body {
       flex: 1;
@@ -79,6 +40,8 @@
     .page-title {
       text-align: center;
     }
+    .back-link { position:absolute; top:var(--s-5); left:var(--s-6); z-index:2; }
+    .page-step { font-family:var(--f-mono); font-size:var(--t-xs); color:var(--c-text-3); letter-spacing:.1em; margin-bottom:var(--s-2); }
     .page-title__main {
       font-family: var(--f-serif-ko);
       font-size: var(--t-2xl);
@@ -185,6 +148,20 @@
       color: var(--c-primary);
       letter-spacing: 0.1em;
     }
+    @media (max-width: 1100px) {
+      body { overflow:auto; }
+      .screen { width:100%; min-height:100vh; height:auto; }
+      .page-body { padding:72px var(--s-5) var(--s-8); }
+      .card-row { display:grid; grid-template-columns:repeat(2,minmax(0,196px)); }
+      .page-footer { position:sticky; bottom:0; background:rgba(8,14,32,.96); }
+    }
+    @media (max-width: 520px) {
+      .card-row { grid-template-columns:1fr; width:100%; }
+      .persona-card, .persona-card__portrait { width:100%; }
+      .persona-card__portrait { height:320px; }
+      .page-footer { padding:var(--s-3); }
+      .selected-summary { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -192,40 +169,11 @@
 <div class="screen">
   <div class="bg-texture"></div>
 
-  <!-- Top Nav -->
-  <div class="page-nav">
-    <a href="01-onboarding.html" class="btn btn-ghost btn-sm" style="padding: var(--s-2);">
-      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-    </a>
-    <span class="page-nav__brand">Magic Academy</span>
-
-    <!-- Progress Steps -->
-    <div class="page-nav__steps">
-      <div class="step done">
-        <div class="step-dot"></div>
-        <span>온보딩</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="step active">
-        <div class="step-dot"></div>
-        <span>Persona 선택</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="step">
-        <div class="step-dot"></div>
-        <span>설정</span>
-      </div>
-      <div class="step-line"></div>
-      <div class="step">
-        <div class="step-dot"></div>
-        <span>시뮬레이션</span>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Body -->
   <div class="page-body">
+    <a href="01-onboarding.html" id="persona-back-link" class="btn btn-ghost btn-sm back-link" aria-label="이전 화면으로 돌아가기">← 이전</a>
     <div class="page-title">
+      <div class="page-step">PERSONA 선택 · 2 / 3</div>
       <div class="page-title__main">관찰할 Persona를 선택하세요</div>
       <div class="page-title__sub">선택한 Persona의 시점으로 세계를 관찰합니다. 나중에 변경할 수 없습니다.</div>
     </div>
@@ -284,7 +232,7 @@
       <!-- Kai -->
       <div class="persona-card" data-id="kai" onclick="selectPersona(this, 'Kai', 'ENTJ', '마법 도구 제작', '../assets/character/Kai_ENTJ.png')">
         <div class="persona-card__portrait agent-badge--kai"
-             style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size: cover; background-position: center top;"></div>
+             style="background-image: url('../assets/character/Kai_ENTJ.png'); background-size: auto 354px; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Kai</div>
           <div class="persona-card__mbti">ENTJ</div>
@@ -300,7 +248,7 @@
       <!-- Sera -->
       <div class="persona-card" data-id="sera" onclick="selectPersona(this, 'Sera', 'ESFJ', '약초학 & 치유', '../assets/character/Sera_ESFJ.png')">
         <div class="persona-card__portrait agent-badge--sera"
-             style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size: cover; background-position: center top;"></div>
+             style="background-image: url('../assets/character/Sera_ESFJ.png'); background-size: auto 354px; background-position: center top;"></div>
         <div class="persona-card__info">
           <div class="persona-card__name">Sera</div>
           <div class="persona-card__mbti">ESFJ</div>
@@ -336,6 +284,10 @@
 <script src="../js/magic-academy.js"></script>
 <script>
   let currentSelectedId = 'leo';
+  const personaParams = new URLSearchParams(window.location.search);
+  const personaFromMain = personaParams.get('from') === 'main';
+  const personaMode = personaParams.get('mode') === 'demo' ? '&mode=demo' : '';
+  if (personaFromMain) document.getElementById('persona-back-link').href = `08-main.html${personaMode ? '?mode=demo' : ''}`;
 
   function selectPersona(el, name, mbti, major, imgPath) {
     document.querySelectorAll('.persona-card').forEach(c => c.classList.remove('selected'));
@@ -349,7 +301,7 @@
   }
 
   function startWithPersona() {
-    window.location.href = `06-persona-setup.html?char=${currentSelectedId}`;
+    window.location.href = `06-persona-setup.html?char=${currentSelectedId}${personaFromMain ? '&from=main' : ''}${personaMode}`;
   }
 </script>
 </body>

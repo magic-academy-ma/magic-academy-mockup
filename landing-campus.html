@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="여섯 인물이 스스로 움직이며 관계를 만드는 마법학교 캠퍼스를 관찰해 보세요.">
+  <title>살아 움직이는 캠퍼스 | Magic Academy</title>
+  <link rel="icon" href="assets/concept/logo.png" type="image/png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Noto+Serif+KR:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="css/landing-campus.css">
+</head>
+<body>
+  <a class="skip-link" href="#campus">캠퍼스 관찰 화면으로 건너뛰기</a>
+  <header class="site-header">
+    <a class="brand" href="landing.html" aria-label="Magic Academy 랜딩으로 돌아가기">
+      <img src="assets/concept/logo.png" alt="" width="40" height="40">
+      <span>Magic Academy</span>
+    </a>
+    <a class="header-link" href="screens/01-onboarding.html">나만의 이야기 시작하기 <span aria-hidden="true">→</span></a>
+  </header>
+
+  <main id="campus" class="page-shell">
+    <section class="intro" aria-labelledby="page-title">
+      <p class="eyebrow">서로 다른 마음이 만나는 곳</p>
+      <h1 id="page-title">지켜보는 동안,<br><em>캠퍼스는 스스로 움직입니다.</em></h1>
+      <p class="intro-copy">직접 조종하지 않아도 여섯 인물은 각자의 성격과 기억에 따라 장소를 옮기고, 대화하고, 관계를 만듭니다. 아래 이야기의 한 장면을 골라 살펴보세요.</p>
+      <ul class="promise-list" aria-label="관찰할 수 있는 것">
+        <li><span aria-hidden="true">✦</span> 같은 사건, 서로 다른 반응</li>
+        <li><span aria-hidden="true">✦</span> 대화에서 시작되는 관계</li>
+        <li><span aria-hidden="true">✦</span> 선택 뒤에 숨은 단서</li>
+      </ul>
+    </section>
+
+    <section class="campus-experience" aria-labelledby="experience-title">
+      <div class="experience-heading">
+        <div>
+          <p class="eyebrow">오늘의 캠퍼스</p>
+          <h2 id="experience-title">여섯 인물의 하루를 따라가 보세요</h2>
+        </div>
+        <p id="motion-note" class="motion-note">화면은 이야기 단계에 맞춰 천천히 움직입니다.</p>
+      </div>
+
+      <div class="campus-layout">
+        <div class="stage-card">
+          <div class="stage-toolbar">
+            <div class="live-status"><span class="live-dot" aria-hidden="true"></span><span id="stage-status">이야기 관찰 중</span></div>
+            <p id="time-label">오전 8:20 · 등교 시간</p>
+          </div>
+
+          <div class="campus-map" id="campus-map" aria-label="인터랙티브 캠퍼스 지도">
+            <div class="map-glow" aria-hidden="true"></div>
+            <button class="place place-square is-active" type="button" data-place="square" aria-pressed="true">
+              <span class="place-image"><img src="assets/central-square.png" alt="" loading="eager"></span>
+              <span class="place-copy"><strong>별빛 광장</strong><small>아침 약속이 모이는 곳</small></span>
+              <span class="event-ring" aria-hidden="true"></span>
+            </button>
+            <button class="place place-library" type="button" data-place="library" aria-pressed="false">
+              <span class="place-image"><img src="assets/library.png" alt="" loading="eager"></span>
+              <span class="place-copy"><strong>달빛 도서관</strong><small>조용한 발견이 시작되는 곳</small></span>
+              <span class="event-ring" aria-hidden="true"></span>
+            </button>
+            <button class="place place-classroom" type="button" data-place="classroom" aria-pressed="false">
+              <span class="place-image"><img src="assets/classroom.png" alt="" loading="lazy"></span>
+              <span class="place-copy"><strong>별자리 교실</strong><small>함께 배우고 질문하는 곳</small></span>
+              <span class="event-ring" aria-hidden="true"></span>
+            </button>
+            <button class="place place-lab" type="button" data-place="lab" aria-pressed="false">
+              <span class="place-image"><img src="assets/lab.png" alt="" loading="lazy"></span>
+              <span class="place-copy"><strong>마력 연구실</strong><small>호기심이 실험이 되는 곳</small></span>
+              <span class="event-ring" aria-hidden="true"></span>
+            </button>
+
+            <svg class="relationship-lines" viewBox="0 0 1000 650" preserveAspectRatio="none" aria-hidden="true">
+              <path id="relationship-line" d="M 265 360 C 390 235, 530 260, 640 170"></path>
+            </svg>
+            <div id="event-bubble" class="event-bubble" role="status" aria-live="polite">
+              <span>오늘의 사건</span><strong>새 학기의 첫 만남</strong>
+            </div>
+            <div id="dialogue" class="dialogue" aria-live="polite">
+              <span class="dialogue-names">리아 · 아델</span>
+              <p>“같이 교실까지 걸어갈래?”</p>
+            </div>
+            <div id="characters" class="characters" aria-label="캠퍼스의 인물들"></div>
+          </div>
+          <noscript><p class="static-message">현재는 정적인 캠퍼스 장면을 보여드리고 있어요. 여섯 인물은 각자의 선택에 따라 장소를 옮기고 관계를 만듭니다.</p></noscript>
+        </div>
+
+        <aside class="story-panel" aria-labelledby="selected-title">
+          <div class="panel-kicker">지금 보고 있는 인물</div>
+          <div id="selected-person" class="selected-person">
+            <img id="selected-avatar" src="assets/character/Ria_INFP.png" alt="리아" width="72" height="88">
+            <div><h3 id="selected-title">리아</h3><p id="selected-trait">마음을 먼저 살피는 상상가</p></div>
+          </div>
+          <dl class="person-details">
+            <div><dt>지금 하는 일</dt><dd id="selected-action">광장에서 아델에게 먼저 인사해요.</dd></div>
+            <div><dt>지금의 마음</dt><dd id="selected-feeling">새로운 친구를 만날 생각에 조금 설레요.</dd></div>
+            <div><dt>가까워진 사이</dt><dd id="selected-relation">아델과 첫 대화를 시작했어요.</dd></div>
+          </dl>
+          <button id="clue-toggle" class="clue-toggle" type="button" aria-expanded="false" aria-controls="clue-panel">
+            왜 이런 선택을 했을까요? <span aria-hidden="true">＋</span>
+          </button>
+          <div id="clue-panel" class="clue-panel" hidden>
+            <p class="clue-label">선택의 단서</p>
+            <p id="clue-text">리아는 낯선 자리에서 혼자 있는 사람을 지나치지 못해요. 아델이 시간표를 여러 번 확인하는 모습을 보고 먼저 다가갔습니다.</p>
+            <p class="clue-source"><span aria-hidden="true">↳</span> 성격 · 방금 본 장면 · 현재 기분을 함께 살폈어요.</p>
+          </div>
+        </aside>
+      </div>
+
+      <div class="story-controls" aria-label="이야기 재생 도구">
+        <button id="play-toggle" class="play-toggle" type="button" aria-pressed="false"><span aria-hidden="true">▶</span><span>재생</span></button>
+        <div class="scrubber-wrap">
+          <div class="scrubber-heading"><label for="story-range">이야기 단계</label><output id="step-output" for="story-range">1 / 7 · 첫 만남</output></div>
+          <input id="story-range" type="range" min="1" max="7" value="1" step="1" aria-describedby="step-description">
+          <div class="step-dots" aria-hidden="true"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span></div>
+          <p id="step-description" class="step-description">새 학기 아침, 여섯 인물이 각자의 기대를 품고 광장에 도착합니다.</p>
+        </div>
+        <button id="previous-step" class="previous-step" type="button" disabled><span aria-hidden="true">↶</span> 이전 단계</button>
+      </div>
+    </section>
+
+    <section class="closing" aria-labelledby="closing-title">
+      <p class="eyebrow">당신은 조건을 만들고, 인물은 선택합니다</p>
+      <h2 id="closing-title">하나의 작은 조건이<br>어떤 관계를 만들지 궁금한가요?</h2>
+      <p>성격과 사건을 정한 뒤, 인물들이 만들어 가는 일주일을 관찰해 보세요.</p>
+      <a class="primary-cta" href="screens/01-onboarding.html">나만의 캠퍼스 이야기 시작하기 <span aria-hidden="true">→</span></a>
+    </section>
+  </main>
+  <script src="js/landing-campus.js" defer></script>
+</body>
+</html>

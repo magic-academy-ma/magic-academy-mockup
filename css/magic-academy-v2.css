@@ -26,7 +26,7 @@
   --c-cream:          #d4b26f;
   --c-cream-hover:    #e5c88c;
   --c-cream-muted:    rgba(212, 178, 111, 0.14);
-  --c-cream-ring:     rgba(212, 178, 111, 0.32);
+  --c-cream-ring:     rgba(212, 178, 111, 0.35);
 
   /* Color — Inspector / Analysis (Soft Cyan) */
   --c-inspector:        #34b3c7;
@@ -37,7 +37,7 @@
   /* Color — Events (unified with Gold) */
   --c-event:       #d4b26f;
   --c-event-muted: rgba(212, 178, 111, 0.14);
-  --c-event-ring:  rgba(212, 178, 111, 0.32);
+  --c-event-ring:  rgba(212, 178, 111, 0.35);
 
   /* Color — Critical / Missing */
   --c-critical:       #db4c4c;
@@ -998,16 +998,17 @@ ul, ol { list-style: none; }
   overflow: hidden;
   border: 2px solid var(--c-border-hi);
   background-color: var(--c-surface-hi);
-  background-size: 132px 165px;
+  background-size: cover;
+  background-position: center top;
   background-repeat: no-repeat;
   transition: border-color var(--tr-fast), transform var(--tr-fast), box-shadow var(--tr-fast);
 }
 
-.graph-node__portrait.char-adel { background-position: 0px -8px; border-color: var(--c-char-adel-ring); }
-.graph-node__portrait.char-leo  { background-position: -52px -8px; background-size: 156px 195px; border-color: var(--c-char-leo-ring); }
-.graph-node__portrait.char-ria  { background-position: -104px -8px; background-size: 156px 195px; border-color: var(--c-char-ria-ring); }
-.graph-node__portrait.char-kai  { background-size: 104px 130px; background-position: 0px -64px; border-color: var(--c-char-kai-ring); }
-.graph-node__portrait.char-sera { background-size: 104px 130px; background-position: -52px -64px; border-color: var(--c-char-sera-ring); }
+.graph-node__portrait.char-adel { border-color: var(--c-char-adel-ring); }
+.graph-node__portrait.char-leo  { border-color: var(--c-char-leo-ring); }
+.graph-node__portrait.char-ria  { border-color: var(--c-char-ria-ring); }
+.graph-node__portrait.char-kai  { border-color: var(--c-char-kai-ring); }
+.graph-node__portrait.char-sera { border-color: var(--c-char-sera-ring); }
 
 .graph-node.selected .graph-node__portrait {
   box-shadow: var(--sh-primary);

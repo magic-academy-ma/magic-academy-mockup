@@ -2,7 +2,8 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>Causal Inspector — Magic Academy</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>사건 원인 보기 — Magic Academy</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
@@ -27,7 +28,7 @@
     }
 
     .topbar {
-      height: 52px; padding: 0 var(--s-6);
+      height: var(--topbar-h); padding: 0 var(--s-6);
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--c-border);
       background: rgba(6, 13, 32, 0.94); backdrop-filter: blur(16px);
@@ -48,12 +49,12 @@
       cursor: pointer; transition: all var(--tr-fast);
     }
     .tab-btn:hover { color: var(--c-text); background: rgba(70,100,180,0.15); }
-    .tab-btn.active { color: #fff; background: rgba(94,96,232,0.25); border-color: var(--c-primary); box-shadow: 0 0 12px rgba(94,96,232,0.3); }
+    .tab-btn.active { color: var(--c-text); background: rgba(94,96,232,0.25); border-color: var(--c-primary); box-shadow: 0 0 12px rgba(94,96,232,0.3); }
     .tab-btn.memory-tab.active { background: rgba(52,179,199,0.2); border-color: var(--c-inspector); box-shadow: 0 0 12px rgba(52,179,199,0.3); }
 
     .inspector-content {
       flex: 1; padding: var(--s-4) var(--s-6);
-      z-index: 10; height: calc(900px - 52px); overflow: hidden;
+      z-index: 10; height: calc(900px - var(--topbar-h)); overflow: hidden;
     }
     .tab-pane { display: none; height: 100%; }
     .tab-pane.active { display: grid; }
@@ -81,8 +82,8 @@
     }
 
     .gauge-wrap { display: flex; flex-direction: column; gap: 3px; }
-    .gauge-row { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 11px; }
-    .gauge-track { height: 5px; background: rgba(255,255,255,0.08); border-radius: 3px; }
+    .gauge-row { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 13px; }
+    .gauge-track { height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; }
     .gauge-fill { height: 100%; border-radius: 3px; }
 
     .decision-card {
@@ -91,39 +92,39 @@
       border-radius: var(--r-sm); padding: var(--s-3);
     }
     .weight-row { display: flex; align-items: center; gap: 8px; margin-bottom: 6px; }
-    .weight-label { font-family: var(--f-mono); font-size: 10px; color: var(--c-text-2); width: 130px; flex-shrink: 0; }
+    .weight-label { font-family: var(--f-mono); font-size: 12px; color: var(--c-text-2); width: 140px; flex-shrink: 0; }
     .weight-bar-track { flex: 1; height: 6px; background: rgba(255,255,255,0.08); border-radius: 3px; overflow: hidden; }
     .weight-bar-fill { height: 100%; border-radius: 3px; }
-    .weight-score { font-family: var(--f-mono); font-size: 10px; color: var(--c-cream); width: 38px; text-align: right; }
+    .weight-score { font-family: var(--f-mono); font-size: 12px; color: var(--c-cream); width: 42px; text-align: right; }
 
-    .rel-dim-row { display: flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 10px; }
-    .rel-dim-key { color: var(--c-text-3); width: 46px; flex-shrink: 0; }
+    .rel-dim-row { display: flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 12px; }
+    .rel-dim-key { color: var(--c-text-3); width: 52px; flex-shrink: 0; }
     .rel-dim-track { flex: 1; height: 4px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; }
     .rel-dim-fill { height: 100%; border-radius: 2px; }
-    .rel-dim-val { color: var(--c-text-2); width: 32px; text-align: right; flex-shrink: 0; }
+    .rel-dim-val { color: var(--c-text-2); width: 36px; text-align: right; flex-shrink: 0; }
 
     .code-block {
-      background: #030612; border: 1px solid rgba(70,100,180,0.25);
+      background: var(--c-bg); border: 1px solid rgba(70,100,180,0.25);
       border-radius: var(--r-sm); padding: var(--s-2) var(--s-3);
-      font-family: var(--f-mono); font-size: 10.5px; line-height: 1.55; color: #b8c7e6; overflow-x: auto;
+      font-family: var(--f-mono); font-size: 12.5px; line-height: 1.6; color: var(--c-text-2); overflow-x: auto;
     }
     .code-title { color: var(--c-inspector); font-weight: 600; margin-bottom: 4px; border-bottom: 1px dashed rgba(70,100,180,0.2); padding-bottom: 3px; display: flex; justify-content: space-between; }
-    .code-kw { color: #5e60e8; font-weight: 600; }
-    .code-str { color: #d4b26f; }
-    .code-num { color: #38b277; }
-    .code-crit { color: #db4c4c; font-weight: 700; }
-    .code-dim { color: #526388; }
+    .code-kw { color: var(--c-primary); font-weight: 600; }
+    .code-str { color: var(--c-gold); }
+    .code-num { color: var(--c-success); }
+    .code-crit { color: var(--c-critical); font-weight: 700; }
+    .code-dim { color: var(--c-text-3); }
 
     .mem-filter-btn {
       display: flex; align-items: center; justify-content: space-between;
       padding: 6px 10px; border-radius: var(--r-sm);
       background: transparent; border: 1px solid transparent; cursor: pointer;
-      font-family: var(--f-mono); font-size: 11px; color: var(--c-text-2);
+      font-family: var(--f-mono); font-size: 13px; color: var(--c-text-2);
       transition: all var(--tr-fast); text-align: left; width: 100%;
     }
     .mem-filter-btn:hover { background: rgba(70,100,180,0.12); color: var(--c-text); }
     .mem-filter-btn.active { background: rgba(52,179,199,0.15); border-color: rgba(52,179,199,0.35); color: var(--c-inspector); }
-    .mem-badge { font-size: 9px; padding: 1px 5px; border-radius: 8px; background: rgba(255,255,255,0.1); color: var(--c-text-3); }
+    .mem-badge { font-size: 11px; padding: 1px 5px; border-radius: 8px; background: rgba(255,255,255,0.1); color: var(--c-text-3); }
     .mem-filter-btn.active .mem-badge { background: rgba(52,179,199,0.25); color: var(--c-inspector); }
 
     .mem-entry {
@@ -133,9 +134,31 @@
     }
     .mem-entry:hover { border-color: rgba(52,179,199,0.35); background: rgba(11,24,56,0.7); }
     .mem-entry.selected { border-color: var(--c-inspector); background: rgba(52,179,199,0.08); }
-    .mem-entry__icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
-    .mem-entry__meta { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 9px; color: var(--c-text-3); margin-bottom: 3px; }
-    .mem-entry__text { font-size: 11px; color: var(--c-text); line-height: 1.4; }
+    .mem-entry__icon { width: 26px; height: 26px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+    .mem-entry__meta { display: flex; justify-content: space-between; font-family: var(--f-mono); font-size: 11px; color: var(--c-text-3); margin-bottom: 3px; }
+    .mem-entry__text { font-size: 13px; color: var(--c-text); line-height: 1.45; }
+    #pane-user .info-card__body, #pane-memory .info-card__body { font-size:14px; }
+    #pane-user .info-card__header, #pane-memory .info-card__header { font-size:12px; text-transform:none; }
+    #pane-user .gauge-row, #pane-user .weight-label, #pane-user .weight-score, #pane-user .rel-dim-row, #pane-memory .mem-entry__text { font-size:13px; }
+    .tab-btn { font-size:13px; padding:7px 15px; }
+    .dev-view-grid, .memory-view-grid { align-items: start; }
+    .dev-view-grid .info-card, .memory-view-grid .info-card { height: auto; max-height: 100%; }
+    button:focus-visible, a:focus-visible { outline:2px solid #a7a9ff; outline-offset:2px; }
+    @media (max-width: 900px) {
+      body { overflow: auto; }
+      .screen { width: 100%; height: auto; min-height: 100vh; overflow: visible; transform: none !important; }
+      .topbar { height: auto; min-height: 52px; padding: 8px 12px; align-items: flex-start; gap: 8px; }
+      .topbar__left { flex-wrap: wrap; gap: 8px; }
+      .topbar__brand, .topbar__left > div:nth-child(2), .topbar > div:last-child { display: none !important; }
+      .inspector-tab-nav { width: 100%; overflow-x: auto; }
+      .tab-btn { flex: 1; min-width: max-content; }
+      .inspector-content { height: auto; overflow: visible; padding: 12px; }
+      .tab-pane.active { display: grid; height: auto; }
+      .user-view-grid, .dev-view-grid, .memory-view-grid { grid-template-columns: 1fr; }
+      .info-card { min-height: 280px; }
+      .info-card__body { overflow: visible; }
+    }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { animation:none !important; transition:none !important; } }
   </style>
 </head>
 <body>
@@ -146,27 +169,27 @@
   <!-- Topbar -->
   <div class="topbar">
     <div class="topbar__left">
-      <a href="03-simulation.html" class="btn btn-ghost btn-sm" style="padding:4px 10px; gap:4px; font-size:11px;">
+      <a href="03-simulation.html" id="inspector-back-link" class="btn btn-ghost btn-sm" style="padding:4px 10px; gap:4px; font-size:13px;">
         <svg width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M9 11L5 7L9 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         시뮬레이션 복귀
       </a>
       <div style="width:1px; height:16px; background:var(--c-border);"></div>
       <div class="topbar__brand">Magic Academy</div>
       <div class="inspector-tab-nav">
-        <button class="tab-btn active" id="btn-tab-user" onclick="switchTab('user')">§3.1~3.6 사건 인과 분석</button>
+        <button class="tab-btn active" id="btn-tab-user" onclick="switchTab('user')">사건 원인</button>
         <button class="tab-btn memory-tab" id="btn-tab-memory" onclick="switchTab('memory')">
-          <span style="color:var(--c-inspector);">§3.5 Memory Stream</span>
+          <span style="color:var(--c-inspector);">최근 기억</span>
         </button>
         <button class="tab-btn" id="btn-tab-dev" onclick="switchTab('dev')">
-          <span style="color:var(--c-inspector);">§3.7 개발자 메트릭</span>
+          <span style="color:var(--c-inspector);">기술 정보</span>
         </button>
       </div>
     </div>
     <div style="display:flex; align-items:center; gap:var(--s-3);">
-      <span style="font-family:var(--f-mono); font-size:11px; color:var(--c-text-2);">Tick 10 &middot; 14:02:15</span>
+      <span style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-2);">TICK 07 / 07 &middot; 오후</span>
       <div style="width:1px; height:16px; background:var(--c-border);"></div>
-      <a href="05-relationship.html" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:11px;">관계망 그래프</a>
-      <a href="03-simulation.html" class="btn btn-primary btn-sm" style="padding:4px 12px; font-size:11px;">시뮬레이션 뷰 &rarr;</a>
+      <a href="05-relationship.html?from=simulation&amp;tick=7" id="inspector-relationship-link" class="btn btn-outline btn-sm" style="padding:4px 10px; font-size:13px;">관계망 그래프</a>
+      <a href="03-simulation.html" id="inspector-main-link" class="btn btn-primary btn-sm" style="padding:4px 12px; font-size:13px;">시뮬레이션 뷰 &rarr;</a>
     </div>
   </div>
 
@@ -178,22 +201,22 @@
       <!-- Col 1: §3.1 프로필 & §3.2 상태 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.1 프로필 &amp; §3.2 상태</span>
-          <span style="color:var(--c-critical);">CRITICAL</span>
+          <span>Agent 정보와 현재 상태</span>
+          <span style="color:var(--c-critical);">위험</span>
         </div>
         <div class="info-card__body">
           <div style="display:flex; gap:var(--s-3); padding:var(--s-2) var(--s-3); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
             <div style="width:52px; height:66px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:2px solid var(--c-critical); animation:missing-flicker 3s ease infinite;"></div>
             <div style="flex:1;">
-              <div style="font-family:var(--f-serif-ko); font-size:16px; font-weight:700; color:#fff;">Adel</div>
-              <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">ISTJ &middot; 2학년</div>
-              <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">방어마법학과</div>
-              <div style="margin-top:5px; font-family:var(--f-mono); font-size:10px; color:var(--c-critical); font-weight:700;">⚠ MISSING</div>
+              <div style="font-family:var(--f-serif-ko); font-size:16px; font-weight:700; color:var(--c-text);">Adel</div>
+              <div style="font-family:var(--f-mono); font-size:13px; color:var(--c-cream);">ISTJ &middot; 2학년</div>
+              <div style="font-size:13px; color:var(--c-text-2); margin-top:2px;">방어마법학과</div>
+              <div style="margin-top:5px; font-family:var(--f-mono); font-size:12px; color:var(--c-critical); font-weight:700;">⚠ MISSING</div>
             </div>
           </div>
 
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:8px; letter-spacing:0.06em; text-transform:uppercase;">[ 내부 상태 게이지 ]</div>
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; margin-bottom:8px; letter-spacing:0.06em; text-transform:uppercase;">[ 내부 상태 게이지 ]</div>
             <div class="gauge-wrap">
               <div class="gauge-row"><span style="color:var(--c-text-2);">스트레스</span><span style="color:var(--c-critical); font-weight:700;">92 / 90 ↑</span></div>
               <div class="gauge-track"><div class="gauge-fill" style="width:92%; background:var(--c-critical);"></div></div>
@@ -204,7 +227,7 @@
             </div>
             <div class="gauge-wrap" style="margin-top:6px;">
               <div class="gauge-row"><span style="color:var(--c-text-2);">기분 만족도</span><span style="color:var(--c-text-3);">22 / 100</span></div>
-              <div class="gauge-track"><div class="gauge-fill" style="width:22%; background:#5e60e8;"></div></div>
+              <div class="gauge-track"><div class="gauge-fill" style="width:22%; background:var(--c-primary);"></div></div>
             </div>
             <div class="gauge-wrap" style="margin-top:6px;">
               <div class="gauge-row"><span style="color:var(--c-text-2);">마법 집중도</span><span style="color:var(--c-text-3);">14 / 100</span></div>
@@ -213,9 +236,9 @@
           </div>
 
           <div style="margin-top:auto; background:rgba(94,96,232,0.12); border:1px solid var(--c-primary-ring); border-radius:var(--r-sm); padding:var(--s-3);">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-primary); font-weight:700; margin-bottom:4px;">RUNTIME FORECAST</div>
-            <div style="font-size:11px; color:#fff;">상태: <strong>MISSING</strong></div>
-            <div style="font-size:11px; color:var(--c-text-2); margin-top:2px;">예상 복귀: <strong>TICK 14</strong></div>
+            <div style="font-family:var(--f-mono); font-size:13px; color:var(--c-primary); font-weight:700; margin-bottom:4px;">이후 예상</div>
+            <div style="font-size:13px; color:var(--c-text);">상태: <strong>MISSING</strong></div>
+            <div style="font-size:13px; color:var(--c-text-2); margin-top:2px;">예상 복귀: <strong>대표 캠페인 종료 전</strong></div>
           </div>
         </div>
       </div>
@@ -223,16 +246,16 @@
       <!-- Col 2: §3.3 의사결정 가중치 & §3.4 행동 로그 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.3 의사결정 가중치 &amp; §3.4 행동 로그</span>
-          <span style="color:var(--c-cream);">NARRATIVE</span>
+          <span>결정에 영향을 준 요인과 최근 행동</span>
+          <span style="color:var(--c-cream);">이야기</span>
         </div>
         <div class="info-card__body">
           <div class="decision-card">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream); font-weight:600; margin-bottom:6px;">[ 행동 선택 사유 요약 ]</div>
-            <div style="font-family:var(--f-serif-ko); font-size:12.5px; color:#fff; line-height:1.6; margin-bottom:10px;">
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-cream); font-weight:600; margin-bottom:6px;">[ 행동 선택 사유 요약 ]</div>
+            <div style="font-family:var(--f-serif-ko); font-size:12.5px; color:var(--c-text); line-height:1.6; margin-bottom:10px;">
               &ldquo;스트레스·피로 이중 임계치 초과 및 사회적 갈등 회피 정책이 결합해 이탈 결정을 유도했습니다.&rdquo;
             </div>
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; letter-spacing:0.06em;">[ RULE WEIGHT BREAKDOWN ]</div>
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; letter-spacing:0.06em;">[ RULE WEIGHT BREAKDOWN ]</div>
 
             <div class="weight-row">
               <span class="weight-label">스트레스 임계치 초과</span>
@@ -246,7 +269,7 @@
             </div>
             <div class="weight-row">
               <span class="weight-label">결계 구역 이탈 허용</span>
-              <div class="weight-bar-track"><div class="weight-bar-fill" style="width:7%; background:#5e60e8;"></div></div>
+              <div class="weight-bar-track"><div class="weight-bar-fill" style="width:7%; background:var(--c-primary);"></div></div>
               <span class="weight-score">+0.07</span>
             </div>
             <div class="weight-row" style="margin-bottom:0;">
@@ -254,18 +277,18 @@
               <div class="weight-bar-track"><div class="weight-bar-fill" style="width:3%; background:var(--c-char-adel-light);"></div></div>
               <span class="weight-score">+0.03</span>
             </div>
-            <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(70,100,180,0.2); display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px;">
-              <span style="color:var(--c-text-3);">Final Score</span>
-              <span style="color:var(--c-critical); font-weight:700;">1.00 → COMMIT(MISSING) ✓</span>
+            <div style="margin-top:8px; padding-top:8px; border-top:1px solid rgba(70,100,180,0.2); display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:12px;">
+              <span style="color:var(--c-text-3);">종합 결과</span>
+              <span style="color:var(--c-critical); font-weight:700;">실종 상태로 변경됨</span>
             </div>
           </div>
 
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3); flex:1; overflow-y:auto;">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:8px; text-transform:uppercase;">[ 최근 행동 타임라인 ]</div>
-            <div style="display:flex; flex-direction:column; gap:7px; font-size:11px;">
-              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-critical); font-weight:700; flex-shrink:0;">T10</span><span style="color:#fff;">결계 구역에서 이탈 → <span style="color:var(--c-critical);">MISSING</span></span></div>
-              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-cream); font-weight:700; flex-shrink:0;">T09</span><span style="color:var(--c-text-2);">Leo와 규칙 준수 문제로 말다툼 (긴장도 +18)</span></div>
-              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-primary); font-weight:700; flex-shrink:0;">T08</span><span style="color:var(--c-text-2);">도서관 3층 결계 균열 순찰 및 점검</span></div>
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; margin-bottom:8px; text-transform:uppercase;">[ 최근 행동 타임라인 ]</div>
+            <div style="display:flex; flex-direction:column; gap:7px; font-size:13px;">
+              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-critical); font-weight:700; flex-shrink:0;">T07</span><span style="color:var(--c-text);">결계 구역에서 이탈 → <span style="color:var(--c-critical);">MISSING</span></span></div>
+              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-cream); font-weight:700; flex-shrink:0;">T06</span><span style="color:var(--c-text-2);">Leo와 규칙 준수 문제로 말다툼 (긴장도 +18)</span></div>
+              <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-primary); font-weight:700; flex-shrink:0;">T05</span><span style="color:var(--c-text-2);">도서관 3층 결계 균열 순찰 및 점검</span></div>
               <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-text-3); font-weight:700; flex-shrink:0;">T07</span><span style="color:var(--c-text-2);">강의동 A 방어마법 특강 출석</span></div>
               <div style="display:flex; gap:8px;"><span style="font-family:var(--f-mono); color:var(--c-text-3); font-weight:700; flex-shrink:0;">T06</span><span style="color:var(--c-text-2);">기숙사 자습실에서 Sera와 대화 — 감정 완화</span></div>
             </div>
@@ -276,33 +299,33 @@
       <!-- Col 3: §3.5 기억 미리보기 & §3.6 관계 레이더 -->
       <div class="info-card">
         <div class="info-card__header">
-          <span>§3.5 기억 미리보기 &amp; §3.6 관계 레이더</span>
-          <span style="color:var(--c-inspector);">RETRIEVED</span>
+          <span>관련 기억과 관계 변화</span>
+          <span style="color:var(--c-inspector);">확인됨</span>
         </div>
         <div class="info-card__body">
 
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-              <span style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600; text-transform:uppercase;">[ 결정에 영향을 준 기억 ]</span>
-              <button onclick="switchTab('memory')" style="font-family:var(--f-mono); font-size:9px; color:var(--c-inspector); background:rgba(52,179,199,0.1); border:1px solid rgba(52,179,199,0.3); border-radius:var(--r-sm); padding:2px 7px; cursor:pointer;">전체 →</button>
+              <span style="font-family:var(--f-mono); font-size:12px; color:var(--c-inspector); font-weight:600; text-transform:uppercase;">[ 결정에 영향을 준 기억 ]</span>
+              <button onclick="switchTab('memory')" style="font-family:var(--f-mono); font-size:11px; color:var(--c-inspector); background:rgba(52,179,199,0.1); border:1px solid rgba(52,179,199,0.3); border-radius:var(--r-sm); padding:2px 7px; cursor:pointer;">전체 →</button>
             </div>
             <div style="border-bottom:1px solid rgba(70,100,180,0.15); padding-bottom:8px; margin-bottom:8px;">
-              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">
-                <span>관찰기억 · T08</span><span>중요도 85</span>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:12px; color:var(--c-cream);">
+                <span>관찰기억 · T05</span><span>중요도 85</span>
               </div>
-              <div style="font-size:11px; color:#fff; margin-top:3px; line-height:1.5;">"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."</div>
+              <div style="font-size:13px; color:var(--c-text); margin-top:3px; line-height:1.5;">"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."</div>
             </div>
             <div>
-              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">
-                <span>대화기억 · T09</span><span>중요도 90</span>
+              <div style="display:flex; justify-content:space-between; font-family:var(--f-mono); font-size:12px; color:var(--c-cream);">
+                <span>대화기억 · T06</span><span>중요도 90</span>
               </div>
-              <div style="font-size:11px; color:#fff; margin-top:3px; line-height:1.5;">"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."</div>
+              <div style="font-size:13px; color:var(--c-text); margin-top:3px; line-height:1.5;">"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."</div>
             </div>
           </div>
 
           <!-- §3.6 6대 관계 레이더 차트 (Adel × Leo) -->
           <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3); flex:1; display:flex; flex-direction:column; gap:8px;">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">[ §3.6 6대 관계 차원 — Adel × Leo ]</div>
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">[ §3.6 6대 관계 차원 — Adel × Leo ]</div>
 
             <!-- Radar SVG -->
             <svg viewBox="0 0 200 175" xmlns="http://www.w3.org/2000/svg" style="width:100%; max-height:130px;">
@@ -328,19 +351,19 @@
               <!-- BL(라이벌45%): 100-66*0.45=70.3, 88+35*0.45=103.75 -->
               <!-- TL(의존도22%): 100-66*0.22=85.5, 88-35*0.22=80.3 -->
               <polygon points="100,55.8 138.9,67.4 116.5,96.8 100,107.6 70.3,103.8 85.5,80.3"
-                       fill="rgba(52,179,199,0.18)" stroke="#34b3c7" stroke-width="1.5" filter="url(#glow-r)"/>
-              <text x="100" y="13" text-anchor="middle" fill="#a4b5d6" font-family="JetBrains Mono" font-size="7.5">호감도</text>
-              <text x="170" y="50" text-anchor="start" fill="#a4b5d6" font-family="JetBrains Mono" font-size="7.5">친밀도</text>
-              <text x="170" y="128" text-anchor="start" fill="#a4b5d6" font-family="JetBrains Mono" font-size="7.5">신뢰도</text>
-              <text x="100" y="170" text-anchor="middle" fill="#db4c4c" font-family="JetBrains Mono" font-size="7.5">긴장도</text>
-              <text x="30" y="128" text-anchor="end" fill="#a4b5d6" font-family="JetBrains Mono" font-size="7.5">라이벌</text>
-              <text x="30" y="50" text-anchor="end" fill="#a4b5d6" font-family="JetBrains Mono" font-size="7.5">의존도</text>
-              <circle cx="100" cy="88" r="2" fill="#34b3c7" opacity="0.7"/>
+                       fill="rgba(52,179,199,0.18)" stroke="var(--c-inspector)" stroke-width="1.5" filter="url(#glow-r)"/>
+              <text x="100" y="13" text-anchor="middle" fill="var(--c-text-2)" font-family="JetBrains Mono" font-size="7.5">호감도</text>
+              <text x="170" y="50" text-anchor="start" fill="var(--c-text-2)" font-family="JetBrains Mono" font-size="7.5">친밀도</text>
+              <text x="170" y="128" text-anchor="start" fill="var(--c-text-2)" font-family="JetBrains Mono" font-size="7.5">신뢰도</text>
+              <text x="100" y="170" text-anchor="middle" fill="var(--c-critical)" font-family="JetBrains Mono" font-size="7.5">긴장도</text>
+              <text x="30" y="128" text-anchor="end" fill="var(--c-text-2)" font-family="JetBrains Mono" font-size="7.5">라이벌</text>
+              <text x="30" y="50" text-anchor="end" fill="var(--c-text-2)" font-family="JetBrains Mono" font-size="7.5">의존도</text>
+              <circle cx="100" cy="88" r="2" fill="var(--c-inspector)" opacity="0.7"/>
             </svg>
 
             <!-- 6D numerical bars -->
             <div style="display:flex; flex-direction:column; gap:5px;">
-              <div class="rel-dim-row"><span class="rel-dim-key">호감도</span><div class="rel-dim-track"><div class="rel-dim-fill" style="width:46%; background:#5e60e8;"></div></div><span class="rel-dim-val" style="color:#5e60e8;">-8</span></div>
+              <div class="rel-dim-row"><span class="rel-dim-key">호감도</span><div class="rel-dim-track"><div class="rel-dim-fill" style="width:46%; background:var(--c-primary);"></div></div><span class="rel-dim-val" style="color:var(--c-primary);">-8</span></div>
               <div class="rel-dim-row"><span class="rel-dim-key">친밀도</span><div class="rel-dim-track"><div class="rel-dim-fill" style="width:59%; background:var(--c-inspector);"></div></div><span class="rel-dim-val" style="color:var(--c-inspector);">18</span></div>
               <div class="rel-dim-row"><span class="rel-dim-key">신뢰도</span><div class="rel-dim-track"><div class="rel-dim-fill" style="width:25%; background:var(--c-success);"></div></div><span class="rel-dim-val" style="color:var(--c-success);">25</span></div>
               <div class="rel-dim-row"><span class="rel-dim-key">긴장도</span><div class="rel-dim-track"><div class="rel-dim-fill" style="width:72%; background:var(--c-critical);"></div></div><span class="rel-dim-val" style="color:var(--c-critical);">72</span></div>
@@ -369,7 +392,7 @@
           </div>
           <div class="code-block" style="margin-top:auto;">
             <div class="code-title"><span>STATE SNAPSHOT DELTA</span><span class="code-dim">JSONB</span></div>
-            <pre style="margin:0; font-size:10px; color:#a4b5d6;">{ "agent_id": <span class="code-str">"s-1"</span>,
+            <pre style="margin:0; font-size:12px; color:var(--c-text-2);">{ "agent_id": <span class="code-str">"s-1"</span>,
   "prev": <span class="code-str">"ACTIVE"</span>, "curr": <span class="code-crit">"MISSING"</span>,
   "duration": <span class="code-num">4</span> <span class="code-dim">/* Ticks */</span> }</pre>
           </div>
@@ -381,17 +404,17 @@
         <div class="info-card__body">
           <div class="code-block">
             <div class="code-title"><span>TOP-1: mem_01j5a87b</span><span style="color:var(--c-cream);">Score: 0.892</span></div>
-            <div style="font-size:10px; color:#fff;">"도서관 금서 구역 결계 균열 목격"</div>
-            <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">vec[1536]: [0.0241, -0.0512, 0.1184, ...]</div>
+            <div style="font-size:12px; color:var(--c-text);">"도서관 금서 구역 결계 균열 목격"</div>
+            <div class="code-dim" style="margin-top:4px; font-size:11px; word-break:break-all;">vec[1536]: [0.0241, -0.0512, 0.1184, ...]</div>
           </div>
           <div class="code-block">
             <div class="code-title"><span>TOP-2: mem_01j5a99c</span><span style="color:var(--c-cream);">Score: 0.841</span></div>
-            <div style="font-size:10px; color:#fff;">"Leo와 마법 생물 유인 말다툼"</div>
-            <div class="code-dim" style="margin-top:4px; font-size:9px; word-break:break-all;">vec[1536]: [-0.0128, 0.0891, ...]</div>
+            <div style="font-size:12px; color:var(--c-text);">"Leo와 마법 생물 유인 말다툼"</div>
+            <div class="code-dim" style="margin-top:4px; font-size:11px; word-break:break-all;">vec[1536]: [-0.0128, 0.0891, ...]</div>
           </div>
           <div class="code-block" style="margin-top:auto;">
             <div class="code-title"><span>HNSW Index</span><span style="color:var(--c-inspector);">text-embedding-3-small</span></div>
-            <div style="font-size:10px;">Metric: <code>vector_cosine_ops</code></div>
+            <div style="font-size:12px;">Metric: <code>vector_cosine_ops</code></div>
           </div>
         </div>
       </div>
@@ -401,7 +424,7 @@
         <div class="info-card__body">
           <div class="code-block">
             <div class="code-title"><span>LLM EXECUTION</span><span style="color:var(--c-success);">OK</span></div>
-            <div style="font-size:10px; line-height:1.6;">
+            <div style="font-size:12px; line-height:1.6;">
               • Latency: <strong style="color:var(--c-success);">42ms</strong><br>
               • Prompt Tokens: <strong>412</strong><br>
               • Completion: <strong>58</strong><br>
@@ -410,7 +433,7 @@
           </div>
           <div class="code-block" style="margin-top:auto;">
             <div class="code-title"><span>DB TRANSACTION</span><span style="color:var(--c-success);">COMMITTED</span></div>
-            <pre style="margin:0; font-size:10px; color:#7dd3fc;"><span class="code-kw">UPDATE</span> agents <span class="code-kw">SET</span> status=<span class="code-crit">'MISSING'</span>
+            <pre style="margin:0; font-size:12px; color:#7dd3fc;"><span class="code-kw">UPDATE</span> agents <span class="code-kw">SET</span> status=<span class="code-crit">'MISSING'</span>
 <span class="code-kw">WHERE</span> id=<span class="code-str">'s-1'</span>;
 <span class="code-kw">INSERT INTO</span> event_participants
 <span class="code-kw">VALUES</span> (<span class="code-str">'evt-04'</span>,<span class="code-str">'s-1'</span>,...)</pre>
@@ -425,18 +448,18 @@
       <!-- Left sidebar -->
       <div class="info-card">
         <div class="info-card__header" style="border-left:3px solid var(--c-inspector);">
-          <span>§3.5 Memory Stream</span><span style="color:var(--c-inspector);">10 ITEMS</span>
+          <span>최근 기억</span><span style="color:var(--c-inspector);">10개</span>
         </div>
         <div class="info-card__body">
           <div style="display:flex; gap:8px; padding:var(--s-2); background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); align-items:center;">
-            <div style="width:32px; height:40px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1px solid var(--c-char-adel-ring); flex-shrink:0;"></div>
+            <div id="memory-agent-avatar" style="width:32px; height:40px; border-radius:3px; background-image:url('../assets/character/Adel_ISTJ.png'); background-size:cover; border:1px solid var(--c-char-adel-ring); flex-shrink:0;"></div>
             <div>
-              <div style="font-family:var(--f-serif-ko); font-size:13px; font-weight:700; color:#fff;">Adel</div>
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-cream);">ISTJ · 기억 10개</div>
+              <div id="memory-agent-name" style="font-family:var(--f-serif-ko); font-size:13px; font-weight:700; color:var(--c-text);">Adel</div>
+              <div id="memory-agent-meta" style="font-family:var(--f-mono); font-size:12px; color:var(--c-cream);">ISTJ · 기억 10개</div>
             </div>
           </div>
 
-          <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">기억 유형 필터</div>
+          <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; letter-spacing:0.06em; text-transform:uppercase;">기억 유형 필터</div>
           <div style="display:flex; flex-direction:column; gap:3px;">
             <button class="mem-filter-btn active" onclick="filterMem('all',this)"><span>전체</span><span class="mem-badge">10</span></button>
             <button class="mem-filter-btn" onclick="filterMem('obs',this)"><span>🔍 관찰기억</span><span class="mem-badge">4</span></button>
@@ -446,11 +469,11 @@
           </div>
 
           <div style="margin-top:auto; background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 기억 통계 ]</div>
-            <div style="display:flex; flex-direction:column; gap:4px; font-family:var(--f-mono); font-size:11px;">
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 기억 통계 ]</div>
+            <div style="display:flex; flex-direction:column; gap:4px; font-family:var(--f-mono); font-size:13px;">
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">평균 중요도</span><span style="color:var(--c-cream);">76.4</span></div>
               <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">최고 중요도</span><span style="color:var(--c-critical);">96 (회고)</span></div>
-              <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">가장 오래된</span><span style="color:var(--c-text-3);">Tick 01</span></div>
+              <div style="display:flex; justify-content:space-between;"><span style="color:var(--c-text-2);">가장 오래된</span><span style="color:var(--c-text-3);">시간 01</span></div>
             </div>
           </div>
         </div>
@@ -463,14 +486,14 @@
           <div class="mem-entry selected" data-type="obs" onclick="selectMem(this,'m1')">
             <div class="mem-entry__icon" style="background:rgba(52,179,199,0.15); color:var(--c-inspector);">🔍</div>
             <div style="flex:1; min-width:0;">
-              <div class="mem-entry__meta"><span>관찰기억 · T08</span><span>중요도 85</span></div>
+              <div class="mem-entry__meta"><span>관찰기억 · T05</span><span>중요도 85</span></div>
               <div class="mem-entry__text">"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."</div>
             </div>
           </div>
           <div class="mem-entry" data-type="conv" onclick="selectMem(this,'m2')">
-            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:#7375f5;">💬</div>
+            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:var(--c-primary-hover);">💬</div>
             <div style="flex:1; min-width:0;">
-              <div class="mem-entry__meta"><span>대화기억 · T09</span><span>중요도 90</span></div>
+              <div class="mem-entry__meta"><span>대화기억 · T06</span><span>중요도 90</span></div>
               <div class="mem-entry__text">"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."</div>
             </div>
           </div>
@@ -496,7 +519,7 @@
             </div>
           </div>
           <div class="mem-entry" data-type="conv" onclick="selectMem(this,'m6')">
-            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:#7375f5;">💬</div>
+            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:var(--c-primary-hover);">💬</div>
             <div style="flex:1; min-width:0;">
               <div class="mem-entry__meta"><span>대화기억 · T03</span><span>중요도 68</span></div>
               <div class="mem-entry__text">"Sera가 수업 노트를 빌려달라 해 흔쾌히 응했다."</div>
@@ -524,7 +547,7 @@
             </div>
           </div>
           <div class="mem-entry" data-type="conv" onclick="selectMem(this,'m10')">
-            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:#7375f5;">💬</div>
+            <div class="mem-entry__icon" style="background:rgba(94,96,232,0.15); color:var(--c-primary-hover);">💬</div>
             <div style="flex:1; min-width:0;">
               <div class="mem-entry__meta"><span>대화기억 · T01</span><span>중요도 50</span></div>
               <div class="mem-entry__text">"Ria에게 입학 첫날 길을 안내해주며 인사를 나눴다."</div>
@@ -536,23 +559,18 @@
         <div style="flex:1; padding:var(--s-4); overflow-y:auto;" id="mem-detail-panel">
           <div style="background:rgba(6,13,32,0.6); border:1px solid rgba(70,100,180,0.25); border-radius:var(--r-sm); padding:var(--s-4);">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-inspector); font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">관찰기억 · Tick 08</div>
-              <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">중요도 85 / 100</div>
+              <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-inspector); font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">관찰 기억 · TICK 05</div>
+              <div style="font-family:var(--f-mono); font-size:13px; color:var(--c-cream);">중요도 85 / 100</div>
             </div>
-            <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); margin-bottom:8px;">ID: mem_01j5a87b</div>
-            <div style="font-family:var(--f-serif-ko); font-size:13px; color:#fff; line-height:1.7; background:rgba(6,13,32,0.8); border:1px solid rgba(70,100,180,0.2); border-left:3px solid var(--c-inspector); border-radius:var(--r-sm); padding:var(--s-3); margin-bottom:12px;">
+            <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); margin-bottom:8px;">ID: mem_01j5a87b</div>
+            <div style="font-family:var(--f-serif-ko); font-size:13px; color:var(--c-text); line-height:1.7; background:rgba(6,13,32,0.8); border:1px solid rgba(70,100,180,0.2); border-left:3px solid var(--c-inspector); border-radius:var(--r-sm); padding:var(--s-3); margin-bottom:12px;">
               "도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."
             </div>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-family:var(--f-mono); font-size:11px; margin-bottom:12px;">
-              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:#fff;">Tick 08</div></div>
-              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">중요도</div><div style="color:var(--c-cream);">85</div></div>
-              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:var(--c-inspector);">관찰기억</div></div>
-              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">T10 이탈 결정</div></div>
-            </div>
-            <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-              <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 벡터 임베딩 미리보기 ]</div>
-              <div style="font-family:var(--f-mono); font-size:9px; color:#526388; word-break:break-all;">[0.0241, -0.0512, 0.1184, -0.0094, 0.0732, ...]</div>
-              <div style="margin-top:4px; font-family:var(--f-mono); font-size:9px; color:var(--c-text-3);">Cosine 유사도: <span style="color:var(--c-cream);">0.892 (TOP-1)</span></div>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-family:var(--f-mono); font-size:13px; margin-bottom:12px;">
+              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:var(--c-text);">TICK 05</div></div>
+              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">중요도</div><div style="color:var(--c-cream);">85</div></div>
+              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:var(--c-inspector);">관찰기억</div></div>
+              <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">T07 이탈 결정</div></div>
             </div>
           </div>
         </div>
@@ -566,16 +584,16 @@
 <script src="../js/magic-academy.js"></script>
 <script>
   const memData = {
-    m1: { type:'관찰기억', tick:'Tick 08', imp:'85', id:'mem_01j5a87b', color:'var(--c-inspector)', text:'"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."', causal:'T10 이탈 결정', emb:'[0.0241, -0.0512, 0.1184, ...]', score:'0.892 (TOP-1)' },
-    m2: { type:'대화기억', tick:'Tick 09', imp:'90', id:'mem_01j5a99c', color:'#7375f5', text:'"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."', causal:'T10 이탈 결정', emb:'[-0.0128, 0.0891, ...]', score:'0.841 (TOP-2)' },
-    m3: { type:'장기 회고', tick:'Tick 06', imp:'96', id:'mem_01j5b12d', color:'var(--c-cream)', text:'"나는 규칙을 수호해야 한다. 그것이 내 존재 이유이자 불안을 억제하는 유일한 방법이다."', causal:'성격 파라미터 강화', emb:'[0.0892, 0.0241, ...]', score:'0.779 (TOP-3)' },
-    m4: { type:'사건기억', tick:'Tick 05', imp:'88', id:'mem_01j5b08e', color:'var(--c-critical)', text:'"마법 약품 실험실 폭발 사고를 목격하고 Kai와 협력해 대피를 도왔다."', causal:'Kai 신뢰도 +12', emb:'[0.0554, -0.0312, ...]', score:'0.701' },
-    m5: { type:'관찰기억', tick:'Tick 04', imp:'72', id:'mem_01j5a76f', color:'var(--c-inspector)', text:'"Ria가 혼자 마법진 연구실에서 밤새 실험하는 것을 목격했다."', causal:'Ria 관찰 기록', emb:'[0.0178, 0.0621, ...]', score:'0.612' },
-    m6: { type:'대화기억', tick:'Tick 03', imp:'68', id:'mem_01j5a65g', color:'#7375f5', text:'"Sera가 수업 노트를 빌려달라 해 흔쾌히 응했다."', causal:'Sera 친밀도 +5', emb:'[-0.0223, 0.0445, ...]', score:'0.589' },
-    m7: { type:'관찰기억', tick:'Tick 02', imp:'60', id:'mem_01j5a54h', color:'var(--c-inspector)', text:'"Prof. Aldric이 강의 중 내 이름을 모범 사례로 언급했다."', causal:'자아효능감 +8', emb:'[0.0341, -0.0178, ...]', score:'0.543' },
-    m8: { type:'장기 회고', tick:'Tick 02', imp:'82', id:'mem_01j5a43i', color:'var(--c-cream)', text:'"Leo는 규칙을 경시한다. 그의 행동은 언젠가 문제를 일으킬 것이다."', causal:'Leo 긴장도 누적', emb:'[0.0672, 0.0234, ...]', score:'0.521' },
-    m9: { type:'관찰기억', tick:'Tick 01', imp:'55', id:'mem_01j5a32j', color:'var(--c-inspector)', text:'"첫 오리엔테이션에서 Kai가 리더십을 자처해 조별 대표를 맡았다."', causal:'Kai 초기 인상', emb:'[-0.0112, 0.0789, ...]', score:'0.489' },
-    m10: { type:'대화기억', tick:'Tick 01', imp:'50', id:'mem_01j5a21k', color:'#7375f5', text:'"Ria에게 입학 첫날 길을 안내해주며 인사를 나눴다."', causal:'Ria 초기 친밀도 +3', emb:'[0.0198, -0.0534, ...]', score:'0.467' },
+    m1: { type:'관찰기억', tick:'Tick 05', imp:'85', id:'mem_01j5a87b', color:'var(--c-inspector)', text:'"도서관 금서 구역 결계에 미세한 균열이 발생한 것을 목격했다."', causal:'T07 이탈 결정' },
+    m2: { type:'대화기억', tick:'Tick 06', imp:'90', id:'mem_01j5a99c', color:'var(--c-primary-hover)', text:'"Leo가 마법 생물을 금서 구역으로 유인하려 해 심한 말다툼을 벌였다."', causal:'T07 이탈 결정' },
+    m3: { type:'장기 회고', tick:'Tick 06', imp:'96', id:'mem_01j5b12d', color:'var(--c-cream)', text:'"나는 규칙을 수호해야 한다. 그것이 내 존재 이유이자 불안을 억제하는 유일한 방법이다."', causal:'성격 파라미터 강화' },
+    m4: { type:'사건기억', tick:'Tick 05', imp:'88', id:'mem_01j5b08e', color:'var(--c-critical)', text:'"마법 약품 실험실 폭발 사고를 목격하고 Kai와 협력해 대피를 도왔다."', causal:'Kai 신뢰도 +12' },
+    m5: { type:'관찰기억', tick:'Tick 04', imp:'72', id:'mem_01j5a76f', color:'var(--c-inspector)', text:'"Ria가 혼자 마법진 연구실에서 밤새 실험하는 것을 목격했다."', causal:'Ria 관찰 기록' },
+    m6: { type:'대화기억', tick:'Tick 03', imp:'68', id:'mem_01j5a65g', color:'var(--c-primary-hover)', text:'"Sera가 수업 노트를 빌려달라 해 흔쾌히 응했다."', causal:'Sera 친밀도 +5' },
+    m7: { type:'관찰기억', tick:'Tick 02', imp:'60', id:'mem_01j5a54h', color:'var(--c-inspector)', text:'"Prof. Aldric이 강의 중 내 이름을 모범 사례로 언급했다."', causal:'자아효능감 +8' },
+    m8: { type:'장기 회고', tick:'Tick 02', imp:'82', id:'mem_01j5a43i', color:'var(--c-cream)', text:'"Leo는 규칙을 경시한다. 그의 행동은 언젠가 문제를 일으킬 것이다."', causal:'Leo 긴장도 누적' },
+    m9: { type:'관찰기억', tick:'Tick 01', imp:'55', id:'mem_01j5a32j', color:'var(--c-inspector)', text:'"첫 오리엔테이션에서 Kai가 리더십을 자처해 조별 대표를 맡았다."', causal:'Kai 초기 인상' },
+    m10: { type:'대화기억', tick:'Tick 01', imp:'50', id:'mem_01j5a21k', color:'var(--c-primary-hover)', text:'"Ria에게 입학 첫날 길을 안내해주며 인사를 나눴다."', causal:'Ria 초기 친밀도 +3' },
   };
 
   function switchTab(key) {
@@ -602,23 +620,47 @@
     document.getElementById('mem-detail-panel').innerHTML = `
       <div style="background:rgba(6,13,32,0.6); border:1px solid rgba(70,100,180,0.25); border-radius:var(--r-sm); padding:var(--s-4);">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <div style="font-family:var(--f-mono); font-size:10px; color:${d.color}; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">${d.type} · ${d.tick}</div>
-          <div style="font-family:var(--f-mono); font-size:11px; color:var(--c-cream);">중요도 ${d.imp} / 100</div>
+          <div style="font-family:var(--f-mono); font-size:12px; color:${d.color}; font-weight:600; text-transform:uppercase; letter-spacing:0.08em;">${d.type} · ${d.tick}</div>
+          <div style="font-family:var(--f-mono); font-size:13px; color:var(--c-cream);">중요도 ${d.imp} / 100</div>
         </div>
-        <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); margin-bottom:8px;">ID: ${d.id}</div>
-        <div style="font-family:var(--f-serif-ko); font-size:13px; color:#fff; line-height:1.7; background:rgba(6,13,32,0.8); border:1px solid rgba(70,100,180,0.2); border-left:3px solid ${d.color}; border-radius:var(--r-sm); padding:var(--s-3); margin-bottom:12px;">${d.text}</div>
-        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-family:var(--f-mono); font-size:11px; margin-bottom:12px;">
-          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:#fff;">${d.tick}</div></div>
-          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">중요도</div><div style="color:var(--c-cream);">${d.imp}</div></div>
-          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:${d.color};">${d.type}</div></div>
-          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:9px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">${d.causal}</div></div>
-        </div>
-        <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-3);">
-          <div style="font-family:var(--f-mono); font-size:10px; color:var(--c-text-3); font-weight:600; margin-bottom:6px; text-transform:uppercase;">[ 벡터 임베딩 ]</div>
-          <div style="font-family:var(--f-mono); font-size:9px; color:#526388; word-break:break-all;">${d.emb}</div>
-          <div style="margin-top:4px; font-family:var(--f-mono); font-size:9px; color:var(--c-text-3);">Cosine: <span style="color:var(--c-cream);">${d.score}</span></div>
+        <div style="font-family:var(--f-mono); font-size:12px; color:var(--c-text-3); margin-bottom:8px;">ID: ${d.id}</div>
+        <div style="font-family:var(--f-serif-ko); font-size:13px; color:var(--c-text); line-height:1.7; background:rgba(6,13,32,0.8); border:1px solid rgba(70,100,180,0.2); border-left:3px solid ${d.color}; border-radius:var(--r-sm); padding:var(--s-3); margin-bottom:12px;">${d.text}</div>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-family:var(--f-mono); font-size:13px; margin-bottom:12px;">
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">생성 시점</div><div style="color:var(--c-text);">${d.tick}</div></div>
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">중요도</div><div style="color:var(--c-cream);">${d.imp}</div></div>
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">기억 유형</div><div style="color:${d.color};">${d.type}</div></div>
+          <div style="background:rgba(6,13,32,0.6); border:1px solid var(--c-border); border-radius:var(--r-sm); padding:var(--s-2) var(--s-3);"><div style="color:var(--c-text-3); font-size:11px; text-transform:uppercase; margin-bottom:2px;">인과 연결</div><div style="color:var(--c-success);">${d.causal}</div></div>
         </div>
       </div>`;
+  }
+  const inspectorParams = new URLSearchParams(window.location.search);
+  const inspectorAgent = inspectorParams.get('agent');
+  const inspectorTick = inspectorParams.get('tick') || '10';
+  const inspectorReturn = inspectorParams.get('from') === 'mypage'
+    ? '10-mypage-personas.html'
+    : `03-simulation.html?tick=${encodeURIComponent(inspectorTick)}${inspectorAgent ? `&agent=${encodeURIComponent(inspectorAgent)}` : ''}`;
+  document.getElementById('inspector-back-link').href = inspectorReturn;
+  document.getElementById('inspector-main-link').href = inspectorReturn;
+  document.getElementById('inspector-back-link').lastChild.textContent = inspectorParams.get('from') === 'mypage' ? ' Persona 기록 복귀' : ' 시뮬레이션 복귀';
+  document.getElementById('inspector-relationship-link').href = `05-relationship.html?from=simulation&tick=${encodeURIComponent(inspectorTick)}${inspectorAgent ? `&agent=${encodeURIComponent(inspectorAgent)}` : ''}`;
+  if (inspectorParams.get('tab') === 'memory') switchTab('memory');
+  const agentProfiles = {
+    adel: { name:'Adel', mbti:'ISTJ', portrait:'Adel_ISTJ.png' },
+    leo: { name:'Leo', mbti:'ESTP', portrait:'Leo_ESTP.png' },
+    ria: { name:'Ria', mbti:'INFP', portrait:'Ria_INFP.png' },
+    kai: { name:'Kai', mbti:'ENTJ', portrait:'Kai_ENTJ.png' },
+    sera: { name:'Sera', mbti:'ESFJ', portrait:'Sera_ESFJ.png' },
+  };
+  const requestedAgent = agentProfiles[inspectorParams.get('agent')];
+  if (requestedAgent) {
+    document.getElementById('memory-agent-name').textContent = requestedAgent.name;
+    document.getElementById('memory-agent-meta').textContent = `${requestedAgent.mbti} · 기억 10개`;
+    document.getElementById('memory-agent-avatar').style.backgroundImage = `url('../assets/character/${requestedAgent.portrait}')`;
+  }
+  const requestedMemory = inspectorParams.get('memory');
+  if (requestedMemory) {
+    const requestedEntry = document.querySelector(`[onclick*="'${requestedMemory}'"]`);
+    if (requestedEntry) selectMem(requestedEntry, requestedMemory);
   }
 </script>
 </body>

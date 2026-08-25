@@ -6,7 +6,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Noto+Serif+KR:wght@300;400;600&family=JetBrains+Mono:wght@400;500;600&display=swap">
-  <link rel="stylesheet" href="../css/magic-academy-v2.css">
+  <link rel="stylesheet" href="../../css/magic-academy-v2.css">
   <style>
     * { box-sizing: border-box; }
     body { margin: 0; overflow: hidden; background: var(--c-bg); font-family: var(--f-sans); color: var(--c-text); }
@@ -14,7 +14,7 @@
 
     .bg-map {
       position: absolute; inset: 0;
-      background-image: url('../assets/concept/academy-night-background.png');
+      background-image: url('../../assets/concept/academy-night-background.png');
       background-size: cover; background-position: center;
       filter: brightness(0.08) saturate(0.3) blur(14px);
       transform: scale(1.06); pointer-events: none;
@@ -27,7 +27,7 @@
 
     /* ── Topbar ── */
     .topbar {
-      height: 52px; padding: 0 var(--s-6);
+      height: var(--topbar-h); padding: 0 var(--s-6);
       display: flex; align-items: center; justify-content: space-between;
       border-bottom: 1px solid var(--c-border);
       background: rgba(6, 13, 32, 0.96); backdrop-filter: blur(16px);
@@ -189,7 +189,8 @@
       <span class="topbar__title">BRANCH TREE — What-If 시나리오 분기</span>
     </div>
     <div class="topbar__right">
-      <a href="11-replay.html" class="btn-nav">⏮ 리플레이</a>
+      <span class="btn-nav" aria-label="보관된 화면">ARCHIVED</span>
+      <a href="../11-replay.html" class="btn-nav">⏮ 리플레이</a>
       <a href="13-magic-comparison.html" class="btn-nav">⚖ 비교 뷰</a>
       <button class="btn-new-fork" onclick="document.querySelector('.modal-overlay').classList.add('open')">⑂ 새 분기 생성</button>
     </div>
@@ -339,25 +340,25 @@
         <div class="diff-block">
           <div class="diff-block__title">관계 변화 델타 (vs Main)</div>
           <div class="diff-item">
-            <div class="char-mini-avatar" style="background-image:url('../assets/character/Adel_ISTJ.png'); border-color:var(--c-char-adel-light);"></div>
+            <div class="char-mini-avatar" style="background-image:url('../../assets/character/Adel_ISTJ.png'); border-color:var(--c-char-adel-light);"></div>
             <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-adel-light);">Adel</span>
             <span style="flex:1; font-size:10px;color:var(--c-text-2);">스트레스 감소</span>
             <span class="delta pos">-18</span>
           </div>
           <div class="diff-item">
-            <div class="char-mini-avatar" style="background-image:url('../assets/character/Ria_INFP.png'); border-color:var(--c-char-ria-light);"></div>
+            <div class="char-mini-avatar" style="background-image:url('../../assets/character/Ria_INFP.png'); border-color:var(--c-char-ria-light);"></div>
             <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-ria-light);">Ria ★</span>
             <span style="flex:1; font-size:10px;color:var(--c-text-2);">Adel 신뢰도 ↑</span>
             <span class="delta pos">+24</span>
           </div>
           <div class="diff-item">
-            <div class="char-mini-avatar" style="background-image:url('../assets/character/Kai_ENTJ.png'); border-color:var(--c-char-kai-light);"></div>
+            <div class="char-mini-avatar" style="background-image:url('../../assets/character/Kai_ENTJ.png'); border-color:var(--c-char-kai-light);"></div>
             <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-kai-light);">Kai</span>
             <span style="flex:1; font-size:10px;color:var(--c-text-2);">갈등 라이벌 감소</span>
             <span class="delta neg">-12</span>
           </div>
           <div class="diff-item">
-            <div class="char-mini-avatar" style="background-image:url('../assets/character/Leo_ESTP.png'); border-color:var(--c-char-leo-light);"></div>
+            <div class="char-mini-avatar" style="background-image:url('../../assets/character/Leo_ESTP.png'); border-color:var(--c-char-leo-light);"></div>
             <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-char-leo-light);">Leo</span>
             <span style="flex:1; font-size:10px;color:var(--c-text-2);">친밀도 상승</span>
             <span class="delta pos">+9</span>
@@ -372,7 +373,7 @@
         </div>
       </div>
       <div class="action-area">
-        <a href="11-replay.html" class="btn-full btn-primary">⏮ 이 분기 리플레이 보기</a>
+        <a href="../11-replay.html" class="btn-full btn-primary">⏮ 이 분기 리플레이 보기</a>
         <a href="13-magic-comparison.html" class="btn-full btn-ghost">⚖ Main과 비교하기</a>
       </div>
     </div>

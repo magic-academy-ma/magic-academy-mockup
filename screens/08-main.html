@@ -20,9 +20,11 @@
     }
     .hero__bg {
       position: absolute; inset: 0;
-      background-image: url('../assets/concept/academy-night-background.png');
-      background-size: cover; background-position: center 30%;
-      filter: brightness(0.7) saturate(0.85);
+      background:
+        radial-gradient(circle at 75% 15%, rgba(94, 96, 232, 0.14), transparent 55%),
+        linear-gradient(to bottom, rgba(6,13,32,.35), rgba(6,13,32,.55)),
+        url('../assets/concept/academy-night-background.png') center / cover;
+      transform: scale(1.03);
     }
     .hero__overlay {
       position: absolute; inset: 0;
@@ -73,12 +75,16 @@
       z-index: 10;
     }
     .main-nav__brand {
+      display: flex;
+      align-items: center;
+      gap: var(--s-2);
       font-family: var(--f-serif-en);
       font-size: var(--t-base);
       font-weight: 600;
       color: var(--c-text);
       letter-spacing: 0.04em;
     }
+    .main-nav__brand img { width: 34px; height: 34px; border-radius: 8px; object-fit: cover; }
     .main-nav__links {
       display: flex; gap: var(--s-5); margin-left: var(--s-4);
     }
@@ -99,6 +105,9 @@
       flex-direction: column;
       gap: var(--s-6);
     }
+    .demo-banner { display:none; align-items:center; justify-content:space-between; gap:var(--s-4); padding:var(--s-3) var(--s-5); background:rgba(52,179,199,.1); border-bottom:1px solid rgba(52,179,199,.35); color:var(--c-text-2); }
+    .demo-mode .demo-banner { display:flex; }
+    .demo-mode .account-only { display:none!important; }
 
     /* Section header */
     .section-header {
@@ -134,7 +143,7 @@
     .sim-card:hover {
       border-color: var(--c-border-hi);
       transform: translateY(-4px);
-      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(215, 198, 167, 0.12);
+      box-shadow: 0 10px 28px rgba(0, 0, 0, 0.5), 0 0 20px rgba(212, 178, 111, 0.12);
     }
     .sim-card.new-card {
       border: 1.5px dashed var(--c-border);
@@ -150,8 +159,8 @@
     .sim-card.new-card:hover {
       border-color: var(--c-primary);
       color: #ffffff;
-      background: rgba(109, 90, 230, 0.12);
-      box-shadow: 0 0 20px rgba(109, 90, 230, 0.25);
+      background: rgba(94, 96, 232, 0.12);
+      box-shadow: 0 0 20px rgba(94, 96, 232, 0.25);
     }
 
     .sim-card__thumb {
@@ -166,6 +175,20 @@
       background-size: cover;
       background-position: center;
       filter: brightness(0.7) saturate(0.85);
+      transition: transform var(--tr-normal);
+    }
+    .sim-card:hover .sim-card__thumb-img { transform: scale(1.08); }
+    .sim-card__thumb-preview {
+      position: absolute; inset: 0;
+      display: flex; align-items: center; justify-content: center;
+      background: rgba(6,13,32,0.35);
+      opacity: 0; transition: opacity var(--tr-fast);
+    }
+    .sim-card:hover .sim-card__thumb-preview { opacity: 1; }
+    .sim-card__thumb-preview span {
+      font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.08em;
+      color: #fff; border: 1px solid rgba(255,255,255,0.6); border-radius: var(--r-sm);
+      padding: 4px 10px; backdrop-filter: blur(4px); background: rgba(6,13,32,0.4);
     }
     .sim-card__thumb-overlay {
       position: absolute; inset: 0;
@@ -188,7 +211,8 @@
     }
     .sim-card__agent-dot {
       width: 20px; height: 20px; border-radius: 50%;
-      background-image: url('../assets/character.png');
+      background-size: cover;
+      background-position: center top;
       background-repeat: no-repeat;
       border: 1.5px solid var(--c-surface);
       margin-left: -4px;
@@ -437,7 +461,8 @@
   </style>
 </head>
 <body>
-<div class="screen">
+<div class="screen" id="main-screen">
+  <div class="demo-banner"><span><strong style="color:var(--c-inspector)">데모 모드</strong> · 아래 기록은 기능 체험을 위한 샘플입니다.</span><a class="btn btn-primary btn-sm" href="07-login.html">로그인</a></div>
   <!-- Hero -->
   <div class="hero">
     <div class="hero__bg"></div>
@@ -445,19 +470,19 @@
 
     <!-- Top Nav -->
     <div class="main-nav">
-      <a href="../index.html" class="main-nav__brand">Magic Academy</a>
+      <a href="../landing.html" class="main-nav__brand"><img src="../assets/concept/logo.png" alt="">Magic Academy</a>
       <div class="main-nav__links">
         <span class="nav-link active">홈</span>
-        <span class="nav-link" onclick="window.location.href='10-mypage.html'">마이페이지</span>
+        <span class="nav-link account-only" onclick="window.location.href='10-mypage.html'">마이페이지</span>
       </div>
       <div style="margin-left:auto; display:flex; align-items:center; gap:var(--s-3);">
         <div style="
           width:28px; height:28px; border-radius:50%;
-          background-image: url('../assets/character.png');
-          background-size: 84px 105px; background-position: -44px -5px;
+          background-image: url('../assets/character/Leo_ESTP.png');
+          background-size: cover; background-position: center top;
           border: 2px solid var(--c-primary);
           cursor:pointer;
-        " onclick="window.location.href='10-mypage.html'"></div>
+        " class="account-only" onclick="window.location.href='10-mypage.html'"></div>
       </div>
     </div>
 
@@ -472,6 +497,7 @@
         <button class="btn btn-outline btn-lg" onclick="window.location.href='03-simulation.html'">
           이어 관찰하기
         </button>
+        <a href="01-onboarding.html?from=main" style="align-self:center;color:var(--c-text-2);font-size:12px;">세계관 다시 보기</a>
       </div>
     </div>
   </div>
@@ -481,7 +507,7 @@
     <!-- Recent -->
     <div>
       <div class="section-header">
-        <span class="section-title">최근 관찰 기록</span>
+        <span class="section-title" id="recent-title">최근 관찰 기록</span>
         <span class="section-more">전체 보기 →</span>
       </div>
       <div class="saved-grid">
@@ -493,31 +519,33 @@
             <div class="sim-card__thumb-status">
               <span class="chip chip-critical">MISSING</span>
             </div>
+            <div class="sim-card__thumb-preview"><span>▶ 이어서 관찰하기</span></div>
           </div>
           <div class="sim-card__body">
             <div class="sim-card__name">첫 번째 시뮬레이션</div>
-            <div class="sim-card__meta">TICK 10 · LEO 시점</div>
+            <div class="sim-card__meta">TICK 07 · LEO 시점</div>
             <div class="sim-card__agents">
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:0 -4px;"></div>
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:-20px -4px;"></div>
-              <div class="sim-card__agent-dot" style="background-size:60px 75px; background-position:-40px -4px;"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Leo_ESTP.png');"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Adel_ISTJ.png');"></div>
+              <div class="sim-card__agent-dot" style="background-image:url('../assets/character/Ria_INFP.png');"></div>
               <span style="font-family:var(--f-mono);font-size:10px;color:var(--c-text-2);margin-left:var(--s-2);display:flex;align-items:center;">+2</span>
             </div>
           </div>
         </div>
 
         <!-- Recent #2 -->
-        <div class="sim-card">
+        <div class="sim-card" onclick="window.location.href='11-replay.html?from=main'">
           <div class="sim-card__thumb">
             <div class="sim-card__thumb-img" style="filter: brightness(0.5) saturate(0.5);"></div>
             <div class="sim-card__thumb-overlay"></div>
             <div class="sim-card__thumb-status">
               <span class="chip chip-active">SAVED</span>
             </div>
+            <div class="sim-card__thumb-preview"><span>▶ 리플레이 보기</span></div>
           </div>
           <div class="sim-card__body">
             <div class="sim-card__name">Leo의 마법 생물 사건</div>
-            <div class="sim-card__meta">TICK 42 · RIA 시점</div>
+            <div class="sim-card__meta">TICK 04 · RIA 시점</div>
           </div>
         </div>
 
@@ -717,6 +745,12 @@
 </div>
 
 <script>
+  const isDemoMode = new URLSearchParams(window.location.search).get('mode') === 'demo';
+  if (isDemoMode) {
+    document.getElementById('main-screen').classList.add('demo-mode');
+    document.getElementById('recent-title').textContent = '샘플 관찰 기록';
+  }
+
   let obCurrent = 1;
 
   function openOnboarding() {
