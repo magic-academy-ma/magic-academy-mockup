@@ -8,67 +8,67 @@
 
 /* ── 1. Design Tokens ─────────────────────────────────────── */
 :root {
-  /* Color — Background & Surfaces (Distinct Vibrant Midnight Navy) */
-  --c-bg:               #071128;   /* Deep mystic midnight navy */
-  --c-surface:          #0e1f4a;   /* Rich navy surface for cards & panels */
-  --c-surface-hi:       #162f6e;   /* Elevated bright navy for hover/active */
-  --c-surface-card:     rgba(16, 33, 76, 0.80);  /* Translucent rich navy card */
-  --c-surface-glass:    rgba(12, 25, 60, 0.86);  /* Frosted luminous navy glass */
-  --c-surface-drawer:   rgba(9, 20, 48, 0.96);   /* Deep midnight drawer */
+  /* Color — Background & Surfaces */
+  --c-bg:               #060D20;
+  --c-surface:          #0B1838;
+  --c-surface-hi:       #122450;
+  --c-surface-card:     rgba(12, 24, 58, 0.82);
+  --c-surface-glass:    rgba(10, 20, 50, 0.88);
+  --c-surface-drawer:   rgba(8, 16, 40, 0.96);
 
-  /* Color — Primary / Agent (Mystic Violet) */
-  --c-primary:          #6D5AE6;   /* Arcane Violet — Agent actions & selection */
-  --c-primary-hover:    #8270fa;
-  --c-primary-muted:    rgba(109, 90, 230, 0.20);
-  --c-primary-ring:     rgba(109, 90, 230, 0.45);
+  /* Color — Primary / Indigo (Interaction & Data) */
+  --c-primary:          #5E60E8;
+  --c-primary-hover:    #7375F5;
+  --c-primary-muted:    rgba(94, 96, 232, 0.16);
+  --c-primary-ring:     rgba(94, 96, 232, 0.38);
 
-  /* Color — Brand / Accent (Cream Ivory) */
-  --c-cream:            #d7c6a7;   /* Cream Ivory — brand titles & elegant accents */
-  --c-cream-hover:      #eadecb;
-  --c-cream-muted:      rgba(215, 198, 167, 0.16);
-  --c-cream-ring:       rgba(215, 198, 167, 0.38);
+  /* Color — Gold (Narrative & World) */
+  --c-cream:            #D4B26F;
+  --c-cream-hover:      #E5C88C;
+  --c-cream-muted:      rgba(212, 178, 111, 0.14);
+  --c-cream-ring:       rgba(212, 178, 111, 0.35);
 
-  /* Color — Inspector (Luminous Cyan) */
-  --c-inspector:        #38c8dc;   /* Luminous Cyan — causal trace & analysis */
-  --c-inspector-hover:  #58e2f4;
-  --c-inspector-muted:  rgba(56, 200, 220, 0.18);
-  --c-inspector-ring:   rgba(56, 200, 220, 0.40);
+  /* Color — Inspector (Cyan / Analysis) */
+  --c-inspector:        #34B3C7;
+  --c-inspector-hover:  #4BCDE0;
+  --c-inspector-muted:  rgba(52, 179, 199, 0.14);
+  --c-inspector-ring:   rgba(52, 179, 199, 0.32);
 
-  /* Color — Events (Warm Gold) */
-  --c-event:            #f4a442;   /* Warm Gold — magic events & narrative */
-  --c-event-muted:      rgba(244, 164, 66, 0.18);
-  --c-event-ring:       rgba(244, 164, 66, 0.40);
+  /* Color — Events (unified with Gold) */
+  --c-event:            #D4B26F;
+  --c-event-muted:      rgba(212, 178, 111, 0.14);
+  --c-event-ring:       rgba(212, 178, 111, 0.35);
 
-  /* Color — Critical / Error (Coral Red) */
-  --c-critical:         #e05252;   /* Vivid Coral Red — missing, alerts, strain */
-  --c-critical-muted:   rgba(224, 82, 82, 0.20);
-  --c-critical-ring:    rgba(224, 82, 82, 0.45);
+  /* Color — Critical / Error */
+  --c-critical:         #DB4C4C;
+  --c-critical-muted:   rgba(219, 76, 76, 0.16);
+  --c-critical-ring:    rgba(219, 76, 76, 0.38);
 
-  /* Color — Gold (Dividers, Accents, Amber) */
-  --c-gold:             #D4AF37;   /* Golden Amber */
-  --c-gold-light:       #f4a442;
-  --c-gold-line:        rgba(212, 175, 55, 0.35);
+  /* Color — Gold Dividers & Accents */
+  --c-gold:             #D4B26F;
+  --c-gold-light:       #E5C88C;
+  --c-gold-line:        rgba(212, 178, 111, 0.35);
 
-  /* Color — Success / Active */
-  --c-success:          #3dba7e;
-  --c-success-muted:    rgba(61, 186, 126, 0.18);
+  /* Color — Success */
+  --c-success:          #38B277;
+  --c-success-muted:    rgba(56, 178, 119, 0.14);
 
-  /* Color — Text (High-contrast, eye-friendly) */
-  --c-text:             #f5f2fa;   /* Ivory White — primary text */
-  --c-text-2:           #b0bee0;   /* Bright Soft Blue-Slate — secondary text */
-  --c-text-3:           #6e80b0;   /* Muted Navy Blue — metadata & disabled */
+  /* Color — Text */
+  --c-text:             #F2F5FC;
+  --c-text-2:           #A4B5D6;
+  --c-text-3:           #62759E;
 
-  /* Color — Borders (Luminous Navy & Gold Traces) */
-  --c-border:           rgba(75, 115, 205, 0.28);  /* Luminous rich navy border */
-  --c-border-hi:        rgba(215, 198, 167, 0.35);  /* Cream/Gold highlight */
-  --c-border-gold:      rgba(212, 175, 55, 0.40);
+  /* Color — Borders */
+  --c-border:           rgba(70, 100, 180, 0.24);
+  --c-border-hi:        rgba(212, 178, 111, 0.35);
+  --c-border-gold:      rgba(212, 178, 111, 0.35);
 
   /* Character tokens */
-  --c-adel:             #0F4C5C;   /* Teal Green */
-  --c-leo:              #D4AF37;   /* Golden Amber */
-  --c-ria:              #B56576;   /* Dusky Rose */
-  --c-kai:              #9A1C1C;   /* Deep Crimson */
-  --c-sera:             #4A0E6B;   /* Royal Purple */
+  --c-adel:             #0F4C5C;
+  --c-leo:              #D4AF37;
+  --c-ria:              #B56576;
+  --c-kai:              #9A1C1C;
+  --c-sera:             #5A189A;
 
   /* Typography */
   --f-serif-en:         'Playfair Display', Georgia, serif;
@@ -105,10 +105,10 @@
   --sh-sm:        0 2px 8px rgba(3, 7, 18, 0.4);
   --sh-md:        0 8px 24px rgba(3, 7, 18, 0.6);
   --sh-lg:        0 16px 48px rgba(3, 7, 18, 0.8);
-  --sh-primary:   0 0 24px rgba(109, 90, 230, 0.35);
-  --sh-inspector: 0 0 24px rgba(56, 200, 220, 0.25);
-  --sh-event:     0 0 32px rgba(244, 164, 66, 0.30);
-  --sh-cream:     0 0 20px rgba(215, 198, 167, 0.25);
+  --sh-primary:   0 0 24px rgba(94, 96, 232, 0.35);
+  --sh-inspector: 0 0 24px rgba(52, 179, 199, 0.25);
+  --sh-event:     0 0 32px rgba(212, 178, 111, 0.30);
+  --sh-cream:     0 0 20px rgba(212, 178, 111, 0.25);
 
   /* Transitions */
   --tr-fast:   150ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -126,7 +126,7 @@
 html { font-size: 16px; }
 
 body {
-  background-color: #010a1a; /* slightly darker than --c-bg for letterbox gutters */
+  background-color: #030810; /* slightly darker than --c-bg for letterbox gutters */
   color: var(--c-text);
   font-family: var(--f-ui);
   font-size: var(--t-base);
@@ -233,27 +233,27 @@ ul, ol { list-style: none; }
 }
 
 .btn-primary {
-  background: linear-gradient(135deg, #7c68f7 0%, #5d48e0 100%);
+  background: linear-gradient(135deg, #6e70f2 0%, #4a4dd0 100%);
   color: #ffffff;
   border: 1px solid rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 14px rgba(109, 90, 230, 0.35);
+  box-shadow: 0 4px 14px rgba(94, 96, 232, 0.35);
 }
 .btn-primary:hover {
-  background: linear-gradient(135deg, #8d7bf9 0%, #6d58ee 100%);
-  box-shadow: 0 6px 20px rgba(109, 90, 230, 0.5);
+  background: linear-gradient(135deg, #8082f5 0%, #5e60e8 100%);
+  box-shadow: 0 6px 20px rgba(94, 96, 232, 0.5);
   transform: translateY(-1px);
 }
 
 .btn-cream {
-  background: linear-gradient(135deg, #d7c6a7 0%, #c4b08e 100%);
-  color: #070d1e;
+  background: linear-gradient(135deg, #D4B26F 0%, #B89550 100%);
+  color: #060D20;
   font-weight: 600;
   border: 1px solid rgba(255, 255, 255, 0.3);
-  box-shadow: 0 4px 14px rgba(215, 198, 167, 0.3);
+  box-shadow: 0 4px 14px rgba(212, 178, 111, 0.3);
 }
 .btn-cream:hover {
-  background: linear-gradient(135deg, #e5d7be 0%, #d0bd9c 100%);
-  box-shadow: 0 6px 20px rgba(215, 198, 167, 0.45);
+  background: linear-gradient(135deg, #DFC07E 0%, #C9A867 100%);
+  box-shadow: 0 6px 20px rgba(212, 178, 111, 0.45);
   transform: translateY(-1px);
 }
 
@@ -294,7 +294,7 @@ ul, ol { list-style: none; }
   border: 1px solid var(--c-event-ring);
 }
 .btn-gold:hover {
-  background: rgba(244, 164, 66, 0.25);
+  background: rgba(212, 178, 111, 0.25);
   box-shadow: var(--sh-event);
 }
 
@@ -1139,12 +1139,12 @@ ul, ol { list-style: none; }
 .persona-card:hover {
   border-color: var(--c-border-hi);
   transform: translateY(-6px);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(215, 198, 167, 0.15);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 20px rgba(212, 178, 111, 0.15);
 }
 
 .persona-card.selected {
   border-color: var(--c-primary);
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(109, 90, 230, 0.4);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6), 0 0 24px rgba(94, 96, 232, 0.4);
   transform: translateY(-4px);
 }
 
