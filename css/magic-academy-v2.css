@@ -26,7 +26,7 @@
   --c-cream:          #d4b26f;
   --c-cream-hover:    #e5c88c;
   --c-cream-muted:    rgba(212, 178, 111, 0.14);
-  --c-cream-ring:     rgba(212, 178, 111, 0.32);
+  --c-cream-ring:     rgba(212, 178, 111, 0.35);
 
   /* Color — Inspector / Analysis (Soft Cyan) */
   --c-inspector:        #34b3c7;
@@ -37,7 +37,7 @@
   /* Color — Events (unified with Gold) */
   --c-event:       #d4b26f;
   --c-event-muted: rgba(212, 178, 111, 0.14);
-  --c-event-ring:  rgba(212, 178, 111, 0.32);
+  --c-event-ring:  rgba(212, 178, 111, 0.35);
 
   /* Color — Critical / Missing */
   --c-critical:       #db4c4c;
